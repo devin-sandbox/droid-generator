@@ -7,8 +7,15 @@ interface LfoConfig {
   hz: string;
 }
 
-const MAX_LFOS = 8;
+const MAX_ALLOWED_LFOS = 8;
 const LFO_SELECT = "_LFO_SELECT";
+
+function validateNumLfos(num: number): number {
+  if (isNaN(num) || num < 1 || num > MAX_ALLOWED_LFOS) {
+    throw new Error(`Number of LFOs must be between 1 and ${MAX_ALLOWED_LFOS}`);
+  }
+  return num;
+}
 
 function createLfoState(index: number): LfoConfig {
   return {
@@ -42,26 +49,33 @@ function configureFaders(ini: IniMap, config: LfoConfig, lfoSelect: string): voi
   ini.set(hzFader.id ?? hzFader.sec, "output", config.hz);
 }
 
-const ini = new IniMap();
+function generatePatch(numLfos: number): string {
+  const ini = new IniMap();
+  numLfos = validateNumLfos(numLfos);
 
-ini.setComment("# LABELS: master=18");
+  ini.setComment("# LABELS: master=18");
 
-ini.setSection("p2b8");
-ini.setSection("e4");
-ini.setSection("m4");
+  ini.setSection("p2b8");
+  ini.setSection("e4");
+  ini.setSection("m4");
 
-// Configure encoder for LFO selection
-const enc = ini.setSection("encoder");
-ini.set(enc.id ?? enc.sec, "discrete", `${MAX_LFOS}`);
-ini.set(enc.id ?? enc.sec, "encoder", "E2.1");
-ini.set(enc.id ?? enc.sec, "color", LFO_SELECT);
-ini.set(enc.id ?? enc.sec, "output", LFO_SELECT);
+  // Configure encoder for LFO selection
+  const enc = ini.setSection("encoder");
+  ini.set(enc.id ?? enc.sec, "discrete", `${numLfos}`);
+  ini.set(enc.id ?? enc.sec, "encoder", "E2.1");
+  ini.set(enc.id ?? enc.sec, "color", LFO_SELECT);
+  ini.set(enc.id ?? enc.sec, "output", LFO_SELECT);
 
-// Configure LFOs and their faders
-Array.from({ length: MAX_LFOS }, (_, i) => {
-  const config = createLfoState(i);
-  configureLfo(ini, config);
-  configureFaders(ini, config, LFO_SELECT);
-});
+  // Configure LFOs and their faders
+  Array.from({ length: numLfos }, (_, i) => {
+    const config = createLfoState(i);
+    configureLfo(ini, config);
+    configureFaders(ini, config, LFO_SELECT);
+  });
 
-console.log(ini.toString());
+  return ini.toString();
+}
+
+// Get number of LFOs from command line or use default
+const numLfos = process.argv[2] ? parseInt(process.argv[2], 10) : MAX_ALLOWED_LFOS;
+console.log(generatePatch(numLfos));
