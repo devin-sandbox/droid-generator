@@ -6,6 +6,8 @@ interface LfoConfig {
   level: string;
   hz: string;
   waveform: string;  // For selecting between waveforms (0-6)
+  freqMod?: string;  // Optional frequency modulation output
+  ampMod?: string;   // Optional amplitude modulation output
 }
 
 const MAX_ALLOWED_LFOS = 8;
@@ -25,6 +27,8 @@ function createLfoState(index: number): LfoConfig {
     level: `_LEVEL_${index + 1}`,
     hz: `_HZ_${index + 1}`,
     waveform: `_WAVEFORM_${index + 1}`,
+    freqMod: `_FREQ_MOD_${index + 1}`,
+    ampMod: `_AMP_MOD_${index + 1}`,
   };
 }
 
@@ -32,8 +36,22 @@ function configureLfo(ini: IniMap, config: LfoConfig): void {
   const lfo = ini.setSection("lfo");
   ini.set(lfo.id ?? lfo.sec, "output", config.output);
   ini.set(lfo.id ?? lfo.sec, "waveform", config.waveform);
-  ini.set(lfo.id ?? lfo.sec, "level", config.level);
-  ini.set(lfo.id ?? lfo.sec, "hz", `${config.hz} * 100`);
+  ini.set(lfo.id ?? lfo.sec, "level", config.ampMod ?? config.level);
+  ini.set(lfo.id ?? lfo.sec, "hz", `${config.freqMod ?? config.hz} * 100`);
+}
+
+function configureMixers(ini: IniMap, config: LfoConfig, modSource: string): void {
+  // Frequency modulation mixer
+  const freqMixer = ini.setSection("mixer");
+  ini.set(freqMixer.id ?? freqMixer.sec, "input1", modSource);
+  ini.set(freqMixer.id ?? freqMixer.sec, "input2", config.hz);
+  ini.set(freqMixer.id ?? freqMixer.sec, "output", config.freqMod);
+
+  // Amplitude modulation mixer
+  const ampMixer = ini.setSection("mixer");
+  ini.set(ampMixer.id ?? ampMixer.sec, "input1", modSource);
+  ini.set(ampMixer.id ?? ampMixer.sec, "input2", config.level);
+  ini.set(ampMixer.id ?? ampMixer.sec, "output", config.ampMod);
 }
 
 function configureFaders(ini: IniMap, config: LfoConfig, lfoSelect: string): void {
@@ -82,6 +100,9 @@ function generatePatch(numLfos: number): string {
     const config = createLfoState(i);
     configureLfo(ini, config);
     configureFaders(ini, config, LFO_SELECT);
+    if (i > 0) {  // First LFO can't be modulated
+      configureMixers(ini, config, `O${i}`);  // Use previous LFO as modulator
+    }
   });
 
   return ini.toString();
