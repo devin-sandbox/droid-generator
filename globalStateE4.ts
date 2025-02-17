@@ -5,6 +5,7 @@ interface LfoConfig {
   output: string;
   level: string;
   hz: string;
+  waveform: string;  // For selecting between waveforms (0-6)
 }
 
 const MAX_ALLOWED_LFOS = 8;
@@ -23,12 +24,14 @@ function createLfoState(index: number): LfoConfig {
     output: `O${index + 1}`,
     level: `_LEVEL_${index + 1}`,
     hz: `_HZ_${index + 1}`,
+    waveform: `_WAVEFORM_${index + 1}`,
   };
 }
 
 function configureLfo(ini: IniMap, config: LfoConfig): void {
   const lfo = ini.setSection("lfo");
-  ini.set(lfo.id ?? lfo.sec, "sawtooth", config.output);
+  ini.set(lfo.id ?? lfo.sec, "output", config.output);
+  ini.set(lfo.id ?? lfo.sec, "waveform", config.waveform);
   ini.set(lfo.id ?? lfo.sec, "level", config.level);
   ini.set(lfo.id ?? lfo.sec, "hz", `${config.hz} * 100`);
 }
@@ -47,6 +50,14 @@ function configureFaders(ini: IniMap, config: LfoConfig, lfoSelect: string): voi
   ini.set(hzFader.id ?? hzFader.sec, "select", lfoSelect);
   ini.set(hzFader.id ?? hzFader.sec, "selectat", `${config.index}`);
   ini.set(hzFader.id ?? hzFader.sec, "output", config.hz);
+
+  // waveform fader
+  const waveformFader = ini.setSection("motorfader");
+  ini.set(waveformFader.id ?? waveformFader.sec, "fader", "3");
+  ini.set(waveformFader.id ?? waveformFader.sec, "select", lfoSelect);
+  ini.set(waveformFader.id ?? waveformFader.sec, "selectat", `${config.index}`);
+  ini.set(waveformFader.id ?? waveformFader.sec, "output", config.waveform);
+  ini.set(waveformFader.id ?? waveformFader.sec, "notches", "7");  // 0-6 for waveform selection
 }
 
 function generatePatch(numLfos: number): string {
