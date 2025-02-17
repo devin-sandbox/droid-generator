@@ -38,14 +38,14 @@ function configureFaders(ini: IniMap, config: LfoConfig, lfoSelect: string): voi
   const levelFader = ini.setSection("motorfader");
   ini.set(levelFader.id ?? levelFader.sec, "fader", "1");
   ini.set(levelFader.id ?? levelFader.sec, "select", lfoSelect);
-  ini.set(levelFader.id ?? levelFader.sec, "selectat", `${config.index + 1}`);
+  ini.set(levelFader.id ?? levelFader.sec, "selectat", `${config.index}`);
   ini.set(levelFader.id ?? levelFader.sec, "output", config.level);
 
   // hz fader
   const hzFader = ini.setSection("motorfader");
   ini.set(hzFader.id ?? hzFader.sec, "fader", "2");
   ini.set(hzFader.id ?? hzFader.sec, "select", lfoSelect);
-  ini.set(hzFader.id ?? hzFader.sec, "selectat", `${config.index + 1}`);
+  ini.set(hzFader.id ?? hzFader.sec, "selectat", `${config.index}`);
   ini.set(hzFader.id ?? hzFader.sec, "output", config.hz);
 }
 
