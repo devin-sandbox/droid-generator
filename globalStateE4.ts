@@ -84,25 +84,25 @@ function generatePatch(numLfos: number): string {
   // Configure encoder for layer selection and pagination
   const enc = ini.setSection("encoder");
   ini.set(enc.id ?? enc.sec, "encoder", "E2.1");
-  ini.set(enc.id ?? enc.sec, "button", "_BUTTON");  // Button state output
-  ini.set(enc.id ?? enc.sec, "color", LAYER_SELECT);
+  ini.set(enc.id ?? enc.sec, "input", "_BUTTON");  // Button state output
+  ini.set(enc.id ?? enc.sec, "led", LAYER_SELECT);
   ini.set(enc.id ?? enc.sec, "output", LFO_SELECT);  // Still controls LFO selection
 
   // Configure button for layer switching
   const layerButton = ini.setSection("button");
-  ini.set(layerButton.id ?? layerButton.sec, "button", "_BUTTON");
+  ini.set(layerButton.id ?? layerButton.sec, "input", "_BUTTON");
   ini.set(layerButton.id ?? layerButton.sec, "states", "2");  // LFO and mixer layers
-  ini.set(layerButton.id ?? layerButton.sec, "led", LAYER_SELECT);
+  ini.set(layerButton.id ?? layerButton.sec, "output", LAYER_SELECT);
   ini.set(layerButton.id ?? layerButton.sec, "value1", `${LAYER_LFO}`);
   ini.set(layerButton.id ?? layerButton.sec, "value2", `${LAYER_MIXER}`);
 
   // Configure layer colors for visual feedback
   const colorConfig = ini.setSection("color");
   ini.set(colorConfig.id ?? colorConfig.sec, "input", LAYER_SELECT);  // Use layer selection as input
-  ini.set(colorConfig.id ?? colorConfig.sec, "color0", "red");        // LFO layer = red
-  ini.set(colorConfig.id ?? colorConfig.sec, "value0", `${LAYER_LFO}`);
-  ini.set(colorConfig.id ?? colorConfig.sec, "color1", "blue");       // Mixer layer = blue
-  ini.set(colorConfig.id ?? colorConfig.sec, "value1", `${LAYER_MIXER}`);
+  ini.set(colorConfig.id ?? colorConfig.sec, "led", "0.6");          // LFO layer = red (0.6)
+  ini.set(colorConfig.id ?? colorConfig.sec, "value", `${LAYER_LFO}`);
+  ini.set(colorConfig.id ?? colorConfig.sec, "led", "0.2");          // Mixer layer = cyan (0.2)
+  ini.set(colorConfig.id ?? colorConfig.sec, "value", `${LAYER_MIXER}`);
 
   // Configure pagination for LFO layer (4 items per page)
   const totalPages = Math.ceil(numLfos / ITEMS_PER_PAGE);
