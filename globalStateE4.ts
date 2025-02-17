@@ -9,7 +9,7 @@ interface LfoConfig {
   freqMod?: string;  // Optional frequency modulation output
 }
 
-const MAX_ALLOWED_LFOS = 8;
+const MAX_ALLOWED_LFOS = 7;  // Using O1-O7 for LFOs
 const LFO_SELECT = "_LFO_SELECT";
 
 function validateNumLfos(num: number): number {
