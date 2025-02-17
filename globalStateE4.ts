@@ -6,7 +6,7 @@ interface LfoConfig {
   level: string;
   hz: string;
   waveform: string;  // For selecting between waveforms (0-6)
-  freqMod?: string;  // Optional frequency modulation output
+
 }
 
 const MAX_ALLOWED_LFOS = 7;  // Using O1-O7 for LFOs
@@ -26,7 +26,7 @@ function createLfoState(index: number): LfoConfig {
     level: `_LEVEL_${index + 1}`,
     hz: `_HZ_${index + 1}`,
     waveform: `_WAVEFORM_${index + 1}`,
-    freqMod: `_FREQ_MOD_${index + 1}`,
+
   };
 }
 
@@ -42,7 +42,7 @@ function configureMixers(ini: IniMap, config: LfoConfig, modSource: string): voi
   // Frequency modulation mixer using MASTER18
   const freqMixer = ini.setSection("mixer");
   ini.set(freqMixer.id ?? freqMixer.sec, "input1", modSource);
-  ini.set(freqMixer.id ?? freqMixer.sec, "input2", config.hz);
+  ini.set(freqMixer.id ?? freqMixer.sec, "input2", `${config.hz} * _FADER_OUT`);
   ini.set(freqMixer.id ?? freqMixer.sec, "output", "O8");
 }
 
