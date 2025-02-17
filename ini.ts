@@ -655,6 +655,31 @@ export class IniMap {
     return this;
   }
 
+  setSection(sec: string): LineSection {
+    const id = crypto.randomUUID();
+    const lineSection: LineSection = {
+      type: "section",
+      num: this.#lines.length + 1,
+      sec,
+      map: new Map<string, LineValue>(),
+      end: this.#lines.length + 1,
+      id,
+    };
+    this.#lines.push(lineSection);
+    this.#sections.set(id, lineSection);
+    return lineSection;
+  }
+
+  setComment(val: string): LineComment {
+    const lineComment: LineComment = {
+      type: "comment",
+      num: this.#lines.length + 1,
+      val,
+    };
+    this.#lines.push(lineComment);
+    return lineComment;
+  }
+
   /**
    * Iterate over each entry in the INI to retrieve key, value, and section.
    *
