@@ -44,7 +44,7 @@ function configureMixers(ini: IniMap, config: LfoConfig, modSource: string): voi
   const freqMixer = ini.setSection("mixer");
   ini.set(freqMixer.id ?? freqMixer.sec, "input1", modSource);
   ini.set(freqMixer.id ?? freqMixer.sec, "input2", config.hz);
-  ini.set(freqMixer.id ?? freqMixer.sec, "output", "MASTER18");
+  ini.set(freqMixer.id ?? freqMixer.sec, "output", "O8");
 }
 
 function configureFaders(ini: IniMap, config: LfoConfig, lfoSelect: string): void {
