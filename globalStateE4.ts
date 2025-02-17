@@ -97,12 +97,15 @@ function generatePatch(numLfos: number): string {
   ini.set(layerButton.id ?? layerButton.sec, "value2", `${LAYER_MIXER}`);
 
   // Configure layer colors for visual feedback
-  const colorConfig = ini.setSection("color");
-  ini.set(colorConfig.id ?? colorConfig.sec, "input", LAYER_SELECT);  // Use layer selection as input
-  ini.set(colorConfig.id ?? colorConfig.sec, "led", "0.6");          // LFO layer = red (0.6)
-  ini.set(colorConfig.id ?? colorConfig.sec, "value", `${LAYER_LFO}`);
-  ini.set(colorConfig.id ?? colorConfig.sec, "led", "0.2");          // Mixer layer = cyan (0.2)
-  ini.set(colorConfig.id ?? colorConfig.sec, "value", `${LAYER_MIXER}`);
+  const lfoColor = ini.setSection("color");
+  ini.set(lfoColor.id ?? lfoColor.sec, "input", LAYER_SELECT);  // Use layer selection as input
+  ini.set(lfoColor.id ?? lfoColor.sec, "led", "0.6");          // LFO layer = red (0.6)
+  ini.set(lfoColor.id ?? lfoColor.sec, "value", `${LAYER_LFO}`);
+
+  const mixerColor = ini.setSection("color");
+  ini.set(mixerColor.id ?? mixerColor.sec, "input", LAYER_SELECT);  // Use layer selection as input
+  ini.set(mixerColor.id ?? mixerColor.sec, "led", "0.2");          // Mixer layer = cyan (0.2)
+  ini.set(mixerColor.id ?? mixerColor.sec, "value", `${LAYER_MIXER}`);
 
   // Configure pagination for LFO layer (4 items per page)
   const totalPages = Math.ceil(numLfos / ITEMS_PER_PAGE);
@@ -126,8 +129,7 @@ function generatePatch(numLfos: number): string {
   ini.set(mixer.id ?? mixer.sec, "output", "O8");  // Fixed mixer output
   Array.from({ length: Math.min(numLfos, ITEMS_PER_PAGE) }, (_, i) => {
     const config = createLfoState(i);
-    ini.set(mixer.id ?? mixer.sec, `input${i + 1}`, config.output);  // LFO output
-    ini.set(mixer.id ?? mixer.sec, `gain${i + 1}`, config.level);    // Fader controls LFO gain
+    ini.set(mixer.id ?? mixer.sec, `input${i + 1}`, `${config.output} * _FADER_OUT`);  // Attenuated LFO output
   });
 
   return ini.toString();
