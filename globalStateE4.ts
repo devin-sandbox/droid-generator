@@ -35,8 +35,7 @@ function configureLfo(ini: IniMap, config: LfoConfig): void {
   ini.set(lfo.id ?? lfo.sec, "output", config.output);
   ini.set(lfo.id ?? lfo.sec, "waveform", config.waveform);
   ini.set(lfo.id ?? lfo.sec, "level", config.level);
-  // Use modulated frequency if available, otherwise use base frequency
-  ini.set(lfo.id ?? lfo.sec, "hz", `${config.freqMod ?? config.hz} * 100`);
+  ini.set(lfo.id ?? lfo.sec, "hz", `${config.hz} * 100`);
 }
 
 function configureMixers(ini: IniMap, config: LfoConfig, modSource: string): void {
