@@ -57,7 +57,7 @@ function configureFaders(ini: IniMap, config: LfoConfig, lfoSelect: string): voi
   ini.set(waveformFader.id ?? waveformFader.sec, "select", lfoSelect);
   ini.set(waveformFader.id ?? waveformFader.sec, "selectat", `${config.index}`);
   ini.set(waveformFader.id ?? waveformFader.sec, "output", config.waveform);
-  ini.set(waveformFader.id ?? waveformFader.sec, "cvnotches", "7");  // 0-6 for waveform selection
+  ini.set(waveformFader.id ?? waveformFader.sec, "notches", "7");  // 0-6 for waveform selection
 }
 
 function generatePatch(numLfos: number): string {
