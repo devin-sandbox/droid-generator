@@ -1,4 +1,7 @@
 import { Patch } from './patch';
+import type { LFOConfig } from './types/circuits/modulation/lfo';
+import type { MotorFaderConfig } from './types/circuits/io/motorfader';
+import type { EncoderConfig } from './types/circuits/io/encoder';
 
 const MAX_ALLOWED_LFOS = 8;
 const LFO_SELECT = "_LFO_SELECT";
@@ -19,8 +22,12 @@ function generatePatch(numLfos: number): string {
     section: 'encoder',
     encoder: 'E2.1',
     discrete: `${numLfos}`,
-    color: LFO_SELECT,
-    output: LFO_SELECT
+    output: LFO_SELECT,
+    button: '1',  // Enable button functionality
+    mode: '1',    // Normal mode
+    color: '0.6',  // Red for LFO selection
+    negativecolor: '0.2',  // Cyan when not selected
+    ledfill: '1'  // Bar mode for LED display
   });
 
   // Configure LFOs and their faders

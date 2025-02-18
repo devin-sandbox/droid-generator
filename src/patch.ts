@@ -1,4 +1,4 @@
-import { IniMap } from './ini';
+import { IniMap } from './index';
 import type { BaseCircuitConfig } from './types/base';
 import type { LFOConfig } from './types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
