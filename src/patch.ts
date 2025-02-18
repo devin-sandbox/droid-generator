@@ -45,16 +45,10 @@ export class Patch {
   }
 
   toString(): string {
+    const devices = ['p2b8', 'e4', 'm4'];
     this.ini.clear();
     this.ini.comments.setAtLine(1, "# LABELS: master=18");
-    this.ini.setSection('p2b8');
-    this.ini.setSection('e4');
-    this.ini.setSection('m4');
-    this.ini.comments.setAtLine(this.ini.size + 1, "");
-    this.ini.comments.setAtLine(this.ini.size + 1, "# -------------------------------------------------");
-    this.ini.comments.setAtLine(this.ini.size + 1, "# test2");
-    this.ini.comments.setAtLine(this.ini.size + 1, "# -------------------------------------------------");
-    this.ini.comments.setAtLine(this.ini.size + 1, "");
+    devices.forEach(device => this.ini.setSection(device));
     let lastSection = '';
     for (const circuit of this.circuits) {
       if (lastSection !== circuit.section) {
@@ -67,9 +61,6 @@ export class Patch {
     }
     
     this.ini.comments.setAtLine(this.ini.size + 1, "");
-    this.ini.comments.setAtLine(this.ini.size + 1, "# -------------------------------------------------");
-    this.ini.comments.setAtLine(this.ini.size + 1, "# test3");
-    this.ini.comments.setAtLine(this.ini.size + 1, "# -------------------------------------------------");
     return this.ini.toString();
   }
 }
