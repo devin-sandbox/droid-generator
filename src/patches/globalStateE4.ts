@@ -22,26 +22,26 @@ export function generatePatch(numLfos: number = MAX_ALLOWED_LFOS): string {
     sawtooth: 'O1',
     level: 'P3.2',
     hz: 'P3.1 * 100'
-  });
+  } as Circuit);
 
   patch.addCircuit({
     section: 'button',
     shortpress: '_SAVE',
     button: 'B1.2'
-  });
+  } as Circuit);
 
   patch.addCircuit({
     section: 'button',
     shortpress: '_LOAD',
     button: 'B1.1'
-  });
+  } as Circuit);
 
   patch.addCircuit({
     section: 'motorfader',
     savepreset: '_SAVE',
     fader: '1',
     loadpreset: '_LOAD'
-  });
+  } as Circuit);
 
   return patch.toString();
 }
