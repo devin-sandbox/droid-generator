@@ -10,13 +10,13 @@ export interface MotoquencerConfig extends BaseCircuitConfig {
   clock: GateInput;
   
   /** First fader to use (1-based) */
-  firstfader?: CVInput;
+  firstfader: CVInput;
   
   /** Number of faders to use (max 32) */
-  numfaders?: CVInput;
+  numfaders: CVInput;
   
   /** Number of steps (max 32) */
-  numsteps?: CVInput;
+  numsteps: CVInput;
   
   /** Current page (0-based) */
   page?: CVInput;
@@ -85,10 +85,10 @@ export interface MotoquencerConfig extends BaseCircuitConfig {
   recordsilence?: BooleanInput;
   
   /** CV output */
-  cv?: CVInput;
+  cv: CVInput;
   
   /** Gate output */
-  gate?: GateInput;
+  gate: GateInput;
   
   /** End of sequence trigger */
   endoftrack?: GateInput;
