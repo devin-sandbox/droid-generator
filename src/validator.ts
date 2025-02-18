@@ -55,6 +55,7 @@ const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
     'led',
     'states'
   ]
+} as const;
     'numsteps',
     'page',
     'taptempo',
