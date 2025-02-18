@@ -27,5 +27,5 @@
     // Type definitions
     "types": ["bun-types"]
   },
-  "include": ["types/**/*", "*.ts"]
+  "include": ["src/**/*"]
 }
