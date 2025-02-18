@@ -29,7 +29,9 @@ const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
     'ramp',
     'paraboloid',
     'sine',
-    'cosine'
+    'cosine',
+    'accumulator',
+    'accumulatorrange'
   ],
   motorfader: [
     'section',
