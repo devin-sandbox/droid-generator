@@ -45,9 +45,9 @@ function validateConfig(config: SequencerConfig): void {
 function configureStepEncoder(ini: IniMap): void {
   const enc = ini.setSection("encoder");
   ini.set(enc.id ?? enc.sec, "encoder", "E2.1");
-  ini.set(enc.id ?? enc.sec, "discrete", "16");  // 16 steps
+  ini.set(enc.id ?? enc.sec, "discrete", "4");  // 4 pages of 4 steps each
   ini.set(enc.id ?? enc.sec, "output", STEP_SELECT);
-  ini.set(enc.id ?? enc.sec, "color", STEP_SELECT);  // Visual feedback
+  ini.set(enc.id ?? enc.sec, "color", STEP_SELECT);  // Visual feedback for current page
 }
 
 function configureClockLFO(ini: IniMap): void {
