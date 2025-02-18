@@ -52,7 +52,7 @@ export class Patch {
     
     for (const [key, value] of entries) {
       if (value !== undefined) {
-        this.ini.set(section.id ?? section.sec, `    ${key} = `, value);
+        this.ini.set(section.id ?? section.sec, `    ${key}`, value);
       }
     }
   }
@@ -60,6 +60,8 @@ export class Patch {
   toString(): string {
     // Reset INI
     this.ini.clear();
+    
+    // Add LABELS comment
     this.ini.comments.setAtLine(1, "# LABELS: master=18");
     
     // Add base configuration
@@ -78,7 +80,9 @@ export class Patch {
     let lastSection = '';
     for (const circuit of this.circuits) {
       if (lastSection !== circuit.section) {
-        this.ini.comments.setAtLine(this.ini.size + 1, "");
+        if (lastSection !== '') {
+          this.ini.comments.setAtLine(this.ini.size + 1, "");
+        }
       }
       this.serializeCircuit(circuit);
       lastSection = circuit.section;
