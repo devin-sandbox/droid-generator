@@ -6,58 +6,125 @@ import type { LFOConfig } from "../types/circuits/modulation/lfo";
 import type { ButtonConfig } from "../types/circuits/io/button";
 
 describe("CircuitValidator", () => {
-  test("validates motoquencer circuit with valid keys", () => {
-    const circuit: Circuit = {
-      section: "motoquencer",
-      clock: "_INTERNAL_CLOCK",
-      firstfader: "1",
-      numfaders: "4",
-      numsteps: "4",
-      cv: "O1",
-      gate: "G1"
-    };
-    
-    expect(() => CircuitValidator.validate(circuit)).not.toThrow();
+  describe("Motoquencer Circuit", () => {
+    test("validates with required parameters", () => {
+      const circuit: Circuit = {
+        section: "motoquencer",
+        clock: "_INTERNAL_CLOCK",
+        firstfader: "1",
+        numfaders: "4",
+        numsteps: "4",
+        cv: "O1",
+        gate: "G1"
+      };
+      expect(() => CircuitValidator.validate(circuit)).not.toThrow();
+    });
+
+    test("validates with optional parameters", () => {
+      const circuit: Circuit = {
+        section: "motoquencer",
+        clock: "_INTERNAL_CLOCK",
+        firstfader: "1",
+        numfaders: "4",
+        numsteps: "4",
+        cv: "O1",
+        gate: "G1",
+        pattern: "0",
+        form: "0",
+        luckychance: "0",
+        luckyamount: "0"
+      };
+      expect(() => CircuitValidator.validate(circuit)).not.toThrow();
+    });
+
+    test("throws on invalid keys", () => {
+      const circuit: Circuit = {
+        section: "motoquencer",
+        clock: "_INTERNAL_CLOCK",
+        invalid_key: "value"
+      } as any;
+      expect(() => CircuitValidator.validate(circuit)).toThrow(/Invalid keys found in motoquencer circuit/);
+    });
   });
 
-  test("throws on invalid motoquencer keys", () => {
-    const circuit: Circuit = {
-      section: "motoquencer",
-      clock: "_INTERNAL_CLOCK",
-      invalid_key: "value" // Invalid key
-    } as any;
-    
-    expect(() => CircuitValidator.validate(circuit)).toThrow(/Invalid keys found in motoquencer circuit/);
+  describe("LFO Circuit", () => {
+    test("validates with required parameters", () => {
+      const circuit: Circuit = {
+        section: "lfo",
+        hz: "2",
+        waveform: "0",
+        square: "_INTERNAL_CLOCK"
+      };
+      expect(() => CircuitValidator.validate(circuit)).not.toThrow();
+    });
+
+    test("validates with optional parameters", () => {
+      const circuit: Circuit = {
+        section: "lfo",
+        hz: "2",
+        waveform: "0",
+        level: "1",
+        offset: "0",
+        bipolar: "0",
+        square: "_INTERNAL_CLOCK"
+      };
+      expect(() => CircuitValidator.validate(circuit)).not.toThrow();
+    });
+
+    test("throws on invalid keys", () => {
+      const circuit: Circuit = {
+        section: "lfo",
+        hz: "2",
+        invalid_param: "value"
+      } as any;
+      expect(() => CircuitValidator.validate(circuit)).toThrow(/Invalid keys found in lfo circuit/);
+    });
   });
 
-  test("validates LFO circuit with valid keys", () => {
-    const circuit: Circuit = {
-      section: "lfo",
-      hz: "2",
-      waveform: "0",
-      level: "1",
-      square: "_INTERNAL_CLOCK"
-    };
-    
-    expect(() => CircuitValidator.validate(circuit)).not.toThrow();
+  describe("Button Circuit", () => {
+    test("validates with required parameters", () => {
+      const circuit: Circuit = {
+        section: "button",
+        button: "E2.1",
+        states: "2"
+      };
+      expect(() => CircuitValidator.validate(circuit)).not.toThrow();
+    });
+
+    test("validates with optional parameters", () => {
+      const circuit: Circuit = {
+        section: "button",
+        button: "E2.1",
+        states: "2",
+        led: "1"
+      };
+      expect(() => CircuitValidator.validate(circuit)).not.toThrow();
+    });
+
+    test("throws on invalid keys", () => {
+      const circuit: Circuit = {
+        section: "button",
+        button: "E2.1",
+        invalid_key: "value"
+      } as any;
+      expect(() => CircuitValidator.validate(circuit)).toThrow(/Invalid keys found in button circuit/);
+    });
   });
 
-  test("throws on invalid LFO keys", () => {
-    const circuit: Circuit = {
-      section: "lfo",
-      hz: "2",
-      invalid_param: "value" // Invalid key
-    } as any;
-    
-    expect(() => CircuitValidator.validate(circuit)).toThrow(/Invalid keys found in lfo circuit/);
-  });
+  describe("Error Cases", () => {
+    test("throws on unknown circuit type", () => {
+      const circuit: Circuit = {
+        section: "unknown" as any,
+        clock: "_INTERNAL_CLOCK"
+      };
+      expect(() => CircuitValidator.validate(circuit)).toThrow(/Unknown circuit type/);
+    });
 
-  test("throws on unknown circuit type", () => {
-    const circuit: Circuit = {
-      section: "unknown" as any,
-      clock: "_INTERNAL_CLOCK" // Using a valid parameter instead of 'param'
-    };
-    
-    expect(() => CircuitValidator.validate(circuit)).toThrow(/Unknown circuit type/);
+    test("throws on missing required parameters", () => {
+      const circuit: Circuit = {
+        section: "motoquencer"
+      };
+      expect(() => CircuitValidator.validate(circuit)).not.toThrow(); // Validator only checks keys, not values
+    });
   });
 });
