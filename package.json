@@ -2,6 +2,9 @@
   "name": "droid-generator",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "globalStateE4.ts": "bun globalStateE4.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
