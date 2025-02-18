@@ -21,7 +21,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     waveform: '0',     // Square wave
     level: '1',        // Full level
     bipolar: '0',      // Unipolar output
-    square: 'I1'       // Direct output to motoquencer
+    square: '_INTERNAL_CLOCK'       // Direct output to motoquencer
   };
   patch.addCircuit(lfo);
   
@@ -37,7 +37,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   // Configure motoquencer for basic 4-step sequence
   const motoquencer = {
     section: 'motoquencer' as const,
-    clock: 'I1',      // Use LFO square output as clock
+    clock: '_INTERNAL_CLOCK',      // Use LFO square output as clock
     firstfader: '1',  // Use faders 1-4
     numfaders: '4',   // All 4 faders on M4
     numsteps: '4',    // 4-step sequence
