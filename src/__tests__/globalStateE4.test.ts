@@ -3,36 +3,34 @@ import { generatePatch } from "../patches/globalStateE4";
 import { Patch, type Circuit } from "../patch";
 
 describe("GlobalStateE4", () => {
-  test("generates patch with valid circuit keys", () => {
-    const patch = new Patch();
+  test("generatePatch uses only allowed circuit keys", () => {
+    const ini = generatePatch(8);
     
-    // Add circuits to patch
+    // Test that patch generation doesn't throw validation errors
     expect(() => {
-      patch.addCircuit({
-        section: 'lfo',
-        sawtooth: 'O1',
-        level: 'P3.2',
-        hz: 'P3.1 * 100'
-      } as Circuit);
+      const patch = new Patch();
+      const lines = ini.split('\n');
+      let currentCircuit: Partial<Circuit> & { section: Circuit['section'] } = { section: 'lfo' };
       
-      patch.addCircuit({
-        section: 'button',
-        button: 'B1.2',
-        shortpress: '_SAVE'
-      } as Circuit);
-      
-      patch.addCircuit({
-        section: 'button',
-        button: 'B1.1',
-        shortpress: '_LOAD'
-      } as Circuit);
-      
-      patch.addCircuit({
-        section: 'motorfader',
-        fader: '1',
-        savepreset: '_SAVE',
-        loadpreset: '_LOAD'
-      } as Circuit);
+      for (const line of lines) {
+        if (line.startsWith('[')) {
+          // New circuit section
+          const section = line.slice(1, -1) as Circuit['section'];
+          if (section !== 'p2b8' && section !== 'e4' && section !== 'm4') {
+            currentCircuit = { section };
+          }
+        } else if (line.includes('=')) {
+          // Circuit parameter
+          const [key, value] = line.split('=');
+          if (currentCircuit.section) {
+            currentCircuit[key] = value;
+          }
+        } else if (line === '' && Object.keys(currentCircuit).length > 1) {
+          // End of circuit, validate it
+          patch.addCircuit(currentCircuit as Circuit);
+          currentCircuit = { section: 'lfo' };
+        }
+      }
     }).not.toThrow();
   });
 
