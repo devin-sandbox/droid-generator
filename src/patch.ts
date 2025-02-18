@@ -4,13 +4,15 @@ import type { LFOConfig } from './types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { EncoderConfig } from './types/circuits/io/encoder';
 import type { ButtonConfig } from './types/circuits/io/button';
+import type { MotoquencerConfig } from './types/circuits/sequencing/motoquencer';
 import { DeviceType } from './types/devices';
 
 type Circuit = 
   | (LFOConfig & { section: 'lfo' })
   | (MotorFaderConfig & { section: 'motorfader' })
   | (EncoderConfig & { section: 'encoder' })
-  | (ButtonConfig & { section: 'button' });
+  | (ButtonConfig & { section: 'button' })
+  | (MotoquencerConfig & { section: 'motoquencer' });
 
 export class Patch {
   private circuits: Circuit[] = [];
