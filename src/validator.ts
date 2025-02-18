@@ -108,7 +108,29 @@ const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
     'section',
     'button',
     'led',
-    'states'
+    'states',
+    'shortpress',
+    'longpress',
+    'output',
+    'inverted',
+    'negated',
+    'offvalue',
+    'onvalue',
+    'value1',
+    'value2',
+    'value3',
+    'value4',
+    'doubleclickmode',
+    'longpresstime',
+    'startvalue',
+    'select',
+    'selectat',
+    'preset',
+    'loadpreset',
+    'savepreset',
+    'clear',
+    'clearall',
+    'dontsave'
   ]
 } as const;
 
