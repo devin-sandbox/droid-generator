@@ -14,6 +14,15 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
 
   const patch = new Patch([DeviceType.P2B8, DeviceType.E4, DeviceType.M4]);
   
+  // Configure button for future layer switching
+  const button = {
+    section: 'button' as const,
+    button: 'E2.1',  // Use encoder's button
+    led: 'E2.1',     // Use encoder's LED
+    states: '2'      // Two states for future layer switching
+  };
+  patch.addCircuit(button);
+
   // Configure motoquencer for basic 4-step sequence
   const motoquencer = {
     section: 'motoquencer' as const,
@@ -22,7 +31,8 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     numfaders: '4',   // All 4 faders on M4
     numsteps: '4',    // 4-step sequence
     cv: 'O1',        // CV output on O1
-    gate: 'G1'       // Gate output on G1
+    gate: 'G1',      // Gate output on G1
+    button: 'E2.1'   // Connect to encoder button
   };
   patch.addCircuit(motoquencer);
   
