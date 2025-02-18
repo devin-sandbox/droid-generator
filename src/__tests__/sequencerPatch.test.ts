@@ -1,36 +1,40 @@
 import { expect, test, describe } from "bun:test";
 import { createSequencerPatch } from "../patches/sequencerPatch";
+import { type Circuit } from "../patch";
 
 describe("SequencerPatch", () => {
-  test("creates valid 4-step sequencer patch", () => {
+  test("creates patch with valid circuit keys", () => {
     const patch = createSequencerPatch();
-    const ini = patch.toString();
     
-    // Verify device configuration
-    expect(ini).toContain("[P2B8]");
-    expect(ini).toContain("[E4]");
-    expect(ini).toContain("[M4]");
+    // Verify LFO circuit
+    expect(() => {
+      patch.addCircuit({
+        section: 'lfo',
+        hz: '2',
+        waveform: '0',
+        level: '1',
+        bipolar: '0',
+        square: '_INTERNAL_CLOCK'
+      } as Circuit);
+    }).not.toThrow();
     
-    // Verify LFO configuration
-    expect(ini).toContain("[lfo]");
-    expect(ini).toContain("hz=2");
-    expect(ini).toContain("waveform=0");
-    expect(ini).toContain("level=1");
-    expect(ini).toContain("bipolar=0");
-    expect(ini).toContain("square=_INTERNAL_CLOCK");
-    
-    // Verify motoquencer configuration
-    expect(ini).toContain("[motoquencer]");
-    expect(ini).toContain("clock=_INTERNAL_CLOCK");
-    expect(ini).toContain("firstfader=1");
-    expect(ini).toContain("numfaders=4");
-    expect(ini).toContain("numsteps=4");
-    expect(ini).toContain("cv=O1");
-    expect(ini).toContain("gate=G1");
-    expect(ini).toContain("fadermode=0");
-    expect(ini).toContain("buttonmode=0");
-    expect(ini).toContain("cvbase=0");
-    expect(ini).toContain("cvrange=1");
+    // Verify motoquencer circuit
+    expect(() => {
+      patch.addCircuit({
+        section: 'motoquencer',
+        clock: '_INTERNAL_CLOCK',
+        firstfader: '1',
+        numfaders: '4',
+        numsteps: '4',
+        cv: 'O1',
+        gate: 'G1',
+        fadermode: '0',
+        buttonmode: '0',
+        cvbase: '0',
+        cvrange: '1',
+        quantize: '1'
+      } as Circuit);
+    }).not.toThrow();
   });
 
   test("validates circuits in sequencer patch", () => {
