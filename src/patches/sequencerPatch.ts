@@ -9,37 +9,22 @@ interface SequencerOptions {
 }
 
 export function createSequencerPatch(options: SequencerOptions = {}) {
-  const numSteps = options.numSteps ?? 16;
-  const numTracks = options.numTracks ?? 4;
-  const stepsPerPage = 4;
-  const numPages = Math.ceil(numSteps / stepsPerPage);
+  const numSteps = 4; // Fixed 4 steps for single M4
+  const numTracks = 1; // Start with single track
 
   const patch = new Patch([DeviceType.P2B8, DeviceType.E4, DeviceType.M4]);
   
-  // Configure encoder for layer switching
-  const encoder: EncoderConfig & { section: 'encoder' } = {
-    section: 'encoder',
-    encoder: 'E2.1',
-    discrete: numPages.toString(),
-    button: '1',
-    color: '0.4'  // Green for step control
+  // Configure motoquencer for basic 4-step sequence
+  const motoquencer = {
+    section: 'motoquencer' as const,
+    clock: 'I1',      // Clock input on I1
+    firstfader: '1',  // Use faders 1-4
+    numfaders: '4',   // All 4 faders on M4
+    numsteps: '4',    // 4-step sequence
+    cv: 'O1',        // CV output on O1
+    gate: 'G1'       // Gate output on G1
   };
-  patch.addCircuit(encoder);
-  
-  // Configure motoquencer instances for tracks
-  for (let i = 0; i < numTracks; i++) {
-    const motoquencer: MotoquencerConfig & { section: 'motoquencer' } = {
-      section: 'motoquencer',
-      clock: 'I1',
-      firstfader: `${i * stepsPerPage + 1}`,
-      numfaders: stepsPerPage.toString(),
-      numsteps: numSteps.toString(),
-      linktonext: i < numTracks - 1 ? '1' : undefined,
-      cv: `O${i + 1}`,
-      gate: `G${i + 1}`
-    };
-    patch.addCircuit(motoquencer);
-  }
+  patch.addCircuit(motoquencer);
   
   return patch;
 }
