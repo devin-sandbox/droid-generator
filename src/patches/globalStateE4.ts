@@ -13,9 +13,9 @@ function validateNumLfos(num: number): number {
   return num;
 }
 
-function generatePatch(numLfos: number): string {
-  const patch = new Patch();
+export function generatePatch(numLfos: number = MAX_ALLOWED_LFOS): string {
   numLfos = validateNumLfos(numLfos);
+  const patch = new Patch();
 
   patch.addCircuit({
     section: 'lfo',
@@ -44,8 +44,4 @@ function generatePatch(numLfos: number): string {
   });
 
   return patch.toString();
-}
-
-export function generatePatch(numLfos: number = MAX_ALLOWED_LFOS): string {
-  return generatePatch(validateNumLfos(numLfos));
 }
