@@ -1,0 +1,394 @@
+16.44
+
+motoquencer – Motor fader sequencer
+
+This circuit allows you to build simple
+but also very complex performance sequencers based on motorized faders. It
+supports up to 32 steps and up to eight M4
+controllers with up to 32 faders. The list of
+features is long and diverse and aims at supporting creative live performances.
+You probably will fail to map all existing inputs to controls, so better don’t try and rather experiment with just
+a fraction of those at a time.
+
+Basic minimal example
+Despite all the features, this sequencer is easy to get
+started with. Here is the smallest possible example. You
+always need a clock input. Here I get it from input I1.
+You need to have at least one M4 unit attached to your
+(and declared with [m4] in your patch). The motor sequencer automatically conﬁgures all your available
+faders (up to 32) for the sequencer (you can change that
+with firstfader and numfaders):
+[m4]
+[motoquencer]
+clock = I1
+cv = O1
+gate = O2
+
+As soon as your clock starts, you get a sequence with one
+step per available fader (which is four if you have just one
+[m4] declared). The faders select notes from a C lydian
+scale in two octaves. You will feel 15 notches. They correspond to the 15 notes in this range. The touch buttons
+below the faders switch on/off the gates.
+DROID manual for blue-6
+
+The pitch is output at O1 and the gate at O2. Well –
+this wouldn’t have needed expensive motor faders, but it
+works and shows a minimal application of motoquencer.
+
+page = _PAGE
+numsteps = 16
+cv = O1
+gate = O5
+
+Switching pages
+Your sequence can have more steps than you have faders.
+This is done by switching pages. In the following example we assume that you have just one M4 but want a sequencer with 16 steps. Use the page input in order to set
+the current page (group of 4 steps) that you want to see
+and edit with your faders. These pages have the numbers 0, 1, 2 and 3. That number can nicely be output by
+a buttongroup (see page 146) on a P2B8. Here is a fully
+functional example of a 16 step sequencer with just four
+faders:
+[p2b8]
+[m4]
+[buttongroup]
+button1 = B1.1
+button2 = B1.2
+button3 = B1.3
+button4 = B1.4
+led1 = L1.1
+led2 = L1.2
+led3 = L1.3
+led4 = L1.4
+output = _PAGE
+
+Repeats, Ratchets and Randomize
+In the upper examples we just had two parameters per
+step of the sequence: The pitch / CV and the gate. There
+are some more. Altogether every step has the following
+eight parameters:
+0
+
+pitch / CV
+
+1
+
+randomize CV
+
+2
+
+gate propability
+
+3
+
+repeats (up to 16)
+
+4
+
+gate pattern
+
+5
+
+ratchets (up to 8)
+
+6
+
+gate
+
+7
+
+skip
+
+Each of these parameters has a number from 0 to 7 and
+you can set the input fadermode to one of these in order
+to switch the faders to control that parameter. Here are
+some details about the various parameters:
+Pitch / CV is the output pitch of each step. With the inputs cvbase and cvrange you can deﬁne a voltage range
+for those CVs. Per default, the CV is quantized to a musical scale, but you can change that with quantize (see
+below).
+
+[lfo]
+hz = 20 * P1.1
+square = _CLOCK
+[motoquencer]
+clock = _CLOCK
+
+286
+
+Table of contents at page 2
+
+Randomize CV is a number from 0 (fader at the bottom)
+to 7 (fader at the top). 0 means randomization is off.
+The other 7 steps will increasingly modify the step’s CV
+by adding a different random offset each time the step is
+played. At position 7 (the maximum), the offset is up to
+cvrange, so if your CV is at maximum, this could double
+up your CV range.
+Gate propability also has 8 settings. Here the maximum
+(fader at top position) is the default and means: this step
+is always played, if the gate is on. The other seven settings will reduce the propability of this step being played.
+The lowest setting still leaves a small chance. Turn off the
+gate to silence a step completely.
+But this propability is not simply a random chance. It has
+several very musical settings as you can see from the following table. Here you see the eight fader positions and
+their meaning – 8 being the top position and 1 the bottom
+position:
+Pos.
+
+Meaning
+
+8 (top)
+
+played always
+
+100%
+
+7
+
+random chance of 50%
+
+50%
+
+6
+
+played every even turn
+
+50%
+
+5
+
+played every odd turn
+
+50%
+
+4
+
+random chance of 25%
+
+25%
+
+3
+
+played every 4th turn
+
+25%
+
+2
+
+random chance of 12%
+
+12%
+
+1
+
+played if last random was positive
+
+–
+
+The LEDs below the faders indicate the current setting
+with different color and blink codes:
+• Gates that are played always are blue with a con-
+
+DROID manual for blue-6
+
+stant light.
+• Random gates for 50%, 25% and 12% are in the
+same blue but blink in various speeds.
+• Gates of setting 1 (conditional random) are blinking fast.
+• Gates depending on the turn (3, 5 and 6) are in cyan
+color and light steadily in the bars (turns) where
+they are on and blink in the other bars.
+The position 6 and 5 are very musical and can transform
+a pattern of length 8 into an effective melody of 16 steps.
+A step in position 6 is just played every second run of the
+whole sequence. Position 5 is just the same but starts
+with the ﬁrst run and will then be played on run 3, 5, and
+so on.
+Position 4 is similar, but these steps will just be played
+every fourth sequence run, so you can use it for playing
+things like a pickup or break or the like. These “run counters” are reset by the reset input.
+The bottom position of 1 is an addition for the true random positions 7, 4 and 2: A step in position 1 is played,
+whenever the most recent random decision of positions
+7, 4 and 2 was positive. It allows you to create groups of
+notes that are either played completely or not at all: Set
+the ﬁrst step of these to a random propability of 50, 25 or
+12%. And the remaining notes to position 1. Now whenever fate decides that the ﬁrst note is being played, so will
+all remaining ones. These steps do not need to be subsequent. You can have wholes.
+Repeats changes the number of clock cycles one step will
+last. It is a number from 1 (fader at the bottom) to 16
+(fader at the top). This setting changes the total duration
+of one sequence cycle. If you set repeats to 2 for one of
+16 steps, your sequence will last 17 clock cycles.
+
+• While you move the fader in this mode, the LED below the fader helps you dialing in a speciﬁc number of repeats. It uses the following color scheme:
+The numbers 4, 8, 12 and 16 are displayed red. The
+numbers 2, 6, 10 and 14 are displayed yellow. The
+remaining (odd) numbers are black (LED is off).
+• When you change the number of repeats of a
+step, the skip setting of that step is automatically
+cleared (see below).
+The Gate pattern decides how gates are played when repeats is 2 or larger. There are four gate patterns, which
+you can feel in the fader. In the ﬁrst setting (fader down)
+just the ﬁrst repetition of the step is “played” (i.e. a gate
+signal sent). Setting 2 will play one gate per repetition.
+Setting 3 plays one long gate. And setting 4 is like 3 but
+lets the gate open when the step ends. This ties this step
+to the next one. And this setting also has an effect when
+repeats is just 1.
+Pos.
+
+Gate pattern
+
+4 (top)
+
+Tie this step to the next one
+
+3
+
+play one long gate
+
+2
+
+play all repetitions individually
+
+1
+
+Just the the ﬁrst repetition
+
+Ratches can be set from 1 (normal) to 8. It divides the
+clock cycle of the step into equal time intervals in which
+the step is repeated. If you set ratchets to 2, for example,
+you will get two notes played at double time. Ratchets do
+not change the duration of the sequence.
+The remaining two settings are usually set with the touch
+buttons, but you can also use the faders.
+Gate decides wether the step is “played”. If it is played,
+its CV will be sent to the cv output and the gate signal is
+
+Hints:
+
+287
+
+Table of contents at page 2
+
+set to high for half a clock cycle (you can change all this,
+no worries).
+Steps with Skip enabled will be skipped. This shortens
+the duration of the sequence. Note: if all steps are set to
+skip, the sequencer repeats playing the most recent step
+over and over. If you change the repeats of a step, the
+skip is automatically removed.
+So let’s now make an example where we use a button
+group for setting fadermode:
+
+In buttonmode = 1, the start step has a green LED and
+the end step a red one. Both start and end can be at the
+same step (creating a one step sequence). The LED will
+then blink between red and green.
+
+gate = O5
+
+Button mode
+Very similar to the faders, also the touch buttons have
+modes. These can be switched with buttonmode and here
+are the possible settings:
+0
+
+gates
+
+[p2b8]
+[m4]
+
+1
+
+start / end
+
+2
+
+gate pattern
+
+[buttongroup]
+button1 = B1.1
+button2 = B1.2
+button3 = B1.3
+button4 = B1.4
+button5 = B1.5
+button6 = B1.6
+button7 = B1.7
+button8 = B1.8
+led1 = L1.1
+led2 = L1.2
+led3 = L1.3
+led4 = L1.4
+led5 = L1.5
+led6 = L1.6
+led7 = L1.7
+led8 = L1.8
+output = _FADERMODE
+
+3
+
+skip
+
+If the start step is after the end step, the play order is reversed.
+
+Quantization, root and scale
+
+Three of these settings you already know from the
+fadermode. When the buttons are set to gate pattern,
+you cycle through the four steps each time you touch the
+button (and the LED cycles through four colors).
+Fun fact: You can set fadermode = 6 and buttonmode =
+0. That way, both the button and the fader control the
+gates. Try this out and touch the buttons: the fader will
+move automatically.
+The mode “start / end” cannot be set with the faders.
+They set a sub range of the sequence to be played. Here
+is what it means:
+
+Start and end
+[lfo]
+hz = 20 * P1.1
+square = _CLOCK
+[motoquencer]
+clock = _CLOCK
+fadermode = _FADERMODE
+cv = O1
+
+DROID manual for blue-6
+
+Touching a button changes the end step. You can set the
+start step by ﬁrst setting an end step and holding that
+button and then – with a second ﬁnger – press another
+step. That will be the start step.
+
+Usually your sequence is played from the ﬁrst to the
+last step. But you can change this by setting a start
+step and an end step. This can either be done manually
+(with buttonmode = 1 or with the inputs startstep and
+endstep.
+
+288
+
+Per default, the CVs are quantized to the notes of a lydian
+C major scale, as is the default for many other circuits, as
+well. This means that the faders have one artiﬁcal notch
+for each scale note. You can feel the notes. This makes
+it easy to change the note in exact steps without any display.
+As with many other pitch-aware circuits, like for example
+minifonion (see page 279) or chords (see page ??), you
+can use root and degree for changing the scale. See in
+the table of inputs below for the different possible scales.
+Note: root has no effect on the lower CV boundary. It’s
+just for the selection of the allowed notes. Use cvbase for
+setting that.
+Furthermore, there are the inputs select1, select3, ...
+You can use them to further restrict the possible notes –
+or even add notes that are not contained in the scale. Refer to the minifonion (see page 279) circuit for a broader
+discussion of these inputs.
+Note: If you have set a melody with the faders and reduce
+the number of allowed notes afterwards, the faders will
+possibly move to new positions. But as long as you don’t
+
+Table of contents at page 2
+
+

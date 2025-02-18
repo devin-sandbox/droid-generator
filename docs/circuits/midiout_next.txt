@@ -1,0 +1,299 @@
+Port selection
+The midiin circuit can receive up to two MIDI streams in
+parallel – one from a USB jack and one from a TRS jack.
+Merging together multiple streams from two USB jacks
+or two TRS jacks is currently not possible.
+The two inputs usb and trs deﬁne from which physical
+ports (jacks) MIDI data should be processed. TRS stands
+for “tip ring sleeve”. By this we mean the 3.5 mm MIDI
+input jack on the X7 or the MASTER18.
+For each of the jack types “USB” and “TRS” you can choose
+one of three options:
+• process data from a speciﬁc port
+• auto detection: process data from the port that has
+received MIDI input ﬁrst
+• don’t process data
+For processing data from a speciﬁc port, specify trs =
+or usb = with the number of the port. The numbers depend on your hardware conﬁguration.
+MASTER + X7:
+usb = 1
+
+USB port on the X7
+
+trs = 1
+
+TRS port on the X7
+
+MASTER18:
+usb = 1
+
+USB port on the MASTER18
+
+trs = 1
+
+TRS port MIDI1 on the MASTER18
+
+trs = 2
+
+TRS port MIDI2 on the MASTER18
+
+MASTER18 + X7:
+
+[midiin]
+usb = 1
+
+usb = 1
+
+USB port on the MASTER18
+
+usb = 2
+
+USB port on the X7
+
+trs = 1
+
+TRS port MIDI1 on the MASTER18
+
+trs = 2
+
+TRS port MIDI2 on the MASTER18
+
+trs = 3
+
+TRS port on the X7
+
+Auto detection is selected by using the port number 10. In
+this case
+watches all ports (of the selected type)
+for incoming MIDI data. As soon as it sees data on one
+port it locks in to this port and ignores all other ports for
+the while. After no MIDI data is seen on the locked port
+for a couple of seconds, auto detection happens again, so
+you can e.g. unplug a device from port 1 and plug it into
+port 2 and after a couple of seconds things work again.
+By setting trs = 0 or usb = 0, this type of port is deactivated.
+If you just specify one of trs and usb, the other one will be
+deactivated – unless you set the port to 0, which sets the
+other port to auto detection. Sounds complicated? It’s
+done that way to meet most peoples expectations! Let’s
+view a couple of examples.
+Guess you have a MASTER and an X7. The default is to do
+auto detection on both ports. For this you don’t need to
+specify neither trs nor usb
+
+Process just data from the TRS port:
+[midiin]
+trs = 1
+
+Deactivating USB automatically sets TRS to auto detection, if trs is omitted. So the following example does the
+same, since the X7 has just one TRS port:
+[midiin]
+usb = 0 # disable USB, enable TRS
+
+Now let’s assume that you have a MASTER18 plus X7.
+The following example just processes data from the X7’s
+TRS port:
+[midiin]
+trs = 3
+
+And here is how to process data from the USB port on
+the MASTER18 plus data from that TRS port that receives
+MIDI data ﬁrst:
+[midiin]
+usb = 1
+trs = 10 # auto detection
+
+[midiin]
+pitch = O1
+gate = O2
+...
+
+The next example just processes data from the USB port
+of the X7:
+
+DROID manual for blue-6
+
+262
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+trs ()
+
+1 2 3
+
++
+
+usb ()
+
+1 2 3
+
++
+
+initialrunning (ir)
+
+1 2 3
+
+2
+
+Description
+Selects a TRS port to use (3.5 mm jack). trs = 0 disables TRS, trs = 10 enables auto detection. See the manual of
+midiin for details on port selection.
+Selects a USB port to use. usb = 0 disables USB, usb = 10 enables auto detection. See the manual of midiin for
+details on port selection.
+This parameter sets which “running” state is assumed when your
+starts. The idea behind this parameter is,
+that at this point of time you cannot know the real running state of the MIDI stream, since e.g. the
+might have
+started after the sequencer at the sending end of the line.
+You have three ways to set this: start in stopped state, start in running state and an inbetween “automatic” mode. In
+the auto mode, you start in stopped state but automatically switch to running as soon as a note on event is received.
+At that moment a MIDI START event is simulated.
+0
+
+Start stopped state
+
+1
+
+Start in running state
+
+2
+
+Automatic: start in stopped state, switch to running on ﬁrst “note on”
+
+Note: as this parameter is just read once the absolute system start, you cannot assign a dynamic CV input or control
+here.
+A trigger here resets the whole MIDI state of this circuit. It does the same as a MIDI RESET message: It stops all playing
+note, resets the controllers, the states of the pedals and so on.
+
+systemreset (sr)
+
+channel (ch)
+
+1 2 3
+
+tuningmode (tm)
+
++
+
+Only execute / play commands from a certain MIDI channel. There are 16 MIDI channels. It ranges from 1 to 16.
+
+off
+
+If set to 1, all pitch outputs will go to the CV selected for tuningpitch (which defaults to 2 V), and all gate outputs will
+play gates at 120 BPM. This helps getting all attached voices tuned when working with many voices.
+
+tuningpitch (tp)
+
+1V
+Oct
+
+2V
+
+This pitch CV will be output while the tuning mode is active.
+
+transpose (tr)
+
+1V
+Oct
+
+0V
+
+Transposes all output pitches by this value by adding the value. So in order to transpose one octave down, set this
+input to -1V or -0.1. Changes in the transposition are immediately reﬂected, even for currently already active notes.
+
+0
+
+If this is set to 1, the velocity output for a voice will not be affected by note off events. It’s just altered at the beginning
+of new notes. The velocity is kept after the note ends. This way during the release phase of an envelope triggered by
+the gate, the original velocity still lasts on. In most cases the note off velocity is set to 0, which would immediately cut
+off the release phase when the velocity is patched into a VCA.
+
+holdvelocity (hv)
+
+DROID manual for blue-6
+
+263
+
+Table of contents at page 2
+
+Input
+
+Default
+
+Description
+
+1
+6V
+
+Sets the value to the desired maximum that pitchbend should output, and likewise it’s negative counterpart at its
+2
+V, which corresponds to one whole
+minimum value. At the middle position it always outputs 0. This defaults to 12
+tone. Note: setting this to a negative value is allowed and will invert pitch bend.
+
+bendpitch (bp)
+
+1
+
+When set to 1 (which is the default), the pitch bend will directly be applied to all output pitches. Alternatively you can
+set it to 0 and use the output pitchbend, for using it elsewhere.
+
+roundrobin (rr)
+
+0
+
+Normally when looking for a free output for playing the next note, this circuit will start from output1 in its search. This
+way, if there are not more notes than outputs at any time, the notes played ﬁrst will always be played at the lowest
+numbered outputs. This leads to a deterministic behaviour when it comes to playing things like chords. The same
+voice will always be used for the ﬁrst note in the stream of MIDI events.
+
+pitchbendrange (pbr)
+
+Type
+1V
+Oct
+
+When you switch roundrobin to 1, this changes. Now the outputs are scanned in a round-robin fashion, like in a
+rotating switch. That way every output has the same chance to get a new note. Here it can even make sense to deﬁne
+multiple voices even if the track is monophonic. When you use envelopes with longer release times, you can transform
+such a melody into chords with simultaneous notes.
+Note: When all outputs are currently used by a note, roundrobin has no inﬂuence. Here voiceallocation selects
+which of the notes will be dropped.
+voiceallocation (va)
+
+DROID manual for blue-6
+
+1 2 3
+
+0
+
+When the MIDI stream, at any given time, needs to play more notes than you have voices assigned, normally the
+“oldest” notes would be cancelled. This behaviour can be conﬁgured here by setting voiceallocation to one of the
+following values:
+0
+
+The oldest note will be cancelled (default)
+
+1
+
+The new note will not be played and simply be omitted
+
+2
+
+The lowest note will be cancelled
+
+3
+
+The highest note will be cancelled
+
+264
+
+Table of contents at page 2
+
+

@@ -1,0 +1,250 @@
+Input
+
+Type
+
+constantlength (co)
+
+Default
+
+Description
+
+0
+
+This input enables a feature that (tries to) keep the actual length of the sequence constant. There are two levels. If
+constantlength = 1, every change in the repeats of a step is compensated by changing the repeats in the following
+steps. E.g. if you increase the number of repeats from 4 to 5 in step 3 (by moving the fader in the appropriate fader
+mode), the repeats in step 4 are reduced by 1. If they are already 1, step 5 is tried an so on, until it wrap around to step
+1.
+The second level is constantlength = 2. Here also the skip setting of steps is honored and modiﬁed in order to keep
+the length constant. A skipped step essentially has the length 0 (or 0 repeats). The componsation is now done not
+only when the repeats are changed but also when skip is switched on or off on a step.
+All the compensation is only active with the range that is set with the start and end step.
+
+autoreset (ar)
+metricsaver (ms)
+
+1 2 3
+
+0
+
+If set to non-zero, automatically issues a reset (just like a trigger to reset) every N clock ticks.
+
+1
+
+The Metric Saver ™ helps you to reliably come back to your original metric and time after playing around with all sorts
+of parameters that change the played number of steps in the sequence. These are: startstep, endstep (also when
+changed interactively), form, direction, pingpong, pattern, autoreset and repeats and skips of individual steps.
+Therefore it counts the actual number of clock cycles since the last external reset (or system start). And when all of
+these features are deactivated, it snaps back the clock to the position it would have been by now if you never had
+played around with all the funny stuff.
+That way, during a live performance, you can safely play around with all this polymetric and otherwise time disrupting
+stuff and as soon as you clean up your mess – voila: you are back on track and in sync with the rest of the “band”.
+The metric saver is turned on by default. But you can disable it by setting the parameter to 0.
+
+DROID manual for blue-6
+
+300
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+fadermode (fm)
+
+1 2 3
+
+0
+
+Switches the current meaning of the motor faders. You probably want to connect the output of a buttongroup (see
+page 146) here. Here are the possible modes:
+
+buttonmode (bm)
+
+holdcv (hc)
+
+1 2 3
+
+0
+
+1
+
+0
+
+pitch / CV
+
+1
+
+randomize CV
+
+2
+
+gate propability
+
+3
+
+repeats (up to 16)
+
+4
+
+gate pattern
+
+5
+
+ratchets (up to 8)
+
+6
+
+gate
+
+7
+
+skip
+
+Switches the current meaning of the touch buttons below the faders. You probably want to connect the output of a
+buttongroup (see page 146) here. Here are the possible modes:
+0
+
+gates
+
+1
+
+start / end
+
+2
+
+gate pattern
+
+3
+
+skip
+
+This setting determines wether the CV output changes every time the sequencer moves to the next step or just when
+that step is active (a gate is being played). The latter is the default. But if you set this to 0, the CV values of steps
+without gates will also inﬂuence the output CV.
+Note: regardless of this setting, the CV will never change inbetween. Any change of the CV faders, the cvbase and
+cvrange and so on will only take effect when the next step is played. This also ensures that repeats or ratchets are
+always in the same pitch.
+
+defaultcv (dc)
+
+0.0
+
+Set the CV the steps should be set to on a trigger to clear. That value must be within the range set by cvbase and
+cvrange, or it will be truncated to that range.
+If you have set cvnotches, however, the value is expected to be an integer in the range 0 ... cvnotches - 1.
+
+DROID manual for blue-6
+
+301
+
+Table of contents at page 2
+
+Input
+
+Type
+
+defaultgate (dfg)
+
+Default
+
+Description
+
+1
+
+Here you set to which state (on / off) the gates should be set on a trigger to clear.
+
+clearskips (cs)
+
+A trigger here removes the “skip” setting from all steps.
+
+clearrepeats (crp)
+
+A trigger here resets the number of repeats to 1 for each step.
+
+clearstartend (cse)
+
+A trigger here clears the manual settings of the start and end step. So the sequence will be played in its full length
+(again) .
+
+gatelength (gl)
+
+0.5
+
+The gate length in input clock cycles. A value of 0.5 thus means half a clock cycle. A steady input clock is needed
+for this to work. Please note that if the gate length is >= 1.0, two succeeding notes will get a steady gate, which
+essentially means legato.
+If you don’t use a steady clock, set this parameter to 0. This will output a minimal gate length of about 10 ms (basically
+just a trigger).
+
+keyboardmode (km)
+
+keyboardcv (kc)
+
+1 2 3
+
+1
+
+1V
+Oct
+
+recordsilence (rsi)
+
+DROID manual for blue-6
+
+0
+
+ignore the keyboard inputs
+
+1
+
+keyboard and sequencer play together, keyboard has precedence
+
+2
+
+mute sequencer, just play keyboard
+
+The pitch input of a keyboard. This is used for playing along with the keyboardmode or recording with recordmode.
+The gate input of a keyboard. A positive gate enabled play along (see keyboardmode) and also recording, if recordmode
+is set accordingly.
+
+keyboardgate (kg)
+
+recordmode (rm)
+
+This input sets how a keyboard, that is hooked to keyboardcv, and keyboardgate should be used for directly playing
+notes. You can set it to 0, 1 or 2.
+
+1 2 3
+
+0
+
+0
+
+Use this input to record melodies played with a keyboard (namely keyboardcv and keyboardgate) into the sequencer.
+There are three possible settings:
+0
+
+don’t record
+
+1
+
+record, notes longer than one step will automatically tie steps via the gate pattern
+
+2
+
+record, don’t tie notes. Ignore the length of the input note
+
+When this input is set to 1 while recording, silence will be recorded while keyboardgate is off. Otherwise you can just
+add notes to the sequence.
+
+302
+
+Table of contents at page 2
+
+

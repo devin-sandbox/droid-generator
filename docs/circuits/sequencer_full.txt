@@ -1,0 +1,285 @@
+16.60
+
+select – Copy a signal if selected
+
+Copies a value just when the circuit is selected via select.
+This solves the problem of having an LED
+displaying something, but just when a certain “menu page” or similar is active. Simply setting the LED with copy (see page 172) or some
+other circuit’s output will always set it. Checking some
+
+Input
+
+Type
+
+input (i)
+
+Description
+
+0.0
+
+Connect the signal you want to copy.
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+Output
+
+Type
+
+DROID manual for blue-6
+
+Here is an example of letting the LED L1.1 ﬂash when
+_SELECTED is high, and otherwise don’t copy anything to
+the LED:
+
+Default
+
+select (s)
+
+output (o)
+
+select state and sending 0 does not help, since it will
+override any other circuit’s values for the LED even when
+those are selected.
+
+[lfo]
+output = _FLASH
+[select]
+select = _SELECT
+input = _FLASH
+output = L1.1
+
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+
+Description
+The input will be copied here, but just when the circuit is selected via select.
+
+348
+
+Table of contents at page 2
+
+16.61
+
+sequencer – Simple eight step sequencer
+
+This circuit implements a sequencer that is
+a bit similar to the widely known Metropolis sequencer by Intellijel. It lacks a couple
+of its features – but most of these can be
+patched externally by use of other circuits.
+On the other hand it is not limited to 8 stages since you
+can chain multiple instance of this sequencer together to
+form one large sequencer very easily.
+is controllable via CV, of
+Since everything in the
+course pitch and gate signals are included, which makes
+the circuit much more versatile than it may seem at a ﬁrst
+look.
+Here is a small example of a CV sequencer that is playing
+four voltages in a turn (it needs a clock into I1):
+[sequencer]
+clock
+= I1
+pitchoutput = O1
+pitch1
+= 1V
+pitch2
+= 3.5V
+pitch3
+= 8V
+pitch4
+= -2V
+1
+V (which is
+If you set the outputscale parameter to 12
+1
+the same as the number 120 , you can specify pitches directly in semitones:
+
+[sequencer]
+clock
+= I1
+pitchoutput = O1
+outputscale = 1/120
+pitch1
+= 0
+pitch2
+= 12
+pitch3
+= 10
+pitch4
+= 7
+
+DROID manual for blue-6
+
+pitch5
+pitch6
+pitch7
+pitch8
+
+= 5
+= 3
+= 5
+= 7
+
+pitch3
+pitch4
+gate1
+gate2
+gate3
+gate4
+
+The following example uses four expander buttons for
+turning the steps on or off and four pots, which are scaled
+down to a range of 0V ... 3V.
+[p2b8]
+[p2b8]
+[lfo]
+hz = 4
+square = _CLOCK
+
+= P2.1 * 3V
+= P2.2 * 3V
+= L1.1
+= L1.2
+= L1.3
+= L1.4
+
+Note: the pitch values you dial in with the pots are not
+quantized, so it’s a bit hard to hit a musical pitch. Please
+have a look at the circuits quantizer (page 337) and
+minifonion (page 279) for how to quantize pitch values.
+
+Making longer sequences
+The sequencer circuit is limited to 8 steps. But: you can
+easily chain a large number of these circuits together to
+form longer sequences. This is super easy. Just set the
+jack chaintonext to 1 and place another sequencer circuit with more steps after that. Here is an example for a
+12 step sequencer:
+
+[button]
+button = B1.1
+led
+= L1.1
+[button]
+button = B1.2
+led
+= L1.2
+
+[p2b8]
+[button]
+button = B1.3
+led
+= L1.3
+
+[lfo]
+hz = P1.1 * 30
+output = _CLOCK
+
+[button]
+button = B1.4
+led
+= L1.4
+[sequencer]
+clock
+= _CLOCK
+pitchoutput = O1
+gateoutput = O2
+pitch1
+= P1.1 * 3V
+pitch2
+= P1.2 * 3V
+
+349
+
+[sequencer]
+clock = _CLOCK
+reset = B1.1
+pitchoutput = O1
+gateoutput = O2
+outputscaling = 1/120
+pitch1 = 1
+pitch2 = 8
+pitch3 = 13
+
+Table of contents at page 2
+
+pitch4 = 25
+pitch5 = 4
+pitch6 = 11
+pitch7 = 7
+pitch8 = 21
+chaintonext = 1 # continue at next sequencer
+[sequencer]
+pitch1 = 2
+pitch2 = 9
+pitch3 = 14
+pitch4 = 26
+
+You can make the chain longer by adding more sequencer
+circuits. All but the last must have chaintonext set to 1.
+Here comes a 19 step sequencer:
+[p2b8]
+[lfo]
+hz = P1.1 * 30
+output = _CLOCK
+
+pitch2 = 9
+pitch3 = 14
+pitch4 = 26
+pitch5 = 2
+pitch6 = 9
+pitch7 = 14
+pitch8 = 26
+chaintonext = 1 # continue at next sequencer
+[sequencer]
+pitch1 = 3
+pitch2 = 10
+pitch3 = 15
+
+Notes:
+• Deﬁne all the input and output jacks like clock,
+pitchoutput etc. just for the ﬁrst sequencer. All
+subsequent ones just have pitch, gate, repeat,
+slew and cv deﬁnitions.
+• The parameter chaintonext is dynamic. You could
+make or break the chain with a toggle button or
+something else if you like.
+
+[sequencer]
+clock = _CLOCK
+reset = B1.1
+pitchoutput = O1
+gateoutput = O2
+outputscaling = 1/120
+pitch1 = 1
+pitch2 = 8
+pitch3 = 13
+pitch4 = 25
+pitch5 = 4
+pitch6 = 11
+pitch7 = 7
+pitch8 = 21
+chaintonext = 1 # continue at next sequencer
+[sequencer]
+pitch1 = 2
+
+DROID manual for blue-6
+
+350
+
+Table of contents at page 2
+
+

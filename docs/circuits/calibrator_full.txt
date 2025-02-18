@@ -1,0 +1,638 @@
+16.8
+
+calibrator – VCO Calibrator
+
+This circuit allows you to precisely compensate for decalibrated or otherwise imperfectly tracking VCOs – which is probably a property of all existing analog VCOs
+to some degree. It does this by applying
+one speciﬁc adaptation value per individual octave. This
+way you can make even those VCO track well over 10 octaves, that would normally only do 2 or 3.
+The calibration of the error compensation is done manually – by you. At ﬁrst this may seem like a disadvantage. In practice, however, this is much easier and more
+accurate than the way some “autotune” modules do it.
+Those modules have an additional input for “listening” to
+a waveform output of the oscillator and measure and adjust the tracking at a button press.
+The advantages of manual tuning are:
+• You don’t need an extra waveform output of your
+VCO.
+• You can calibrate sound sources with complex
+wave forms, whose pitch is are hard to grab by autotune devices.
+• You can change the correction at any time during a
+live performance without your audience noticing.
+• It’s possible to make one VCO follow the (imperfect) tracking of a second one, in order to create
+perfect FM sounds while just one VCO needs to be
+adapted.
+• It’s also possible to ﬁx the tracking of unprecise
+pitch CV generators, such as sequencers, quantizers or MIDI interfaces.
+The calibrator circuit happily proﬁts from the
+’s
+highly precise, linear and low-jitter ADCs and DACs. And
+using eight such circuits one
+could ﬁx the tuning
+
+DROID manual for blue-6
+
+of up to eight VCOs.
+
+and try to minimize the audible beatings.
+
+How to use
+Here is a typical patch for the use of the calibrator:
+[calibrator]
+input
+= I1
+output
+= O1
+nudgeup
+= B1.1
+nudgedown = B1.3
+ledup
+= L1.1
+leddown
+= L1.3
+
+As second way of using the VCO calibrator is specifying a tuning adjustment for each octave by a ﬁxed number (or a potentiometer if you can afford). This is done
+with the inputs tune0 ... tune8 and tunelowtail and
+tunehightail.A value of 1.0 means an upwards tuning
+of one semitone (100 cents) per octave, and -1.0 likewise
+downwards.
+
+Persistence
+
+The original pitch information from the sequencer, quantizer, MIDI converter or whatever comes into I1. The
+adapted pitch goes to O1 and from there to the V/Oct input of your VCO. Of course the pitch information could
+also come from some internal circuit like the minifonion
+(page 279). In that case input is connected to an internal
+patch cable coming from that circuit.
+Now with the two buttons B1.1 and B1.3 you can adjust
+the tuning up and down at any time while playing. Each
+button press just very slightly shifts the pitch up or down.
+The adjustment is only done for the octave that’s currently playing. calibrator saves one calibration value
+for each octave from 0 to 8 and also one for the pitches
+below 0 V and those above 8 V. Your tuning proﬁle is automatically saved to the memory card.
+Pressing both buttons at the same time resets the calibration of the current octave.
+For a good result I suggest either using a precise tuner or
+playing the voice at the same time as a reference voice
+150
+
+As always, the internal state of the calibrator circuit
+is automatically saved to your SD card and loaded when
+starts.
+your
+But what if you are using several calibrators, each for
+a different (and differently tracking) VCO? How do you
+know which of the saved calibration states is applied to
+which VCO?
+The answer to this is: all calibrators in your patch are
+enumerated starting from 1. For each of them there is
+one conﬁguration saved to the SD card, based on that
+number. So when you modify the calibration of the third
+calibrator circuit in your patch, the modiﬁed conﬁguration will be saved as belonging to calibrator number 3.
+So if you make sure that each VCO is always handled by
+the same calibrator circuit you will always get the right
+conﬁguration.
+If you for example remove the ﬁrst calibrator from your
+patch, the second one will become the new ﬁrst one and
+load its calibration state when you load the new patch. If
+you don’t want that to happen, simply keep the calibra-
+
+Table of contents at page 2
+
+tor in the patch, even if you don’t need it anymore. It is
+sufﬁcient to keep just the line [calibrator] without any
+further jack speciﬁcations.
+
+Using an encoder instead of buttons
+If you own an E4 controller, you can use one of its encoders for the tuning correction, instead of buttons. This
+is not only faster and easier to operate but also gives you
+visual feedback about the current correction in the LED
+ring of the E4.
+To do that add an encoder (see page 189) circuit. The
+
+Input
+input (i)
+
+Type
+1V
+Oct
+
+trick is to use the encoder’s movedup and moveddown triggers and feed them into the nudgeup and nudgedown inputs. The calibrator’s correction output informs you
+about the current correction and can be used as an input
+for the override parameter of the encoder. If you use
+just tiny corrections, you can amplify the display (zoom
+in) by multiplying the value say be 2.
+The following example shows you how to setup this.
+Here in addition the encoder’s button is used for resetting
+the correction of the current pitch (not the total one):
+[calibrator]
+input = I1
+output = O4
+
+Default
+
+Description
+
+0V
+
+Patch your V/Oct pitch input here.
+
+nudgeup = _UP
+nudgedown = _DOWN
+correction = _CORRECTION
+clearhere = _CLEARHERE
+nudgeamount = 0.01
+[encoder]
+encoder = 4
+movedup = _UP
+moveddown = _DOWN
+override = _CORRECTION * 2
+button = _CLEARHERE
+mode = 2 # make it bipolar
+color = 0.4 # green
+negativecolor = 0.8 # red
+
+nudgeup (nu)
+
+A trigger here (most likely a button press) will modify the tuning of the currently played note (as read by input) upwards by one cent (or by nudgeamount if that is used.
+
+nudgedown (nd)
+
+A trigger here will modify the tuning of the currently played note down.
+
+clearhere (ch)
+
+A trigger here sets the correction of the currently played note to zero. This might affect a range of up to two octaves.
+
+nudgeamount (na)
+
+0.01
+
+Changes the amount each button press detunes. A value of one would mean one semitone, so the default value of
+1
+0.01 corresponds to one cent ( 100
+) of a semitone.
+
+tune0 ... tune8 (t)
+
+0.0
+
+Explicit tuning of the octaves 0 through 8 – if you do not want to nudge manually. tune0 sets the tuning for the input
+pitch of 0 V, tune1 for 1 V and so on. A value of 1 means a tune adjustment of one semitone – which is 100 cent. The
+maximum detuning is ± 1 Octave ( at a value of ±12).
+
+tunelowtail (tl)
+
+0.0
+
+Tuning adaption for the negative voltage range. A value of 1 means an upwards tuning of one semitone per octave, -1
+likewise downwards.
+
+tunehightail (th)
+
+0.0
+
+Tuning adaption for voltages > 8 V. A value of 1 means an upwards tuning of one semitone per octave, -1 likewise
+downwards.
+
+DROID manual for blue-6
+
+151
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+preset (pr)
+
+1 2 3
+
++
+
+Description
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+This is the preset number to save or to load. Note: the ﬁrst preset has the number 0, not 1! For the whole story on
+presets please refer to page 21. This circuit has 4 presets, so this number ranges from 0 to 3.
+
+loadpreset (lp)
+
+A trigger here loads a preset. As a speciality you can use the trigger for selecting a preset at the same time.
+
+savepreset (sp)
+
+A trigger here saves a preset.
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+Output
+
+0
+
+Type
+1V
+Oct
+
+output (o)
+ledup (lu)
+
+0
+
+1
+
+leddown (ld)
+
+0
+
+1
+
+correction (c)
+
+DROID manual for blue-6
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+Description
+The calibrated pitch goes out here.
+When nudgeup is mapped to a button (which is most likely), map this output to the according LED and it will indicate
+whenever it’s currently adjusting the output pitch upwards.
+This is the LED for nudgedown, which indicates downwards adjustment.
+This output gives you information about the current amout of pitch correction. It is positive if the pitch is corrected
+upwards, else negative. It is scaled in semitones, so a value of 0.2 means a 20% of a semitone, which is the same is 20
+cents.
+
+152
+
+Table of contents at page 2
+
+16.9
+
+case – Switch choosing from inputs via conditions
+
+This circuit selects one of several inputs
+and routes its signal to the output based
+on which of several conditions is true. For
+each signal there is one related case input.
+The ﬁrst signal whose case input is nonzero, is selected.
+
+is an internal cable that is 1 if that clock is present, and 0
+otherwise:
+
+One example application is selecting one out of several
+clock sources, depending on which clock is present. In
+this example we assume that for each clock source there
+
+Input
+
+Type
+
+Default
+
+[case]
+case1 = _INTERNAL_CLOCK_PRESENT
+value1 = _INTERNAL_CLOCK
+case2 = _EXTERNAL_CLOCK_PRESENT
+value2 = _EXTERNAL_CLOCK
+case3 = _MIDI_CLOCK_PRESENT
+value3 = _MIDI_CLOCK
+output = _CLOCK
+
+The order of the values is important here, since it
+deﬁnes the precedence of the individual inputs. If
+_INTERNAL_CLOCK_PRESENT is non-zero, input1 is
+copied to output, regardless of what happens at the
+other inputs.
+If none of the switch inputs is non-zero, 0 is output, but
+you can set a different fallback value with the input else.
+
+Description
+
+case1 ... case16 (c)
+
+1st ... 16th case input. The ﬁrst one that is non-zero deﬁnes which input value to use.
+
+value1 ... value16 (v)
+
+1st ... 16th value input. One of these is copied to the output, depending on which of the case inputs is none-zero.
+
+else (e)
+
+Output
+output (o)
+
+DROID manual for blue-6
+
+0
+
+Type
+
+In case none of the case inputs is non-zero, this value is copied to the output.
+
+Description
+To this output the select value input is copied.
+
+153
+
+Table of contents at page 2
+
+16.10
+
+chord – Chord generator
+
+This circuit creates the pitch information
+for up to four voices of a musical chord.
+This means that you can attach the Volts
+per octave inputs of up to four synth voices
+and they will play a nice musical chord.
+Hereby you have the ﬂexibility of building your chord out
+of any of the seven notes of a selected scale. So you are
+not limited to root, 3rd , 5th and 7th . The algorithm is
+similar to that in the Sinfonion but has an adapted mode
+for three voiced chords in addition.
+
+Minimal example
+Here is the most simple (and probably useless) example:
+it will play a C major 7 chord, i.e. output the respective
+pitch CVs for the notes C, E, G and B at the outputs O1,
+O2, O3 and O4:
+[chord]
+output1 = O1
+output2 = O2
+output3 = O3
+output4 = O4
+
+Output O1 will be at 0 V, representing a C. Or course, if you
+just have three voices, don’t use output4 and you will get
+a C major triad.
+
+Selecting root and scale
+Most likely you do not want to play in C major all the time
+(or even never!), so you can select the root note and the
+scale with the inputs root and degree. Setting root to 2
+and degree to 7, for example, will select D natural minor:
+DROID manual for blue-6
+
+[chord]
+output1 = O1
+output2 = O2
+output3 = O3
+output4 = O4
+root
+= 2
+degree = 7
+
+root ranges from 0 to 11 and and degree from 0 to 107.
+
+You ﬁnd the complete table of all 108 scales on page 107.
+But why the heck is that input named degree?? Well, it’s
+a jargon from the Sinfonion and does make sense there in
+some contexts. Please have a look into the manual of the
+Sinfonion if you are interested!
+
+Selecting the pitch of the notes
+Per default all outputs are in the ﬁrst octave, i.e. in the
+range 0 V ... 1 V. Per convention this is very low and probably sounds ugly. With the pitch input you can set the
+minimum pitch of the lowest output chord note. In the
+next example this is read from I1. So you could, for example, patch a sequencer here and have the chord outputs play a kind of four voiced melody:
+[chord]
+pitch = I1
+output1 = O1
+output2 = O2
+output3 = O3
+output4 = O4
+root
+= 2
+degree = 7
+
+154
+
+The spread parameter controls the maximum pitch of the
+highest output chord note. It is always relative to the
+pitch of the lowest note plus one octave. So if spread is
+1.5 V (or 0.15), for example, the maximum allowed distance between the lowest and the highest chord note is
+2.5 octaves. As lowest note the chord generator places
+the chord note that is nearest above the pitch input. As
+highest note it places the one nearest to upper bound
+of the allowed range and the remaining notes are distributed in between with the most equal spacing possible.
+
+Selecting the chord notes
+What makes the Sinfonion and also the harmonic circuits
+stand apart from other modules is the ﬂexin the
+ibility of note selection. So e.g. in C major, you are
+not limited to playing the chord C/E/G/B. In fact you can
+choose any subset from the currently selected scale.
+For this there are seven inputs select1, select3, ...
+select13 that select the notes of the current scale and
+another ﬁve inputs selectfill1 ... selectfill5 that
+select the notes not in the current scale. These 12 inputs
+are binary inputs that expect either 0 or one 1. Each of
+them selects one of the seven intervals of the scale for
+being part of the chord. Here is a table of all these inputs
+and the notes they would select in a C major or C minor
+scale:
+
+Table of contents at page 2
+
+Input
+
+interval
+
+step
+
+Cmaj
+
+select1
+
+root
+3rd
+
+I
+
+C
+
+C
+
+III
+
+E
+
+E♭
+
+V
+
+G
+
+G
+
+VII
+
+B
+
+B♭
+
+II
+
+D
+
+D
+
+select11
+
+9th = 2nd
+11th = 4th
+
+IV
+
+F
+
+F
+
+select13
+
+13th = 6th
+
+VI
+
+A
+
+A♭
+
+select3
+select5
+select7
+select9
+
+5th
+7th
+
+Cmin
+
+One typical way to select these notes is with seven toggle buttons, which is then much like the Sinfonion does
+it. Assign the output of each of the seven buttons to one
+of these functions:
+[p2b8]
+[button]
+button = B1.1
+led = L1.1
+[button]
+button = B1.2
+led = L1.2
+[button]
+button = B1.3
+led = L1.3
+[button]
+button = B1.4
+led = L1.4
+[button]
+button = B1.5
+led = L1.5
+[button]
+button = B1.6
+led = L1.6
+
+DROID manual for blue-6
+
+[button]
+button = B1.7
+led = L1.7
+
+even just two of the outputs, if you don’t need or have a
+total of four voices.
+
+[chord]
+select1 = L1.1
+select3 = L1.2
+select5 = L1.3
+select7 = L1.4
+select9 = L1.5
+select11 = L1.6
+select13 = L1.7
+output1 = O1
+output2 = O2
+output3 = O3
+output4 = O4
+
+Chord inversion
+The chord generator lets you nail down the chord structure to a certain inversion. If you set inversion to 1, the
+root note (or, to be more precise, the ﬁrst selected note)
+will be placed as the lowest note. Similarly the inversions
+2, 3 and 4 will make the respective other selected notes
+the lowest note.
+Setting inversion to 0 (which is the default) will allow
+any note to be the lowest. This allows the chord to be
+closest to the pitch input.
+
+Now you can use the buttons to change the chord notes
+on the ﬂy. Of course, however, you also can use other signals for the selection. Maybe random gates, slowly running LFOs, a sequencer, whatever you like!
+
+Triggered mode
+
+But what happens, if you do not select exactly four
+notes?
+
+The trigger input is essentially a sample & hold for the
+outputs. So as soon as you patch that input, all outputs
+are frozen until the next trigger.
+
+• If you don’t select any note (or do not patch the
+select-inputs at all), all scale notes are selected.
+• If you select just one note, all four outputs will play
+that same note.
+• If you select two notes, output1 and output3 will
+play the ﬁrst note and output2 and output4 the
+second one.
+• If you select three notes, output4 will play the
+same as output1.
+• If you select ﬁve, six or seven notes, just the ﬁrst
+four notes will be used.
+If some of the notes are doubled and you use a large
+enough spread, they will be placed at different octaves.
+
+Chords with three voices
+The chord generation circuit can also create chords
+with just three output voices. Simply omit the output
+output4. When it is not connected, the “three voice
+mode” is activated:
+[chord]
+output1 = O1
+output2 = O2
+output3 = O3
+root
+= 2
+degree = 7
+
+By the way: It’s of course no problem to just use three or
+155
+
+Table of contents at page 2
+
+

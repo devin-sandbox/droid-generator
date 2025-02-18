@@ -1,0 +1,265 @@
+tive gate edge of the sample input. So the recordings can
+be as long as 256 notes.
+Note: That way you would loose the gate length, since
+the end of the gate does not trigger a new sample. Use
+the gatetool (see page 235) with the inputgate and
+outputedge to get one trigger at each edge and feed that
+into sample.
+
+Saving the tape to disk
+The delay does not support presets because of memory
+limitations. But you can save the current contents of the
+tape to your SD card. This is done by the two trigger inputs save and load, which are usually mapped to some
+buttons. Here is a simple example.
+[delay]
+save = B1.5
+load = B1.6
+...
+
+Input
+
+If you hit button B1.5, the ﬁle tape0001.bin is created
+on your SD card. Button B1.6 loads that ﬁle into the circuit.
+
+patches. A recording of the recorer circuit can be loaded
+with every recorder or delay circuit.
+
+You can use any ﬁle number from 1 to 9999 by using the
+parameter filenumber. You might want to map that to a
+rotary switch of an S10:
+
+Loading and saving
+
+[delay]
+save = B1.5
+load = B1.6
+filenumber = S2.1
+...
+
+Note: Loading and saving is done in real time from/to
+your SD card. The ﬁles are very small, but the operation
+can take a small number of milliseconds. During that time
+no circuit will do its job. And if your SD card is missing,
+things lag a bit more due to timeouts.
+
+You might wonder, why this circuit offers loading and
+saving of the tape’s content to the SD card. The reason
+is not because it’s super useful but because delay uses
+the same tape implementation as recorder and saving is
+part of that.
+When you load a ﬁle into the tape, it’s contents will be
+audible for a short time. But soon after the tape is overwritten with the new incoming data.
+Saving might make more sense. You could make a snapshot of the tape’s content and load that into a recorder
+(see page 341) for playback. But even that doesn’t seem
+to be game changing material.
+
+One important difference to presets is that these ﬁles
+can be share among circuits and even among different
+
+Default
+
+Description
+
+delay (dl)
+
+1.0
+
+The CVs are delayed by this amount of seconds. If you patch clock as well, the delay is speciﬁed in clock tick, so then
+delay = 1 means “delay by one clock tick”.
+
+cvin (ci)
+
+0.0
+
+Continous input CV
+
+numberin (ni)
+
+Type
+
+1 2 3
+
+Discrete input number in the range 0 ... 255
+
+gatein1 ... gatein8 (gi)
+
+Input gates
+
+clock (c)
+
+If you use this clock input, all time inputs are measured in clock ticks instead of seconds.
+
+sample (sm)
+
+If you patch this input, “triggered” mode is enabled. In this mode, the virtual tape just records a new CV on each trigger
+at sample. So it just records stepped CVs, no slopes and no CV changes between the triggers.
+
+DROID manual for blue-6
+
+180
+
+Table of contents at page 2
+
+Input
+
+Type
+
+timewindow (tw)
+
+Default
+
+Description
+
+0.0
+
+When in triggered mode, this optional parameter helps tackling a problem that many hardware sequencers show: often
+their pitch CV is not at its ﬁnal destination value at the time their gate is being output. Often you see a very short “slew”
+ramp of say 5 ms after the gate. During that time the pitch CV moves from its former to the new value.
+Now if you trigger the cvtape circuit with the sequencer’s gate you will essentially sample the previous pitch CV instead
+of the new one. Or maybe something in between.
+The timewindow parameter conﬁgures a short time window after the trigger to trigger. During that time period the
+tape will constantly adapt the last sample to a changed input CV. When that time is over, the input is ﬁnally frozen on
+the tape.
+The timewindow parameter is in seconds. So when you set timewindow to say 0.005 (which means 5 ms), you give the
+input CV 5 ms time for settling to its ﬁnal value after a trigger to sample before freezing it.
+
+bypass (b)
+
+off
+
+Setting bypass to on copies the input signals directly to the outputs, regardless of any other stuff going on.
+
+save (sv)
+
+Send a trigger here to save the current contents of the tape to a ﬁle on the SD card. The ﬁlename is tapeXXXX.bin,
+where XXXX is replaced by the number set by filenumber.
+
+load (ld)
+
+Send a trigger here to load a previously saved ﬁle into the tape. Use filenumber so specify which ﬁle to load.
+
+filenumber (f)
+
+1 2 3
+
+Output
+
+Type
+
+Number of the ﬁle to load or save. The range is 0 - 9999. If filenumber is 123, the name on the SD card is
+tape0123.bin. These ﬁles are shared between all recorder and delay circuits.
+
+Description
+Output of the continous input CV
+
+cvout (co)
+numberout (no)
+
+1
+
+1 2 3
+
+Output of the discrete number
+
+gateout1 ... gateout8
+(go)
+
+Output of the gates
+
+overflow (ov)
+
+When the internal memory of the tape is exceeded and data got lost, this gate goes to 1 for 0.5 seconds. If you are
+suspecting this situation, you can wire this output to an LED and observe the memory status that way.
+
+DROID manual for blue-6
+
+181
+
+Table of contents at page 2
+
+16.19
+
+detune – Detune multiple voices in a most disharmonic way
+
+Sometimes braking the harmony – at least
+for some period of time – can be a way to
+break through monotony. This circuit allows you to detune up to eight voices in a
+most disharmonic way.
+The application is simple. Before outputting your pitch
+information from your sequencers, quantizers, chord
+generators, arpeggiators and friends, feed them through
+this circuit. Then use the CV input detune to select the
+level of ugly detuning.
+
+[detune]
+detune = P1.1
+input1 = _PITCH1 # from somewhere
+input2 = _PITCH2 # from somewhere
+input3 = _PITCH3 # from somewhere
+input4 = _PITCH4 # from somewhere
+input5 = _PITCH5 # from somewhere
+output1 = O1
+output2 = O2
+output3 = O3
+output4 = O4
+output5 = O5
+
+For a ﬁrst test, start with using a pot for the detune value:
+The crux of the matter is that all of the voices are detuned
+in realation to each other. This circuit makes sure that
+
+Input
+
+Type
+
+Default
+
+each of the eight outputs is detuned in a different way,
+so if you input a chord, it won’t just simply move up and
+down in pitch but gets distorted and disharmonic.
+Hints:
+• Try using a slow and slight bipolar triangle LFO.
+• Try using an envelope with a short attack and a
+longer release to detune at the start of every bar
+and let the voices fade back into tune.
+This detune algorithm is identical with that of the Sinfonion. Therefore it is a good match for the chaoticdetune
+output of the circuit sinfonionlink (see page 353).
+
+Description
+
+input1 ... input8 (i)
+detune (d)
+
+0.0
+
+tuningmode (tm)
+
+0
+
+While this is 1, the circuit will output the value set by tuningpitch instead of the actual pitch. This is ment to be a
+help for tuning your VCOs.
+
+0V
+
+This pitch CV will be output while the tuning mode is active.
+
+tuningpitch (tp)
+
+Output
+
+1V
+Oct
+
+Type
+
+Description
+
+output1 ... output8 (o)
+
+DROID manual for blue-6
+
+182
+
+Table of contents at page 2
+
+

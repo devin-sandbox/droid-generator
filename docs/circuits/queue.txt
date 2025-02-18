@@ -1,0 +1,48 @@
+# DROID Circuit Input/Output Keys
+
+## queue - Clocked CV Shift Register
+
+### Inputs
+- input - CV input
+  - Type: float
+  - Default: 0.0
+  - Description: CV value to push into first cell on clock
+
+- clock - Clock input
+  - Type: trigger
+  - Description: Advances all values to next cell on trigger
+
+- outputpos1...outputpos8 - Tap positions
+  - Type: integer
+  - Range: 1-64
+  - Default: 1-8 respectively
+  - Description: Cell positions to output (1-64)
+
+### Outputs
+- output1...output8 - Tapped outputs
+  - Type: float
+  - Description: CV values from specified tap positions
+  - Note: Default to first 8 cells if positions unspecified
+
+Note: CV shift register with features:
+- 64 cell storage capacity
+- 8 configurable output taps
+- Clock-synchronized operation
+- Precise CV delay capability
+- Dynamic tap positioning
+- Sequential CV storage
+
+Example applications:
+- CV delay lines
+- Multi-tap delays
+- Pattern generation
+- CV sequence storage
+- Time-shifted modulation
+- Complex CV patterns
+
+Limitations:
+- Maximum 64 cells
+- Fixed 8 outputs
+- No feedback path
+- No cell value editing
+- FIFO operation only

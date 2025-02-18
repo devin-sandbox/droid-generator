@@ -1,0 +1,225 @@
+Input
+
+Type
+
+Default
+
+cc1 ... cc8 ()
+
+0
+
++
+
+1
+
+Description
+The current value of the CCs that are speciﬁed with ccnumber1 through ccnumber8. The range is always from 0.0 to
+1.0 (which is mapped to the number 0 to 127 on the MIDI wire).
+If you don’t patch anything here, no CC events will be sent, of course.
+Usually midiout will send out a new CC event every time the input value of a CC has changed (with some rate limit in
+order not to to ﬂood the MIDI stream).
+
+cctrigger1 ... cctrigger8
+(ct)
+
+When you use these inputs, an alternative method is enabled. Now CC events are created whenever a trigger arrives
+here. No more updates will be sent automatically.
+This is useful for target devices that use CCs just as messages, i.e. as one time events and not for updating a continous
+value.
+A trigger here sends an update for all CCs that you have in use (used ccX inputs). Normally an update is just sent once
+initially and then when the input CV at one of the cc inputs changes its value. With the trigger you can force updates.
+This might be neccessary if the receiving device has lost memory of the current states of the CCs (e.g. due to a power
+cycle).
+
+updateccs (uc)
+
+Note: Unlike the cctriggerX inputs, this trigger does not change the way the CC inputs work. It is just a hint for
+that forces one additonal update.
+delayinitialccs (dc)
+
+1.0
+
+When the Droid starts it needs a short time until the X7 is operating and your PC / DAW is able to receive the MIDI
+events via USB. Initial CC updates during that short time period might get lost and you are missing the correct CC
+states (which are updated later only on changes).
+In order to avoid that, the Droid wait a short time after starting before it sends the ﬁrst CC events. That delay can be
+tuned here. It is a time in seconds.
+
+bank (ba)
+
+1 2 3
+
++
+
+program (pm)
+
+1 2 3
+
++
+
+programchange (pc)
+
+DROID manual for blue-6
+
+Selects the current “bank”. Some MIDI devices have more than 128 programs (i.e., patches, instruments, preset, etc).
+A MIDI Program Change message supports switching between only 128 programs. So, “Bank Select” (sometimes also
+called bank switch) is sometimes used to allow switching between groups of 128 programs. Bank select uses the MIDI
+CCs #0 (MSB) and #32 (LSB) together to form a number of 16384 different banks. The input value thus ranges from
+1 to 16384. Most devices, however, restrict themselves to just 128 banks and just use the MSB (CC#0). If that is the
+case, you need to set bank to 128 for bank 2, 256 for bank 3 and so on. This can be done by simply multiplying the
+actual bank number with 128.
+Select the current “program”. This is a number from 1 to 128.
+A trigger here will send out a “program change” MIDI message even if the value of bank or program has not changed.
+
+274
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+start (st)
+
+If you send a trigger here, the MIDI message START will be emitted. Don’t use this jack if you also use running. Note:
+START/STOP messages are not bound to a speciﬁc channel.
+
+stop (sp)
+
+If you send a trigger here, the MIDI message STOP will be emitted. Don’t use this jack if you also use running. Note:
+START/STOP messages are not bound to a speciﬁc channel.
+
+running (ru)
+
+This is an alternative to the jacks start and stop. It combines both into one “running” state. When this gate input
+goes high, a START message is sent, when it goes low a STOP message. So you can work with a state rather than with
+state changes. Note: START/STOP messages are not bound to a speciﬁc channel.
+
+systemreset (sr)
+
+A trigger here will send the MIDI real-time message “RESET”, that is supposed to bring the device into some start state.
+
+allnotesoff (ao)
+
+A trigger here will send the MIDI CC#123 “ALL NOTES OFF”, which is essentially the same as releasing all currently held
+keys.
+
+allsoundoff (aso)
+
+A trigger here will send the MIDI CC#120 “ALL SOUND OFF”, which is supposed to make the device silent as soon as
+possible.
+
+damper (dp)
+
+0
+
+This gate input simulates a hold or damper pedal. This is done via the CC#64. If the gate goes to high, a value of 127 is
+being sent, when it goes back to low, a value of 0. When the damper pedal is pressed, the device is supposed to hold all
+currently played notes and not react to any subsequent “NOTE OFF” of those notes as long as the pedal is held. When
+the pedal is released, all notes that had been held be the pedal should be released.
+
+portamento (po)
+
+0
+
+Controls the portamento pedal. The receiver is meant to activate some kind of glide effect as long as this gate is high.
+
+sostenuto (su)
+
+0
+
+This enables the sustain pedal. This is similar to but not exactly the same as the damper pedal as it just holds notes
+that are pressed while the pedal goes down.
+
+soft (so)
+
+0
+
+Controls the soft pedal. The receiving synth voice is meant to play notes softer while this pedal is hold down.
+
+legato (lg)
+
+0
+
+Controls the legato pedal, which ties subsequent notes together.
+
+clock (c)
+
+If you feed a steady clock here, a MIDI clock signal will be derived from this and sent through the output wire. The MIDI
+beat clock or simply MIDI clock is deﬁned to send pulses at 24 PPQN: 24 pulses per quarter note. One quarter note has
+four 16th s, so the MIDI clock is running at 6 pulses per 16th note, and in the modular environment it is very common
+to work with 16th pulses as a master clock. So this clock jack is meant to retrieve a modular master clock, multiplies
+this by 6 and creates a MIDI clock from it.
+
+midiclock (mc)
+
+This is an alternative to clock: don’t use both at the same time. Here you can directly send the MIDI clock in 24 PPQN.
+
+DROID manual for blue-6
+
+275
+
+Table of contents at page 2
+
+Input
+
+Type
+
+activesensing (as)
+
+Default
+
+Description
+
+1
+
+This is a switch that disables or enables active sensing. This is a MIDI feature where a MIDI sender emits one message
+of the type “active sensing” every 300 ms. The receiver can use this in order to detect if the connection is still active
+and also immediately reset (und turn all sound off) if it is not. Active sensing is enabled per default. You can disable it
+here by setting activesensing = 0.
+Note: If you have more than one midiout circuit sending to the same port, you should activate activesensing just
+for one of them in order to avoid useless duplicate MIDI events.
+
+updaterate (ur)
+
+50.0
+
+Speciﬁes the maximum rate at which continuous controllers like the CCs, volume, pitchbend and channelpressure
+are updated. This limitation is necessary in order not to ﬂood the MIDI interface with too many updates because of
+just minimal changes. This rate is speciﬁed in update per second and the default is 50. A zero or negative value will
+completely stop all updates.
+Note: depending on how many events are happening on your channel, fewer updates might be possible. MIDI over a
+classical cable is limited to 3125 bytes per second. Events typically need 1, 2 or 3 bytes each.
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+DROID manual for blue-6
+
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+
+276
+
+Table of contents at page 2
+
+

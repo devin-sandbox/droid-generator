@@ -1,0 +1,54 @@
+# DROID Circuit Input/Output Keys
+
+## timing - Shuffle/Swing Generator
+
+### Inputs
+- clock - Clock input
+  - Type: trigger
+  - Description: Steady clock input for timing modification
+
+- reset - Pattern reset
+  - Type: trigger
+  - Description: Resets step counter to start of pattern
+
+- timing1...timing8 - Step timing
+  - Type: float
+  - Default: none
+  - Range: -0.9999 to 0.9999
+  - Description: Relative timing shift per step
+  - Note: Positive delays step, negative advances step
+
+### Outputs
+- output - Modified clock
+  - Type: trigger
+  - Description: Clock output with applied timing modifications
+
+Note: Advanced timing modification circuit with features:
+- Up to 8-step timing patterns
+- Positive/negative time shifts
+- Pattern synchronization
+- Swing/shuffle generation
+- Clock compensation
+- Beat manipulation
+
+Example applications:
+- Swing timing
+- Groove patterns
+- Clock compensation
+- Rhythmic variation
+- Beat shifting
+- Timing correction
+
+Limitations:
+- Requires stable input clock
+- Maximum ±99.99% shift per step
+- No simultaneous beats output
+- No beat replication
+- Order preservation required
+- Single output only
+
+Special behaviors:
+- Simultaneous beats merged to single trigger
+- Later beats cannot precede earlier ones
+- One output maximum per input
+- Delayed beats play immediately if shift reduced

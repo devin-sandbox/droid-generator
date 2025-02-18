@@ -1,0 +1,47 @@
+# DROID Circuit Input/Output Keys
+
+## ifequal - Check if two values are equal
+
+### Inputs
+- input1 (i1) - First value
+  - Type: float
+  - Default: 0.0
+  - Description: First value to compare
+
+- input2 (i2) - Second value
+  - Type: float
+  - Default: 1.0
+  - Description: Second value to compare
+
+- ifequal (q) - Equal condition output
+  - Type: float
+  - Default: 1.0
+  - Description: Value to output when input1 equals input2
+
+- else (e) - Not equal condition output
+  - Type: float
+  - Default: 0.0
+  - Description: Value to output when input1 does not equal input2
+
+### Outputs
+- output (o) - Result
+  - Type: float
+  - Description: Outputs ifequal value when inputs match, else value otherwise
+
+Note: Simplified version of compare circuit for exact equality checks. Key features:
+- Basic value comparison
+- Configurable output values for equal/not equal conditions
+- Lower memory and CPU usage than compare circuit
+- No tolerance range for comparisons
+
+Limitations:
+- Not suitable for analog input comparisons (due to noise/jitter)
+- May fail with floating-point values due to rounding
+- No comparison tolerance (use compare circuit if needed)
+- Designed for exact integer/discrete value comparisons
+
+Example applications:
+- State matching
+- Discrete value comparison
+- Simple conditional routing
+- Memory-efficient equality checks

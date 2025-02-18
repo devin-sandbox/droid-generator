@@ -1,0 +1,252 @@
+16.52
+
+outputcalibrator – Tune the calibration of your CV outputs
+
+This circuit can be used for tuning the output precision of the CV outputs of your
+master. It’s main purpose is to provide a
+calibration procedure for the MASTER18.
+
+is semi-automatic calibration procedure available in the
+maintainance menu.
+
+The eight CV outputs of the master need
+to be exactly calibrated so that if you write e.g. 5 V in
+your
+patch, the output actually outputs 5.000 V
+and not something else. This due to the slight production tolerances in electronic parts. For the MASTER there
+
+The MASTER18 does not have CV inputs, however, so
+the calibration of the CV outputs has to be done manually with a precise voltmeter. Since the MASTER18 does
+not have a maintainance menu either (it does not have
+LEDs on the front panel), this circuit has been introduced
+to give you access to the calibration settings.
+
+use case would be to adapt it to adapt an output to
+some non-standard tracking which is not 1V/Octave.
+This is a bad idea however, since this permanently destroys your correct calibration. Better is to use the circuit
+calibrator (see page 150) or apply some simple math at
+the outputs, if that is sufﬁcient.
+In the example patches of you ﬁrmware packager you ﬁnd
+an example patch that uses an E4 controller for the calibration procedure.
+
+You can use this circuit with the MASTER, as well. One
+
+Input
+
+Type
+
+Default
+
+Description
+
+output (o)
+
+1 2 3
+
+1
+
+Select the output to calibrate. This is a number from 1 to 8.
+
+referencepoint (r)
+
+1 2 3
+
+0
+
+For each output, two voltages need to be adjusted: 0 V and 5 V. Select either 0 for 0 V or 1 for 5 V.
+
+nudgeup (nu)
+
+Increase the currently selected output voltage by one minimal step, to match the reference voltage.
+
+nudgedown (nd)
+
+Decrease the currently selected output voltage by one minimal step, to match the reference voltage.
+
+save (sv)
+
+A trigger here saves the changed calibration values to the internal ﬂash of the master and the the SD card.
+
+cancel (c)
+
+A trigger here restores the previous calibration values from the internal ﬂash.
+
+loaddefaults (ld)
+
+A trigger here loads the default calibration values, which are not very precise, but a good starting point if you got totally
+lost.
+
+Output
+
+Type
+
+Description
+
+dirty (d)
+
+Outputs 1 if the current calibration has been changed and needs to be saved.
+
+calibration (cl)
+
+Shows the difference between the current calibration of the selected output and reference voltage and its default calibration value.
+
+uncalibrated (u)
+
+DROID manual for blue-6
+
+0
+
+1
+
+Shows you the percentage of uncalibrated outputs. If all eight outputs are calibrated (differ from the default calibration
+value) this outputs 0.
+
+326
+
+Table of contents at page 2
+
+16.53
+
+polytool – Change number of voices in polyphonic setups
+
+The polytool is an intelligent “transformer”
+that can map melodies with N parallel
+notes to synth voices with M parallel voices
+and can thus change the polyphony of a
+melody.
+
+into a single voice. That voice is controlled by O1 and O2:
+
+This functionality is inspired by MIDI to CV interfaces
+(such as midiin (see page 260)), which need to deal with
+the almost unlimited possible polyphony of MIDI, where
+127 parallel notes are possible and where the interface
+needs to sufﬁce with a ﬁxed limited number of CV/gate
+outputs.
+The usage is very simple: patch your input voices
+(CV/gate pairs) into pitchinputX and gateinputX.
+And patch your output voices into pitchoutputX and
+gateoutputX.
+Here is an example for converting a three-fold polyphony
+
+Input
+pitchinput1 ...
+pitchinput16 (pi)
+gateinput1 ...
+gateinput16 (gi)
+
+DROID manual for blue-6
+
+Type
+?
+
+Default
+
+[polytool]
+pitchinput1 = _PITCH_1
+pitchinput2 = _PITCH_2
+pitchinput3 = _PITCH_3
+gateinput1 = _GATE_1
+gateinput2 = _GATE_2
+gateinput3 = _GATE_3
+pitchoutput1 = O1
+gateoutput1 = O2
+
+See how the parameter voiceallocation determines,
+which note should be played if there is more than one at
+a time.
+The polytool can also do the opposite: You input a serial melody with just one note at a time and have that
+mapped to multiple output voices that make the actual
+
+audible sound of the notes overlap. This can even be used
+to convert fast short arpeggios into chord pads.
+The next example shows this. At pitchinput1 and
+gateinput1 there is a melody, for example from a sequencer or from the circuit arpeggio (see page 127).
+That is then played on two output voices:
+[polytool]
+pitchinput1 = _PITCH
+gateinput1 = _GATE
+pitchoutput1 = O1
+pitchoutput2 = O2
+gateoutput1 = O3
+gateoutput2 = O4
+
+Here the parameter roundrobin decides how the notes
+will be distributed onto the two output voices.
+
+Description
+The pitches of up to 16 input voices.
+The gates of up to 16 input voices.
+
+327
+
+Table of contents at page 2
+
+Input
+
+Type
+
+roundrobin (rr)
+
+Default
+
+Description
+
+0
+
+Normally when looking for a free output for playing the next note, this circuit will start from pitchoutput1 in its
+search. This way, if there are not more notes than outputs at any time, the notes played ﬁrst will always be played at
+the lowest numbered outputs. This leads to a deterministic behaviour when it comes to playing things like chords. The
+same voice will always be used for the ﬁrst note in the stream of MIDI events.
+When you switch roundrobin to 1, this changes. Now the outputs are scanned in a round-robin fashion, like in a
+rotating switch. That way every output has the same chance to get a new note. Here it can even make sense to deﬁne
+multiple voices even if the track is monophonic. When you use envelopes with longer release times, you can transform
+such a melody into chords with simultaneous notes.
+Note: When all outputs are currently used by a note, roundrobin has no inﬂuence. Here voiceallocation selects
+which of the notes will be dropped.
+
+1 2 3
+
+voiceallocation (va)
+
+Output
+pitchoutput1 ...
+pitchoutput16 (po)
+gateoutput1 ...
+gateoutput16 (go)
+
+DROID manual for blue-6
+
+Type
+?
+
+0
+
+When from the pitch inputs, at any given time, more voice are active than you have outputs assigned, normally the
+“oldest” notes would be cancelled. This behaviour can be conﬁgured here by setting voiceallocation to one of the
+following values:
+0
+
+The oldest note will be cancelled (default)
+
+1
+
+The new note will not be played and simply be omitted
+
+2
+
+The lowest note will be cancelled
+
+3
+
+The highest note will be cancelled
+
+Description
+The pitches of up to 16 output voices.
+The gates of up to 16 output voices.
+
+328
+
+Table of contents at page 2
+
+

@@ -1,0 +1,183 @@
+Output
+
+Type
+
+Output of the continous input CV
+
+cvout (co)
+numberout (no)
+
+Description
+
+1 2 3
+
+Output of the discrete number
+
+gateout1 ... gateout8
+(go)
+
+Output of the gates
+
+overflow (ov)
+
+When the internal memory of the tape is exceeded and data got lost, this gate goes to 1 for 0.5 seconds. If you are
+suspecting this situation, you can wire this output to an LED and observe the memory status that way.
+
+DROID manual for blue-6
+
+346
+
+Table of contents at page 2
+
+16.59
+
+sample – Sample & Hold Circuit
+
+This is a simple sample & hold circuit. Each
+time a positive trigger is seen at the jack
+sample a new value is sampled from input
+and sent to the output.
+
+Input
+
+Type
+
+input (i)
+
+Example:
+[sample]
+input
+
+sample
+output
+
+= I2
+= O1
+
+= I1
+
+Default
+
+Description
+
+0.0
+
+Input signal to be sampled
+
+sample (sm)
+
+A positive trigger here will read the current value from input and store it internally.
+
+gate (g)
+
+This is an alternative way of making the circuit take a sample from the input. Here it is sampling all the time while the
+gate is high. In that way it is a bit like bypass. But as soon as the gate goes low again, the output sticks to the last
+sample value just before that.
+
+timewindow (tw)
+
+0.0
+
+This optional parameter helps tackling a problem that many (non-analog) sequencers show: often their pitch CV is not
+at its ﬁnal destination value at the time their gate is being output. Often you see a very short “slew” ramp of say 5 ms
+after the gate. During that time the pitch CV moves from its former to the new value.
+Now if you trigger the sample circuit with the sequencer’s gate you will essentially sample the previous pitch CV instead
+of the new one. Or maybe something in between.
+Now the timewindow parameter introduces a short time window after the sample trigger. During that time period the
+sample & hold circuit will constantly adapt to a changed input CV (is essentially in bypass mode). When that time is
+over, the input is ﬁnally frozen.
+The timewindow parameter is in seconds. So when you set timewindow to say 0.005 (which means 5 ms), you give the
+input CV 5 ms time for settling to its ﬁnal value after a trigger to sample before freezing it.
+While this gate input is high, the circuit is bypassed and input is copied to output.
+
+bypass (b)
+
+Output
+output (o)
+
+DROID manual for blue-6
+
+Type
+
+Description
+The most recently sampled value is sent here.
+
+347
+
+Table of contents at page 2
+
+16.60
+
+select – Copy a signal if selected
+
+Copies a value just when the circuit is selected via select.
+This solves the problem of having an LED
+displaying something, but just when a certain “menu page” or similar is active. Simply setting the LED with copy (see page 172) or some
+other circuit’s output will always set it. Checking some
+
+Input
+
+Type
+
+input (i)
+
+Description
+
+0.0
+
+Connect the signal you want to copy.
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+Output
+
+Type
+
+DROID manual for blue-6
+
+Here is an example of letting the LED L1.1 ﬂash when
+_SELECTED is high, and otherwise don’t copy anything to
+the LED:
+
+Default
+
+select (s)
+
+output (o)
+
+select state and sending 0 does not help, since it will
+override any other circuit’s values for the LED even when
+those are selected.
+
+[lfo]
+output = _FLASH
+[select]
+select = _SELECT
+input = _FLASH
+output = L1.1
+
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+
+Description
+The input will be copied here, but just when the circuit is selected via select.
+
+348
+
+Table of contents at page 2
+
+

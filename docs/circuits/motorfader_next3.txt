@@ -1,0 +1,176 @@
+Input
+
+Type
+
+Default
+
+Description
+
+quantize (q)
+
+1 2 3
+
+2
+
+Switches on quantization in two levels. At 0, the faders run freely and output a continous CV.
+1
+At 1, the output is quantized to semitones, which is 12
+V steps. Also the faders will get artiﬁcal notches – one for each
+semitone. That is, unless your range is too large. The maximum number of notches with force feedback is 25, so if
+your range exceeds two octaves (0.2), the notches are turned off.
+
+At 2, the output is quantized to the scale that root and degree deﬁne. Furthermore the individual scale notes can be
+switched on or off with the parameters select1, select3 and so on. Note: the root input does not select the lowest
+note of the CV range. That is still set with cvbase. It is just used for selecting the scale.
+
+cvnotches (cn)
+
+1 2 3
+
+0
+
+0
+
+no quantization
+
+1
+
+quantize to semitones (1/12V steps)
+
+2
+
+quantize to the scale set by root and degree
+
+Usually the CVs of the steps are ment to be note pitches (when quantize is 1 or 2), or just free CVs (quantize = 0).
+There is an alternative mode, however, that allows you to assign integer values like 0, 1, 2 and so on to each step.
+To do this set cvnotches to a value of 2 or greater. This deﬁnes the number of discrete values (and hence notches)
+for each step and put CVs of the sequence into notched mode. 1 makes no sense, of course, since in this “pitch bend
+mode” the faders would always return to the neutral position.
+In notched mode the cv output does not output a pitch but a notch number starting from 0. cvbase, cvrange and
+quantize are ignored.
+The maximum number of notches is 127, but the haptic force feedback of the motor faders is disabled starting at 26.
+
+shiftsteps (sh)
+
+1 2 3
+
+0
+
+Shifts all your steps by that number to the left (negative numbers shift to the right). So if shiftsteps is 1, right after
+a reset, the sequencer will not play step 1, but step 2. The shifting wraps around at the end of your sequence, so if you
+have 24 steps and shift is 1, the sequencer will play step 1 instead of step 24.
+Note: Other things like startstep, endstep, playmode, from and autoreset take place after shifting.
+
+DROID manual for blue-6
+
+296
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+startstep (ss)
+
+1 2 3
+
+1
+
+Sets the ﬁrst step to be used. This means that after a reset or when the sequencer comes to the end of the sequence,
+it will begin at this step.
+There is also a way for settings start and end with buttons (see below at buttonmode). If you use the interactive mode,
+the startstep and endstep settings will be overridden. The are reactived if you clear everything.
+Note: startstep and endstep take place after applying shiftsteps.
+
+endstep (es)
+
+1 2 3
+
+Sets the last of the steps to be played. The default is to play all steps. After playing the end step, the sequencer moves
+on to the start step at the next clock tick.
+If startstep is equal to endstep, the sequence just consists of one single step.
+Settings startstep larger then endstep is allowed and reverses the playing order.
+
+DROID manual for blue-6
+
+297
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+form (fo)
+
+1 2 3
+
+0
+
+This is an advanced feature that allows you to slice your steps into two or three parts and create musical song forms
+like AAAB or ABAC. Each of the parts A, B or C are then played according to the playmode.
+The form AAAB, for example, creates a 32 step form from just 16 steps, by playing the ﬁrst 8 steps three times and
+then the second 8 steps once.
+The following forms are available:
+0
+
+A (forms are basically deactivated)
+
+1
+
+AAAB
+
+2
+
+AABB
+
+3
+
+ABAC
+
+4
+
+AAABAAAC
+
+5
+
+AB
+
+6
+
+AAB
+
+Notes:
+• The splitting of the steps into parts takes place after accounting for startstep and endstep.
+• Forms with A, B and C split the pattern into three parts. These parts can only be of equal size if the number of
+steps is dividable by 3, of course.
+• The pattern AB is really not the same as A, e.g when direction is set 1 (reverse). In that case each of the parts
+is played backwards, but the parts themselves move forwards on your steps.
+direction (d)
+
+0
+
+Sets the general direction in which the sequencer moves through the steps. 0 means forwards and 1 means backwards.
+
+pingpong (pp)
+
+0
+
+If set to 1, the sequencer will change the direction every time it reaches the start or end of the sequence.
+
+DROID manual for blue-6
+
+298
+
+Table of contents at page 2
+
+

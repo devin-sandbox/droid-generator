@@ -1,0 +1,47 @@
+# DROID Circuit Input/Output Keys
+
+## mixer - CV Mixer
+
+### Inputs
+- input1...input8 (i) - Mixing inputs
+  - Type: float
+  - Default: 0.0
+  - Description: Up to 8 CV inputs for mixing
+  - Note: Unpatched inputs behave differently for min/max/avg operations
+
+### Outputs
+- output (o) - Mixed output
+  - Type: float
+  - Description: Sum of all patched inputs
+
+- maximum (x) - Maximum value
+  - Type: float
+  - Description: Maximum value among patched inputs
+  - Use case: Envelope mixing without amplitude increase
+
+- minimum (m) - Minimum value
+  - Type: float
+  - Description: Minimum value among patched inputs
+
+- average (a) - Average value
+  - Type: float
+  - Description: Average (mean) of all patched inputs
+
+Note: CV mixer with features:
+- Up to 8 input channels
+- Multiple output modes (sum/max/min/avg)
+- Unpatched inputs handled specially
+- CV-controlled mixing possible
+
+Example applications:
+- Audio mixing
+- CV combining
+- Envelope mixing
+- Signal averaging
+- Maximum/minimum detection
+- Multi-channel processing
+
+Limitations:
+- Maximum 8 inputs per instance
+- Unpatched inputs affect min/max/avg differently
+- No individual channel mutes

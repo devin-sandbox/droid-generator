@@ -1,0 +1,116 @@
+# DROID Circuit Input/Output Keys
+
+## recorder - CV/Gate Recorder and Player
+
+### Inputs
+- cvin - CV input
+  - Type: float
+  - Range: -1 to 1 (-10V to 10V)
+  - Description: CV signal to record
+
+- gatein1...gatein8 - Gate inputs
+  - Type: gate
+  - Description: Up to 8 gate signals to record
+
+- numberin - Integer input
+  - Type: integer
+  - Range: 0-255
+  - Description: Discrete number to record
+
+- recordbutton - Record control
+  - Type: trigger
+  - Description: Start/stop recording
+
+- playbutton - Play control
+  - Type: trigger
+  - Description: Start/restart playback
+
+- stopbutton - Stop control
+  - Type: trigger
+  - Description: Stop recording/playback
+
+- pause - Pause control
+  - Type: gate
+  - Description: Pause recording/playback while high
+
+- loop - Loop control
+  - Type: binary
+  - Default: 0
+  - Description: Enable playback looping
+
+- playbackspeed - Speed control
+  - Type: float
+  - Default: 1.0
+  - Description: Playback speed multiplier (negative for reverse)
+
+- scrub - Scrub mode
+  - Type: binary
+  - Default: 0
+  - Description: Enable manual position control
+
+- scrubposition - Scrub position
+  - Type: float
+  - Range: 0-1
+  - Description: Position in recording when scrubbing
+
+- trimstart - Start trim
+  - Type: float
+  - Range: 0-1
+  - Default: 0
+  - Description: Start position of playback section
+
+- trimend - End trim
+  - Type: float
+  - Range: 0-1
+  - Default: 1
+  - Description: End position of playback section
+
+### Outputs
+- cvout - CV output
+  - Type: float
+  - Description: Recorded/playing CV signal
+
+- gateout1...gateout8 - Gate outputs
+  - Type: gate
+  - Description: Recorded/playing gate signals
+
+- numberout - Integer output
+  - Type: integer
+  - Description: Recorded/playing integer value
+
+- recordled - Record indicator
+  - Type: gate
+  - Description: Active when recording
+
+- playled - Play indicator
+  - Type: gate
+  - Description: Active when playing
+
+- stopled - Stop indicator
+  - Type: gate
+  - Description: Active when stopped
+
+Note: Multi-track recorder with features:
+- CV, gate, and integer recording
+- Playback speed control
+- Loop functionality
+- Scrubbing capability
+- Section trimming
+- Persistent storage
+- LED feedback
+
+Example applications:
+- CV sequence recording
+- Drum pattern capture
+- Performance recording
+- Motion sequencing
+- Multi-track automation
+- Live looping
+
+Limitations:
+- Experimental status
+- Format may change
+- Fixed track types
+- Single CV track
+- 8 gate tracks max
+- 8-bit integer only

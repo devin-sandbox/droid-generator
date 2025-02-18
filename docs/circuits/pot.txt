@@ -1,0 +1,91 @@
+# DROID Circuit Input/Output Keys
+
+## pot - Potentiometer Helper Circuit
+
+### Inputs
+- pot - Potentiometer input
+  - Type: float
+  - Range: 0-1
+  - Description: Physical potentiometer input (e.g., P1.1)
+
+- notch - Center notch size
+  - Type: percentage
+  - Default: 10%
+  - Description: Size of virtual center detent
+
+- slope - Response curve
+  - Type: float
+  - Default: 1.0
+  - Minimum: 0.001
+  - Description: Adjusts pot response curve (polynomial xslope)
+
+- select - Function selection
+  - Type: gate
+  - Description: Enables pot when gate is high for pot sharing
+
+- preset - Preset selection
+  - Type: integer
+  - Description: Select preset for virtual pot mode
+
+- loadpreset - Load preset
+  - Type: trigger
+  - Description: Load selected preset
+
+- clear - Reset trigger
+  - Type: trigger
+  - Description: Reset to default state
+
+### Outputs
+- output - Main output
+  - Type: float
+  - Range: 0-1
+  - Description: Processed potentiometer value
+
+- bipolar - Bipolar output
+  - Type: float
+  - Range: -1 to 1
+  - Description: Centered bipolar version of output
+
+- lefthalf - Left hemisphere
+  - Type: float
+  - Range: 0-1
+  - Description: Active in left half of pot range
+
+- righthalf - Right hemisphere
+  - Type: float
+  - Range: 0-1
+  - Description: Active in right half of pot range
+
+- lefthalfinv - Inverted left
+  - Type: float
+  - Range: 0-1
+  - Description: Inverted left hemisphere (1 at center)
+
+- righthalfinv - Inverted right
+  - Type: float
+  - Range: 0-1
+  - Description: Inverted right hemisphere (1 at center)
+
+Note: Advanced potentiometer utility with features:
+- Center notch simulation
+- Response curve control
+- Hemisphere splitting
+- Virtual pot modes
+- Preset management
+- LED gauge feedback
+- Pot sharing capability
+
+Example applications:
+- Precise center control
+- Multi-function controls
+- Bipolar CV generation
+- Split-pot interfaces
+- Preset-based controls
+- LED feedback systems
+
+Limitations:
+- Minimum slope of 0.001
+- Fixed notch behavior
+- Lower execution speed
+- UI-focused design
+- Requires LED matrix for gauge

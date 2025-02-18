@@ -1,0 +1,279 @@
+16.47
+
+notchedpot – Helper circuit for pots (OBSOLETE)
+
+This circuit has been superseded by the
+new circuit pot (see page 329). It will be
+removed in the next ﬁrmware version. If
+you use it in your patch, better replace it.
+
+available range. You can set the size of the notch via the
+notch input. Here is an example:
+
+pot can do all notchedpot can do and much more. So
+notchedpot will be removed soon.
+
+This little circuit simulates a potentiometer with a notch
+at the center. It helps you exactly selecting the center position by deﬁning a range that is considered to be the center. This range is called “notch” and defaults to 10% of the
+
+Input
+
+Type
+
+pot (p)
+
+0
+
+Default
+
+[algoquencer]
+activity = _ACTIVITY
+...
+
+0.1
+
+Description
+
+Optionally set the notch size, if you do not like the default of 0.1. The maximum allowed value is 0.5. Greater values
+will be reduced to that.
+
+Output
+
+Type
+
+Description
+
+output (o)
+
+0
+
+Your pot output comes here. It still goes from 0.0 to 1.0.
+
+1
+
+[notchedpot]
+pot
+= P1.1
+notch
+= 0
+bipolar = O1 # Send -10V ... +10V to O1
+
+Wire your pot here, e.g. P1.1
+
+1
+
+notch (no)
+
+[notchedpot]
+pot
+= P1.1
+notch
+= 15%
+output
+= _ACTIVITY
+
+For a second use case there is the output bipolar. That
+converts a normal pot into one with range from -1.0 to
+1.0. This example also shows how to disable the notch, if
+you do not need it here:
+
+bipolar (b)
+
+Optional output with a range from -1.0 to 1.0, where the center notch is at 0.0.
+
+absbipolar (ab)
+
+A variation of bipolar that always outputs a positive value, i.e. the pot will go 1 ... 0.5 ... 0 ... 0.5 ... 1
+
+lefthalf (l)
+
+This output allows you to split the pot into two hemispheres. Here you get 1.0 ... 0.0 while the pot is in the left half.
+In the middle and right of it you always get 0.
+
+righthalf (r)
+
+This is the same but for the right half. It outputs 0 while the pot is in the left half and 0.0 ... 1.0 from the middle to the
+fully right position.
+
+lefthalfinv (li)
+
+This outputs 1.0 - lefthalf, i.e. the value range 0.0 ... 1.0 ... 1.0 when the pot moves left → mid → right.
+
+righthalfinv (ri)
+
+This outputs 1.0 - righthalf, i.e. the value range 1.0 ... 1.0 ... 0.0 when the pot moves left → mid → right.
+
+DROID manual for blue-6
+
+316
+
+Table of contents at page 2
+
+16.48
+
+notebuttons – Note Selection Buttons
+
+This simple utility combines 12 buttons,
+just like radio buttons, into a selector for
+a note such as C, C♯, D, D♯ and so on. It is
+similar to buttongroup, but much simpler.
+And it allows 12 buttons. The output is ei1
+ther a number from 0 to 11 – or alternatively on a 12
+V per
+semitone base. The latter one is ideal for sending it to external sequencers or quantizers as they often adopt that
+scheme.
+
+led11
+= L1.8
+led12
+= L2.7
+semitone = O7
+
+The following example uses all eight buttons of the ﬁrst
+controller plus the ﬁrst column of the second controller
+for selecting the twelve notes. It sends the currently selected note to O7 in a 1 V per octave scheme:
+[notebuttons]
+button1 = B1.1
+button2 = B1.2
+button3 = B2.1
+button4 = B1.3
+button5 = B1.4
+button6 = B2.3
+button7 = B1.5
+button8 = B1.6
+button9 = B2.5
+button10 = B1.7
+button11 = B1.8
+button12 = B2.7
+led1
+= L1.1
+led2
+= L1.2
+led3
+= L2.1
+led4
+= L1.3
+led5
+= L1.4
+led6
+= L2.3
+led7
+= L1.5
+led8
+= L1.6
+led9
+= L2.5
+led10
+= L1.7
+
+DROID manual for blue-6
+
+317
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+button1 ... button12 (b)
+
+Wire 12 buttons to these 12 inputs.
+
+clock (c)
+
+When you use this jack, all button presses are quantized in time to the next clock pulse arriving here. That makes it
+easier to switch the note exactly in time.
+Specify the note that should be selected when the Droid starts and no state is loaded, or when a trigger to clear or
+clearall happened. This is an integer number from 0 to 11.
+
+startnote (sn)
+
+1 2 3
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+preset (pr)
+
+1 2 3
+
++
+
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+This is the preset number to save or to load. Note: the ﬁrst preset has the number 0, not 1! For the whole story on
+presets please refer to page 21. This circuit has 16 presets, so this number ranges from 0 to 15.
+
+loadpreset (lp)
+
+A trigger here loads a preset. As a speciality you can use the trigger for selecting a preset at the same time.
+
+savepreset (sp)
+
+A trigger here saves a preset.
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+Output
+
+0
+
+Type
+
+semitone (st)
+
+DROID manual for blue-6
+
+Description
+Wire the LEDs in the buttons to these 12 outputs.
+
+led1 ... led12 (l)
+output (o)
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+1 2 3
+1V
+Oct
+
+Here you get a number from 0 to 11, according to the currently selected button.
+Here you get the same as output, but divided by 120. When you patch this output to a CV output of the
+O1, it will output the note as a semitone on a 1 V per octave scheme.
+
+318
+
+, like
+
+Table of contents at page 2
+
+

@@ -1,0 +1,108 @@
+# DROID Circuit Input/Output Keys
+
+## math - Math utility circuit
+
+### Inputs
+- input1, input2 (i) - Input values
+  - Type: float
+  - Description: Values for mathematical operations. Omitted inputs use neutral values (0 for sum, 1 for product)
+
+### Outputs
+- sum (s) - Addition
+  - Type: float
+  - Description: input1 + input2
+
+- difference (d) - Subtraction
+  - Type: float
+  - Description: input1 - input2
+
+- product (p) - Multiplication
+  - Type: float
+  - Description: input1 × input2
+
+- quotient (qu) - Division
+  - Type: float
+  - Description: input1 / input2. Returns large number with correct sign if input2 is zero
+
+- modulo (md) - Modulo operation
+  - Type: float
+  - Description: Folds input1 into range 0...input2. Returns 0 if input2 is zero or negative
+
+- power (pw) - Power operation
+  - Type: float
+  - Description: input1 to power of input2. Handles special cases (negative bases use rounded exponents)
+
+- average (a) - Average
+  - Type: float
+  - Description: Average of input1 and input2
+
+- maximum (x) - Maximum
+  - Type: float
+  - Description: Maximum of input1 and input2
+
+- minimum (m) - Minimum
+  - Type: float
+  - Description: Minimum of input1 and input2
+
+- negation (n) - Negation
+  - Type: float
+  - Description: -input1
+
+- reciprocal (rc) - Reciprocal
+  - Type: float
+  - Description: 1/input1. Returns large number with correct sign if input1 is zero
+
+- amount (am) - Absolute value
+  - Type: float
+  - Description: Absolute value of input1
+
+- sine (si) - Sine function
+  - Type: float
+  - Description: sin(2π × input1), one cycle over 0.0...1.0 range
+
+- cosine (cs) - Cosine function
+  - Type: float
+  - Description: cos(2π × input1), one cycle over 0.0...1.0 range
+
+- square (q) - Square
+  - Type: float
+  - Description: input1²
+
+- root (ro) - Square root
+  - Type: float
+  - Description: √input1. For negative input1, returns -√(-input1)
+
+- logarithm (l) - Natural logarithm
+  - Type: float
+  - Description: ln(input1). Special handling for non-positive inputs
+
+- round (rd) - Rounding
+  - Type: float
+  - Description: Nearest integer to input1
+
+- floor (f) - Floor
+  - Type: float
+  - Description: Largest integer not greater than input1
+
+- ceil (c) - Ceiling
+  - Type: float
+  - Description: Smallest integer not less than input1
+
+Note: Utility circuit for mathematical operations. Key features:
+- Basic arithmetic operations
+- Advanced math functions (trig, log, power)
+- Handles missing inputs with neutral values
+- Unlimited internal range (only limited when output to jacks)
+- Special case handling for undefined operations
+
+Example applications:
+- CV arithmetic and scaling
+- Waveform shaping
+- Range folding and limiting
+- Complex mathematical processing
+- Signal combining and analysis
+
+Limitations:
+- Output to jacks limited to -10V to +10V range
+- Some operations undefined for certain inputs
+- Special case handling may not be mathematically precise

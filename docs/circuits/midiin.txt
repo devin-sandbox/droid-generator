@@ -1,0 +1,125 @@
+# DROID Circuit Input/Output Keys
+
+## midiin - MIDI to CV converter
+
+### Inputs
+- lowestnote (ln) - Note range lower bound
+  - Type: integer
+  - Default: 0
+  - Range: 0-127
+  - Description: Ignore notes below this MIDI note (0=C-2)
+
+- highestnote (hn) - Note range upper bound
+  - Type: integer
+  - Default: 127
+  - Range: 0-127
+  - Description: Ignore notes above this MIDI note (127=G9)
+
+- note1...note16 (n) - Note selectors
+  - Type: integer
+  - Description: Select up to 16 notes for dedicated gate outputs
+
+- roundrobin (rr) - Round-robin allocation
+  - Type: binary
+  - Default: 0
+  - Description: Rotate through outputs for new notes
+
+- voiceallocation (va) - Voice allocation
+  - Type: integer
+  - Default: 0
+  - Description: How to handle voice shortage:
+    0=drop oldest
+    1=skip new
+    2=drop lowest
+    3=drop highest
+
+- notegap (ngp) - Note gap
+  - Type: float
+  - Default: 0.0
+  - Description: Forced gap between notes in milliseconds
+
+- ccnumber1...ccnumber4 (cn) - CC numbers
+  - Type: integer
+  - Default: 0
+  - Description: MIDI CC numbers to monitor (0-127)
+
+### Outputs
+- pitch1...pitch8 (p) - Voice pitches
+  - Type: float
+  - Description: 1V/octave pitch outputs for up to 8 voices
+
+- velocity1...velocity8 (v) - Voice velocities
+  - Type: float
+  - Range: 0-1
+  - Description: Note velocity outputs for up to 8 voices
+
+- pressure1...pressure8 (pr) - Aftertouch
+  - Type: float
+  - Range: 0-1
+  - Description: Per-note pressure/aftertouch values
+
+- gate1...gate8 (g) - Voice gates
+  - Type: gate
+  - Description: Gate outputs for up to 8 voices
+
+- trigger1...trigger8 (t) - Voice triggers
+  - Type: trigger
+  - Description: 5ms triggers at note-on, useful for legato notes
+
+- cc1...cc4 - CC values
+  - Type: float
+  - Range: 0-1
+  - Description: Values of monitored MIDI CCs (scaled from 0-127)
+
+- cctrigger1...cctrigger4 (ct) - CC triggers
+  - Type: trigger
+  - Description: Triggers when monitored CC messages received
+
+- notegate1...notegate16 (ng) - Note gates
+  - Type: gate
+  - Description: Gates for specifically monitored notes
+
+- pitchbend (pb) - Pitch bend
+  - Type: float
+  - Description: Current pitch bend value
+
+- programchange (pc) - Program change
+  - Type: trigger
+  - Description: Triggers on program change messages
+
+- program (pm) - Program number
+  - Type: integer
+  - Range: 0-127
+  - Description: Current program number
+
+- bank (ba) - Bank number
+  - Type: integer
+  - Range: 0-16384
+  - Description: Current bank (from CC#0 MSB and CC#32 LSB)
+
+- modwheel (w) - Mod wheel
+  - Type: float
+  - Range: 0-1
+  - Description: Current mod wheel value (CC#1)
+
+Note: Comprehensive MIDI to CV converter with extensive features:
+- Up to 8-voice polyphonic operation
+- Multiple voice allocation strategies
+- Aftertouch support (channel and poly)
+- CC monitoring and triggers
+- Program/bank change handling
+- Note range filtering
+
+Example applications:
+- MIDI keyboard interface
+- DAW integration
+- Complex MIDI control
+- Multi-voice synthesis
+- Drum trigger generation
+- Button/switch expansion
+
+Limitations:
+- Maximum 8 polyphonic voices
+- Only 4 CC parameters monitored
+- Fixed 5ms trigger length
+- Bank selection requires both MSB/LSB

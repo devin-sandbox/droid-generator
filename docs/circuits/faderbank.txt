@@ -1,0 +1,48 @@
+# DROID Circuit Input/Output Keys
+
+## faderbank - Create multiple virtual faders in M4 controller
+
+### Inputs
+- firstfader (f) - Starting fader
+  - Type: int
+  - Default: 1
+  - Description: First M4 fader of the virtual fader bank (starting with 1)
+
+- notches (n) - Fader notches
+  - Type: int
+  - Range: 0-201
+  - Description: Number of artificial notches. 0=disabled, 1=pitch bend, 2=binary switch, >2=number of positions. Force feedback disabled above 25 notches.
+
+- startvalue (sv) - Initial value
+  - Type: float
+  - Default: 0.0
+  - Description: Value faders should get when circuit starts or on clear trigger
+
+- ledcolor (lc) - LED color
+  - Type: float
+  - Description: Sets color of LEDs below faders when circuit is selected
+
+- ledvalue1...ledvalue16 (lv) - LED brightness
+  - Type: float
+  - Description: Override brightness of individual fader LEDs when circuit is selected
+
+- select (s) - Selection control
+  - Type: int
+  - Description: Enables/disables button and LED processing for overlay functionality
+
+### Outputs
+- output1...output16 (o) - Fader outputs
+  - Type: float
+  - Description: CV outputs for each virtual fader in the bank
+
+Note: Similar to motorfader circuit but controls up to 16 faders at once. Key differences:
+- Uses firstfader instead of individual fader selection
+- Multiple numbered outputs (output1, output2, etc.) determine number of controlled faders
+- Shared notches and ledcolor parameters across all faders
+- Individual LED brightness control per fader
+- 6 presets (vs 8 in motorfader)
+
+Example usage:
+- Creating banks of related parameters
+- Multi-channel level control
+- Parameter arrays with similar behavior

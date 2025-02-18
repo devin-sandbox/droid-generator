@@ -1,0 +1,156 @@
+Why? In order to optimize the execution speed of your
+patch, several user interface circuits are executed at just
+12.5% of the normal speed. This saves valuable time for
+the execution of more time critical circuits. So instead of
+checking pots at sub-millisecond intervals, your master
+rather spends its time in executing your sequencers with
+a timing as precise as possible.
+This means, that pot, button, buttongroup and similar
+circuits are executed just every 8th loop cycle.
+If you experience any trouble with this “UI slowdown”,
+you can disable it by using a droid (see page 183) circuit:
+[droid]
+uislowdown = 0
+
+DROID manual for blue-6
+
+332
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+pot (p)
+
+0
+
+0.0
+
+Wire your pot here, e.g. P1.1
+
+outputscale (os)
+
+1.0
+
+The ﬁnal output is multiplied with this value. It’s a convenient method for scaling up and down the pot range.
+
+notch (no)
+
+0.0
+
+By setting this parameter to a positive number you create an artiﬁcial “notch” of that size. We suggest using 0.1 (or
+10%. The maximum allowed value is 0.5. Greater values will be reduced to that. Note: Using this in combination with
+outputscale also moves the notching point. E.g. with outputscale = 2 the notch will be at 1.0.
+
+discrete (d)
+
+1
+
+Setting this value to 1 or larger switches the pot over to select a discrete integer number, rather than a continous value.
+For example discrete = 5 makes the pot output one of the exact values 0, 1, 2, 3 or 4. This is ideal for selecting presets
+and similar. If you enable ledgauge (highly recommended), it shows you the value by using the LEDs of the master in
+an adapted way.
+
+1 2 3
+
+The maximum allowed number is 16.
+When using discrete, the startvalue input is interpreted as a discrete number. So for example if you have discrete
+= 5, you can use startvalue = 3 to set the selected value to the number 3 after a trigger to clear. A potential
+outputscale is applied afterwards.
+Notes: The options notch and slope do not work in discrete mode. outputscale is still applied, though. All outputs
+other than output are dead and output 0.0. discrete = 1 does not really make sense, since there is just one value to
+select from and the output will always be 0.0.
+slope (sl)
+
+DROID manual for blue-6
+
+1.0
+
+Changes the resolution of the pot in lower or higher ranges. Set slope to 2 or more, if you want small values near 0.0
+to be “zoomed in”. Set slope to 0.5 or 0.3 if you want to zoom in value nears 1.0.
+
+333
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
++
+
+ledgauge (g)
+
+Description
+The “LED gauge” uses the 16 LEDs of the MASTER in order to indicate the current value of the pot (not available on the
+MASTER18). This is especially useful for “virtual” pots – i.e. those pots that you get when you use select in order to
+layer several different functions onto one pot. In that situation the position of the physical pot can be different than
+that of the virtual one, so the gauge shows you the effective virtual value.
+Furthermore, by illuminating the inner four LEDs, the gauge shows when the pot hits exactly 0.5. This can only happen
+if you use the notch parameter. Otherwise its practically impossible to hit exactly.
+If you have a MASTER18, the gauge is displayed in the upper 16 LEDs of your ﬁrst B32, if you have one.
+The LED gauge is automatically activated if you use select. If you don’t like the LED gauge, you can turn it off with
+ledgauge = off. Otherwise ledgauge set’s the color of the indicator in the same way as the R-registers do and at the
+same time enables the gauge even if you don’t use select.
+Here are some color examples that you can use for the value of ledgauge:
+0.2
+
+cyan
+
+0.4
+
+green
+
+0.6
+
+yellow
+
+0.73
+
+orange
+
+0.8
+
+red
+
+1.0
+
+magenta
+
+1.1
+
+violet
+
+1.2
+
+blue
+
+The colors repeat over in a kind of wheel at 1.2, so e.g. 1.4 creates the same color as 0.2.
+startvalue (sv)
+
+0
+
+1
+
+0.5
+
+This parameter deﬁnes the value your pot will get when there is a trigger to clear. This is the value before outputscale
+is applied.
+If you use discrete, the parameter does not expect a fraction but a discrete number in the range of the discrete values
+(0, 1, 2, etc.
+
+DROID manual for blue-6
+
+334
+
+Table of contents at page 2
+
+

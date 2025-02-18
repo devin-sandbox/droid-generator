@@ -1,0 +1,317 @@
+16.24
+
+euklid – Euclidean rhythm generator
+
+This circuit creates trigger patterns according to the well-known Euclidean rhythms
+and is of course CV controllable. The pattern is described by three numbers:
+• The number of steps in the pattern
+• The number of beats in the pattern
+• An offset for shifting the beats forward
+The number of beats are distributed as evenly as possible
+in the pattern – but of course are all placed precisely on
+clock beats. Here are a few examples of various patterns:
+length: 16, beats: 4, offset: 0
+
+Offbeats
+Here is an example without CV control:
+[euklid]
+clock
+reset
+length
+beats
+offset
+output
+
+= G1
+= G2
+= 16
+= 5
+= 0
+= G3
+
+The output offbeats does the exact opposite of
+outputs: it triggers at those clock beats where output
+does not. So at any given clock tick exactly either output
+or offbeats triggers.
+
+Gate length
+
+Now let’s change that in order to make the beats controllable by the pot P1.1. Please note how the pot range is
+being changed from the default 0 … 1 to the necessary
+1 … 16 by using a factor of 15 and an offset of 1:
+
+The length of the output gate is the same as that of the input gate. Also the exact voltage from the input is copied
+to the output while the current step is active.
+
+length: 16, beats: 5, offset: 0
+
+length: 16, beats: 11, offset: 0
+
+[euklid]
+clock
+reset
+length
+beats
+offset
+output
+
+length: 13, beats: 5, offset: 0
+
+By the way: Since the default for length is 16 and for
+offset 0 you can drop those two lines if you like:
+
+length: 16, beats: 5, offset: 1
+
+length: 13, beats: 5, offset: 1
+
+[euklid]
+clock
+reset
+beats
+output
+
+= G1
+= G2
+= 16
+= P1.1 * 15 + 1
+= 0
+= G3
+
+= G1
+= G2
+= P1.1 * 15 + 1
+= G3
+
+length: 4, beats: 2, offset: 1
+
+DROID manual for blue-6
+
+216
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
++
+
+clock (c)
+
+Description
+Patch a clock signal here. It does not need to be steady – even if this is the most usual application. Note: this input is
+classiﬁed as a gate input, since the length of the gate is being preserved when forwarded to output and offbeats.
+A trigger here resets the pattern to the start
+
+reset (r)
+
++
+
+outputsignal (os)
+
+Usually on active steps euklid just lets the original input clock get through to the output. If this parameter is used, it
+will be sent to the output on active steps instead. The easiest application is just setting it to 1. The output will then
+become 1 the whole time while the current step is active. This is useful if you want to use euklid as modulation CV
+rather than as trigger.
+
+length (l)
+
+1 2 3
+
+16
+
+The length of a pattern. This is interpreted as an integer number, which must be greater than 0. If it is not then 1 is
+assumed. If you CV control the length, use multiplication. The maximum accepted length is 64.
+
+beats (b)
+
+1 2 3
+
+5
+
+The number of active beats that should be distributed amongst the length steps. If that number is greater than length,
+it is capped to that number.
+
+offset (of)
+
+1 2 3
+
+0
+
+rotates or shifts the pattern by that number of steps. This number can be positive or negative.
+
+Output
+
+Type
+
+Description
+
+output (o)
+
+Output of the beats in the current pattern. The gate length is directly taken from the input clock – just as the voltage.
+
+offbeats (ob)
+
+Here those impulses will be output where there is no beat in the pattern.
+
+DROID manual for blue-6
+
+217
+
+Table of contents at page 2
+
+16.25
+
+explin – Exponential to linear converter
+
+This circuit converts an exponential input
+curve into a linear output curve. Image you
+have an analog envelope outputting an exponential curve like the following one:
+
+an envelope voltage then startvalue would be the start
+or maximum voltage of that envelope.
+
+[explin]
+input
+= I1
+output = O2
+startvalue = 8V
+endvalue = 0.5V
+
+A falling exponential curve will never reach 0 in theory.
+So with endvalue you set a value (or voltage) in that you
+consider the curve to be low enough to be inaudible. At
+that voltage the linear output will exactly be zero. This
+voltage can be used to control the slope of the linear output curve. The following example shows how different
+values of endvalue affect the output:
+
+8
+8
+Input
+Output
+
+6
+4
+
+V olts
+
+2
+0.5
+0
+
+4
+
+8
+
+2
+0
+
+100
+
+200
+300
+time(ms)
+
+400
+
+500
+
+The curve starts at 8 V and reaches 0.5 V at about 500 ms
+later.
+The following droid patch will convert this into a linear
+curve:
+
+Input
+
+0
+
+100
+
+200
+300
+time(ms)
+
+400
+
+500
+
+With the values startvalue and endvalue you conﬁgure how this translation is scaled. The startvalue selects the voltage where the exponential input curve and
+the linear output curve should be the same. If the input is
+
+4
+2
+1
+0.5
+0
+
+100
+
+200
+300
+time(ms)
+
+400
+
+500
+
+Default
+
+Description
+
+input (i)
+
+0.0
+
+Patch an exponential envelope output or a similar signal here. This value must be positive or otherwise it will be set to
+0.0.
+
+startvalue (sv)
+
+1.0
+
+The assumed maximum value of the input signal (the start voltage from where it decays in an exponential way.
+
+endvalue (ev)
+
+0.01
+
+The value at which it is assumed to be zero (at which the linear output will be set to zero. This value must be positive.
+It is forced to be >= 0.001.
+
+1.0
+
+Sets the mix between the “dry” and “wet” signal: At 0.0 the output is the same as the input. At 1.0 the output is the
+linear curve. At a value in between it is some average. You are even allowed to used values > 1.0. A value of 2.0 will
+overcompensate and bend the curve beyond linearity into a curve some modularists would call logarithmic.
+
+mix (m)
+
+DROID manual for blue-6
+
+Type
+
+0.5
+0
+
+0.5V
+1V
+2V
+
+6
+V olts
+
+V olts
+
+6
+
+0
+
+1
+
+218
+
+Table of contents at page 2
+
+

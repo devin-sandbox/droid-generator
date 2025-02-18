@@ -1,0 +1,360 @@
+16.15
+
+crossfader – Morph between 8 inputs
+
+This utility circuit creates a CV controlled
+mix of two out of up to eight inputs.
+
+then maps the range 0.0 ... 1.0 to a journey from the ﬁrst
+to the last input. Let’s see the following example:
+
+With two inputs this acts like a classical
+cross fader. The following example lets
+you fade between the signals at I1 and I2
+by turning the pot P1.1:
+
+[lfo]
+hz
+sawtooth
+
+= 0.1
+= _FADE
+
+[crossfader]
+input1
+input2
+input3
+input4
+fade
+output
+
+= I1
+= I2
+= I3
+= I4
+= _FADE
+= O1
+
+[crossfader]
+input1 = I1
+input2 = I2
+fade
+= P1.1
+output = O1
+
+At fully CCW (0.0) only the signal of the ﬁrst input is being output, at fully CW (1.0) only that of the second one.
+In the center position (0.5) you get the average of both
+inputs, namely 0.5×I1 + 0.5×I2.
+Using more than two inputs is possible. The fade input
+
+Input
+
+Type
+
+input1 ... input8 (i)
+
+fade (f)
+
+0
+
+Output
+
+Type
+
+output (o)
+
+DROID manual for blue-6
+
+1
+
+Now during one LFO cycle of 10 seconds the output O1
+begins with the signal at I1 and then morphs to that of
+I2. It reaches 100% of I2 at a fade value of 31 . Then it
+continues to I3, which it reaches at 23 and ﬁnally – after 10
+seconds – it ends at I4. After that it immediately jumps
+back to I1, in order to begin the next cycle.
+
+Values beyond 1.0 for fade are allowed and allow you to
+morph from the last input to the ﬁrst one. In the previous example that would be the range from 1.0 to 1.3333.
+So if you scale up the sawtooth to a total range of 0.0 ...
+1.3333 you will get a smooth cyclic morph between all
+four inputs:
+[lfo]
+hz
+sawtooth
+
+= 0.1
+= _FADE
+
+[crossfader]
+input1
+input2
+input3
+input4
+fade
+output
+
+= I1
+= I2
+= I3
+= I4
+= _FADE * 1.3333
+= O1
+
+Default
+
+Description
+
+0.0
+
+The input signals that you want to crossfade between. At least input1 and input2 need to be patched. Otherwise
+they are treated like 0 V signals.
+
+0.5
+
+This value decides which of the two inputs should be mixed and to which degree each one should go into the mix. At
+0.0 the mix consists of 100% of the ﬁrst inputs, at 1.0 of 100% of the last patched input.
+
+Description
+Output of the mix
+
+173
+
+Table of contents at page 2
+
+16.16
+
+cvlooper – Clocked CV looper
+
+Easy to use clocked CV looper that also
+loops an additional gate and can do overlay and overdub.
+This circuit is a very easy to use CV looper.
+It records an incoming CV (and optionally
+a gate as well) on a virtual tape loop with a resolution of
+one sample per ms. The length of this tape is eight seconds. If you need a longer loop time, you can reduce the
+tape speed. At a speed of 0.5 you have a maximum loop
+time of 16 seconds and a resolution of one sample per
+2 ms (which is still pretty decent for most applications).
+This looper is meant to be playable in a live situation as
+easily as possible. For that purpose it does not implement the typical loop start → loop stop scheme – which
+requires the musician to know beforehand that she will
+start a loop. Instead the looper is always recording. The
+loop length is speciﬁed in clock ticks. And as soon as the
+looping is activated, the previous x clock ticks of CV information will be repeated over and over.
+Here is an example for a simple looper for one CV without
+a gate:
+[button]
+button
+led
+
+= B1.1
+= L1.1
+
+[cvlooper]
+cvin
+= I1
+clock
+= I8
+cvout
+= O1
+length
+= 16
+loopswitch = L1.1
+
+# steady clock
+# 16 clock ticks
+
+The button B1.1 is converted into a toggle button for activating the looping. The CV is read from I1 and is sent to
+DROID manual for blue-6
+
+O1. As long as the loop switch is off the looper is in bypass mode and simply copies I1 to O1. At the same time
+it is always recording to its internal endless tape. When
+the loop switch is switched on, the last 16 clock ticks of
+CV information is looped to O1 and I1 is ignored.
+
+Please note: for your convenience the exact time when
+the loop switch is switched on is quantized to the nearest
+clock tick – may it be in the future or past. This makes
+playing exactly in time much easier.
+The second example adds a gate signal – such as output by a ribbon controller. The gate is running through
+I2→O2.
+[button]
+button
+led
+
+Toggle buttons would ﬁt nicely for these two functions.
+Please note: you always need a clock! The CV looper is
+useless without one. If you do not want to use an external clock, you can make use of the LFO circuit for creating
+an internal clock.
+What if you want to loop more than one CV? Just create
+more cvlooper circuits – one for each CV. And control
+them from the same set of buttons.
+
+= B1.1
+= L1.1
+
+[cvlooper]
+cvin
+= I1
+gatein
+= I2
+clock
+= I8
+cvout
+= O1
+gateout
+= O2
+length
+= 16
+loopswitch = L1.1
+
+the output. The tape’s content stays untouched.
+This allows you to overlay the loop CV with your
+own from time to time.
+2. On the other hand, when overdub is on and the input gate is active, the input CV will be written to the
+tape and replaces the recorded CV at those places.
+And it also will be routed to the output at the same
+time.
+
+Changing the tape or clock speed
+# steady clock
+
+# 16 clock ticks
+
+Using a gate changes the behaviour of the CV looper. The
+state of gatein (not the exact voltage) is being looped as
+well. The CV is recorded to the tape only while the gate is
+high.
+Using a gate makes two additional features possible:
+1. When overlay is on and the input gate is active,
+the input CV will override that on the tape and instead the source signal from cvin is bypassed to
+174
+
+It is possible to change the tape speed on the ﬂy in order
+to slow down or speed up the recorded loop’s content. It
+is important – however – to always change the tape speed
+and clock speed at the same time and in the same manner.
+Otherwise you will get stuttering effects. So if you double the tapespeed you also need to double the frequency
+of the clock.
+
+Changing the length
+Changing length parameter on the ﬂy is supported and
+just works. Remember: it does not set the length of the
+tape loop but just the length of that part that is played
+Table of contents at page 2
+
+back. The recording is always done with the maximum
+length. So if you increase the length while playing back
+you will get access to the older parts of the CV history
+that way. Just don’t make the length longer than the actual tape (see below).
+
+Limitations
+1. The value range of cvin and cvout is -1 … +1 – or -10 V
+… +10 V. If that range is not sufﬁcient for you, you need to
+scale it yourself. For example you could divide the value
+by 10 before sending it to cvin and multiply it with 10 after it arrives at cvout:
+
+Input
+
+Type
+
+[cvlooper]
+cvin = _INPUT_CV / 10
+cvout = _OUT
+...
+
+3. The total loop length can be 128 clock ticks at most. If
+you need more ticks, you can divide the input clock down,
+using clocktool:
+
+[copy]
+input = _OUT * 10
+output = _OUTPUT_CV
+
+[clocktool]
+clock
+divide
+output
+
+= G1
+= 2
+= _LOOP_CLOCK
+
+2. Memory (RAM) is a valuable resource. The CV looper
+limits itself to 8000 samples in order not to waste too
+much memory and leave space for other circuits as well
+(the Droid master has about 100.000 bytes of memory
+and 8000 samples need 16.000 bytes). But if you want
+to make longer loops, you can reduce the tape speed and
+thus use less samples per second.
+
+[cvlooper]
+clock
+cvin
+tapespeed
+cvout
+length
+loopswitch
+
+= _LOOP_CLOCK
+= I5
+= 0.2 # max loop five x longer
+= O5
+= 128 # = 256 original ticks
+= _SOME_BUTTON
+
+Default
+
+Description
+
+cvin (ci)
+
+0.0
+
+Input CV that should be looped.
+
+gatein (gi)
+
+1
+
+Optional input gate. If you do not patch something here, the gate is assumed to be always high.
+
+clock (c)
+
+Input clock. The clock is mandatory and is the base for the deﬁnition of the loop length. Also the loop switch is quantized in time to the nearest clock.
+
+reset (r)
+
+A trigger here resets the playback head immediately to the start of the loop, if you are in playback mode.
+16
+
+Length of the loop in clock ticks. Example: You get a length of 16 ticks by patching the number 16 to length. If you
+want to set the length by means of an external CV that would require 160 Volts. So you need to multiply your input by
+some useful number in that case.
+
+tapespeed (s)
+
+1.0
+
+Relative tape speed, where 1.0 is the normal speed. So a value of 0.5 slows down the speed thus increasing the effective tape length from 8 to 16 seconds while reducing the sampling rate from 1 ms to 2 ms per sample. Changing the
+tape speed on the ﬂy probably leads to interesting results.
+
+loopswitch (ls)
+
++
+
+length (l)
+
+DROID manual for blue-6
+
+1 2 3
+
+Mandatory parameter: While the loop switch is off the CV looper simply sends all input CV and gate to their respective
+outputs. At the same time CV and gate are also recorded to the tape. When the loop switch is on, the CV and gate are
+being read from the tape, instead. The input CV and gate are now ignored.
+
+175
+
+Table of contents at page 2
+
+

@@ -1,0 +1,67 @@
+# DROID Circuit Input/Output Keys
+
+## quantizer - Non-musical Voltage Quantizer
+
+### Inputs
+- input - Signal input
+  - Type: float
+  - Default: 0.0
+  - Description: Unquantized input voltage
+
+- trigger - Sample trigger
+  - Type: trigger
+  - Description: Optional trigger for sample & hold operation
+
+- steps - Step count
+  - Type: float
+  - Default: 12
+  - Description: Number of steps per volt (12 = semitones)
+  - Note: 0 or negative disables quantization
+
+- bypass - Bypass control
+  - Type: gate
+  - Default: 0
+  - Description: Directly copies input to output when high
+
+- direction - Quantization mode
+  - Type: integer
+  - Range: 0-2
+  - Default: 1
+  - Description: Quantization direction selection
+  - Values:
+    0: Always round down
+    1: Round to nearest
+    2: Always round up
+
+### Outputs
+- output - Quantized signal
+  - Type: float
+  - Description: Quantized output voltage
+
+- changed - Change trigger
+  - Type: trigger
+  - Description: 10ms trigger on quantization value change
+  - Note: Not active in bypass mode
+
+Note: Non-musical voltage quantizer with features:
+- Configurable steps per volt
+- Sample & hold capability
+- Multiple rounding modes
+- Bypass functionality
+- Change detection
+- Triggered operation
+
+Example applications:
+- Semitone quantization
+- Voltage discretization
+- Sample & hold
+- Trigger-synchronized quantization
+- CV standardization
+- Stepped voltage control
+
+Limitations:
+- Fixed trigger duration
+- No hysteresis control
+- No slew limiting
+- No scale mapping
+- Single input channel

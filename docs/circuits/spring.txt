@@ -1,0 +1,91 @@
+# DROID Circuit Input/Output Keys
+
+## spring - Physical Spring Simulation
+
+### Inputs
+- mass - Object mass
+  - Type: float
+  - Default: 1.0
+  - Description: Mass of object on spring, affects oscillation range
+
+- gravity - Gravitational force
+  - Type: float
+  - Default: 1.0
+  - Description: Simulated gravity strength, 0 centers oscillation
+
+- springforce - Spring constant
+  - Type: float
+  - Default: 1.0
+  - Description: Force per meter of stretch (proportional to elongation)
+
+- flowresistance - Velocity-based damping
+  - Type: float
+  - Default: 0.0
+  - Description: Higher velocities damped more than slower ones
+
+- friction - Constant damping
+  - Type: float
+  - Default: 0.0
+  - Description: Speed-independent damping force
+
+- speed - Time scaling
+  - Type: float
+  - Default: 0.0
+  - Description: 1V/Oct based time scaling (1V doubles speed)
+
+- shove - Force trigger
+  - Type: gate
+  - Default: 0
+  - Description: Applies shoveforce while high
+
+- shoveforce - Push strength
+  - Type: float
+  - Default: 1.0
+  - Description: Force applied when shove is active
+
+- reset - System reset
+  - Type: trigger
+  - Description: Returns system to start position/velocity
+
+- startvelocity - Initial velocity
+  - Type: float
+  - Default: 0.0
+  - Description: Velocity after reset trigger
+
+- startposition - Initial position
+  - Type: float
+  - Default: 0.0
+  - Description: Position after reset trigger
+
+### Outputs
+- velocity - Mass velocity
+  - Type: float
+  - Description: Current velocity of mass (limited to ±10 m/s)
+
+- position - Spring length
+  - Type: float
+  - Description: Current spring elongation (limited to ±10 m)
+
+Note: Physical modeling circuit with features:
+- Mass-spring system simulation
+- Configurable physical parameters
+- Multiple damping types
+- Time scaling control
+- External force input
+- Position/velocity outputs
+
+Example applications:
+- Physical modeling
+- Complex modulation
+- Bouncing effects
+- Motion simulation
+- Dynamic envelopes
+- Force-based control
+
+Limitations:
+- Velocity limited to ±10 m/s
+- Position limited to ±10 m
+- Normalized physical model
+- No collision detection
+- No multi-spring systems
+- No angular momentum

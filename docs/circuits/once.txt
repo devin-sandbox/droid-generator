@@ -1,0 +1,41 @@
+# DROID Circuit Input/Output Keys
+
+## once - Single Startup Trigger
+
+### Inputs
+- delay - Trigger delay
+  - Type: float
+  - Default: 0.01
+  - Description: Delay in seconds before trigger after startup (10ms default)
+  - Note: Default allows controllers to update first
+
+- onlycoldstart - Startup type
+  - Type: binary
+  - Default: 0
+  - Description: Only trigger on power-up (cold start), not patch reload
+
+### Outputs
+- trigger - Trigger output
+  - Type: trigger
+  - Description: Single trigger pulse after startup delay
+
+Note: Startup trigger utility with features:
+- Configurable startup delay
+- Cold/warm start differentiation
+- Single trigger generation
+- Controller update consideration
+
+Example applications:
+- Automatic startup sequences
+- MIDI data initialization
+- Default state setting
+- Startup synchronization
+- Controller initialization
+- Power-up sequences
+
+Limitations:
+- Single use per power cycle
+- Fixed trigger duration
+- No repeat capability
+- No manual trigger option
+- No trigger width control

@@ -1,0 +1,44 @@
+# DROID Circuit Input/Output Keys
+
+## euklid - Euclidean rhythm generator
+
+### Inputs
+- clock (c) - Clock input
+  - Type: trigger
+  - Description: Input clock for timing the Euclidean pattern
+
+- reset (r) - Reset input
+  - Type: trigger
+  - Description: Reset trigger to restart pattern from beginning
+
+- length (l) - Pattern length
+  - Type: int
+  - Default: 16
+  - Description: Number of steps in the pattern
+
+- beats (b) - Number of beats
+  - Type: int
+  - Range: 1-16
+  - Description: Number of beats to distribute evenly in the pattern
+
+- offset (o) - Pattern offset
+  - Type: int
+  - Default: 0
+  - Description: Shifts the beats forward by this many steps
+
+### Outputs
+- output (o) - Main output
+  - Type: gate
+  - Description: Outputs triggers at the calculated Euclidean rhythm positions. Gate length matches input clock gate length.
+
+- offbeats (ob) - Inverted output
+  - Type: gate
+  - Description: Outputs triggers at positions where main output is not triggering. Exactly opposite of main output.
+
+Note: The circuit generates Euclidean rhythms by evenly distributing a specified number of beats across a pattern length. The offset parameter allows shifting the pattern forward. Gate length and voltage of outputs match the input clock's gate characteristics.
+
+Example patterns:
+- length=16, beats=4: Basic 4/4 pattern
+- length=16, beats=5: Classic 5/16 rhythm
+- length=13, beats=5: Complex odd-length pattern
+- length=4, beats=2: Simple alternating pattern
