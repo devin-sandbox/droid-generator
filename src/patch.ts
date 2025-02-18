@@ -52,7 +52,7 @@ export class Patch {
     
     for (const [key, value] of entries) {
       if (value !== undefined) {
-        this.ini.set(section.id ?? section.sec, `    ${key}`, value);
+        this.ini.set(section.id ?? section.sec, `    ${key} = `, value);
       }
     }
   }
@@ -68,6 +68,12 @@ export class Patch {
     this.ini.setSection('m4');
     this.ini.comments.setAtLine(this.ini.size + 1, "");
     
+    // Add section headers
+    this.addComment("# -------------------------------------------------");
+    this.addComment("# test2");
+    this.addComment("# -------------------------------------------------");
+    this.addComment("");
+    
     // Serialize all circuits with proper spacing
     let lastSection = '';
     for (const circuit of this.circuits) {
@@ -77,6 +83,12 @@ export class Patch {
       this.serializeCircuit(circuit);
       lastSection = circuit.section;
     }
+    
+    // Add final section header
+    this.ini.comments.setAtLine(this.ini.size + 1, "");
+    this.addComment("# -------------------------------------------------");
+    this.addComment("# test3");
+    this.addComment("# -------------------------------------------------");
     
     return this.ini.toString();
   }
