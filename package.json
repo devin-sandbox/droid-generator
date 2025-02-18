@@ -5,7 +5,6 @@
   "types": "types/index.ts",
   "devDependencies": {
     "@types/bun": "^1.2.2",
-    "@types/node": "^22.13.4",
     "typescript": "^5.7.3"
   },
   "peerDependencies": {
