@@ -8,6 +8,11 @@ const CLOCK_OUTPUT = "O1";
 const CLOCK_HZ = "_CLOCK_HZ";
 const CLOCK_LEVEL = "_CLOCK_LEVEL";
 
+// Constants for step control
+const STEP_SELECT = "_STEP_SELECT";
+const STEP_CV = "_STEP_CV";
+const STEP_GATE = "_STEP_GATE";
+
 interface SequencerState extends Partial<MotoquencerConfig> {
   index: number;
   output: string;
@@ -37,6 +42,14 @@ function validateConfig(config: SequencerConfig): void {
   }
 }
 
+function configureStepEncoder(ini: IniMap): void {
+  const enc = ini.setSection("encoder");
+  ini.set(enc.id ?? enc.sec, "encoder", "E2.1");
+  ini.set(enc.id ?? enc.sec, "discrete", "16");  // 16 steps
+  ini.set(enc.id ?? enc.sec, "output", STEP_SELECT);
+  ini.set(enc.id ?? enc.sec, "color", STEP_SELECT);  // Visual feedback
+}
+
 function configureClockLFO(ini: IniMap): void {
   const lfo = ini.setSection("lfo");
   ini.set(lfo.id ?? lfo.sec, "output", CLOCK_OUTPUT);
@@ -48,6 +61,25 @@ function configureClockLFO(ini: IniMap): void {
   const speedFader = ini.setSection("motorfader");
   ini.set(speedFader.id ?? speedFader.sec, "fader", "1");
   ini.set(speedFader.id ?? speedFader.sec, "output", CLOCK_HZ);
+
+  // Configure clock level fader
+  const levelFader = ini.setSection("motorfader");
+  ini.set(levelFader.id ?? levelFader.sec, "fader", "2");
+  ini.set(levelFader.id ?? levelFader.sec, "output", CLOCK_LEVEL);
+}
+
+function configureStepFaders(ini: IniMap): void {
+  // CV value fader
+  const cvFader = ini.setSection("motorfader");
+  ini.set(cvFader.id ?? cvFader.sec, "fader", "3");
+  ini.set(cvFader.id ?? cvFader.sec, "select", STEP_SELECT);
+  ini.set(cvFader.id ?? cvFader.sec, "output", STEP_CV);
+
+  // Gate length fader
+  const gateFader = ini.setSection("motorfader");
+  ini.set(gateFader.id ?? gateFader.sec, "fader", "4");
+  ini.set(gateFader.id ?? gateFader.sec, "select", STEP_SELECT);
+  ini.set(gateFader.id ?? gateFader.sec, "output", STEP_GATE);
 }
 
 function createTrackConfig(index: number, isLinked: boolean): SequencerState {
@@ -70,6 +102,10 @@ function generatePatch(config: SequencerConfig): string {
 
   // Configure clock LFO first
   configureClockLFO(ini);
+
+  // Configure step encoder and faders
+  configureStepEncoder(ini);
+  configureStepFaders(ini);
 
   // Configure tracks
   Array.from({ length: config.numTracks }, (_, i) => {
