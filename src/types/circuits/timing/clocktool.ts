@@ -7,7 +7,7 @@ import type { GateInput, CVInput } from '../../common';
  */
 export interface ClockToolConfig extends BaseCircuitConfig {
   /** Input clock */
-  clock?: GateInput;
+  clock: GateInput;
   
   /** Reset counter */
   reset?: GateInput;
@@ -28,7 +28,7 @@ export interface ClockToolConfig extends BaseCircuitConfig {
   delay?: CVInput;
   
   /** Output clock */
-  output?: GateInput;
+  output: GateInput;
   
   /** Input clock pitch (1V/oct) */
   inputpitch?: CVInput;
