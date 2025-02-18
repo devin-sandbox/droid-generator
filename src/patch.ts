@@ -42,7 +42,7 @@ export class Patch {
     
     for (const [key, value] of entries) {
       if (value !== undefined) {
-        this.ini.set(section.id ?? section.sec, `    ${key}`, value);
+        this.ini.set(section.id ?? section.sec, key, value);
       }
     }
   }
@@ -51,7 +51,6 @@ export class Patch {
     this.ini.clear();
     this.ini.comments.setAtLine(1, "# LABELS: master=18");
     this.devices.forEach(device => this.ini.setSection(device));
-    this.ini.comments.setAtLine(this.ini.size + 1, "");
     
     for (const circuit of this.circuits) {
       this.serializeCircuit(circuit);
