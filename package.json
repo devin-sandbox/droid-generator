@@ -2,6 +2,10 @@
   "name": "droid-generator",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "test": "bun test",
+    "sequencer": "bun run src/cli/sequencer.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
