@@ -24,7 +24,7 @@ export class Patch {
   constructor(devices: DeviceType[] = [DeviceType.P2B8, DeviceType.E4, DeviceType.M4]) {
     this.devices = devices;
     this.ini = new IniMap({
-      pretty: true,
+      pretty: false,
       assignment: " = ",
       lineBreak: "\n",
       commentChar: "#",
