@@ -1,11 +1,14 @@
 import { IniMap } from "./ini";
+import type { LFOConfig } from './types/circuits/modulation/lfo';
+import type { MotorFaderConfig } from './types/circuits/io/motorfader';
+import type { EncoderConfig } from './types/circuits/io/encoder';
 
-interface LfoConfig {
+interface LfoState extends Partial<LFOConfig> {
   index: number;
-  output: string;
-  level: string;
-  hz: string;
-  waveform: string;  // For selecting between waveforms (0-6)
+  output: string;  // For O1-O8 format
+  level: string;   // For _LEVEL_X format
+  hz: string;      // For _HZ_X format
+  waveform: string;  // For _WAVEFORM_X format (0-6)
 }
 
 const MAX_ALLOWED_LFOS = 8;
@@ -18,7 +21,7 @@ function validateNumLfos(num: number): number {
   return num;
 }
 
-function createLfoState(index: number): LfoConfig {
+function createLfoState(index: number): LfoState {
   return {
     index,
     output: `O${index + 1}`,
@@ -28,7 +31,7 @@ function createLfoState(index: number): LfoConfig {
   };
 }
 
-function configureLfo(ini: IniMap, config: LfoConfig): void {
+function configureLfo(ini: IniMap, config: LfoState): void {
   const lfo = ini.setSection("lfo");
   ini.set(lfo.id ?? lfo.sec, "output", config.output);
   ini.set(lfo.id ?? lfo.sec, "waveform", config.waveform);
@@ -36,7 +39,7 @@ function configureLfo(ini: IniMap, config: LfoConfig): void {
   ini.set(lfo.id ?? lfo.sec, "hz", `${config.hz} * 100`);
 }
 
-function configureFaders(ini: IniMap, config: LfoConfig, lfoSelect: string): void {
+function configureFaders(ini: IniMap, config: LfoState, lfoSelect: string): void {
   // level fader
   const levelFader = ini.setSection("motorfader");
   ini.set(levelFader.id ?? levelFader.sec, "fader", "1");
@@ -88,5 +91,5 @@ function generatePatch(numLfos: number): string {
 }
 
 // Get number of LFOs from command line or use default
-const numLfos = process.argv[2] ? parseInt(process.argv[2], 10) : MAX_ALLOWED_LFOS;
+const numLfos = Bun.argv[2] ? parseInt(Bun.argv[2], 10) : MAX_ALLOWED_LFOS;
 console.log(generatePatch(numLfos));
