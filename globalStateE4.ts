@@ -1,5 +1,5 @@
+/// <reference types="bun-types" />
 import { IniMap } from "./ini";
-
 interface LfoConfig {
   index: number;
   output: string;
@@ -128,5 +128,5 @@ function generatePatch(numLfos: number): string {
 }
 
 // Get number of LFOs from command line or use default
-const numLfos = process.argv[2] ? parseInt(process.argv[2], 10) : MAX_ALLOWED_LFOS;
+const numLfos = Bun.argv[2] ? parseInt(Bun.argv[2], 10) : MAX_ALLOWED_LFOS;
 console.log(generatePatch(numLfos));
