@@ -4,6 +4,8 @@ import type { LFOConfig } from './types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { EncoderConfig } from './types/circuits/io/encoder';
 import type { ButtonConfig } from './types/circuits/io/button';
+import { DeviceType } from './types/devices';
+import { DeviceManager } from './lib/device';
 
 type Circuit = 
   | (LFOConfig & { section: 'lfo' })
@@ -14,6 +16,7 @@ type Circuit =
 export class Patch {
   private circuits: Circuit[] = [];
   private ini: IniMap;
+  private deviceManager: DeviceManager;
 
   addComment(text: string): void {
     this.ini.comments.setAtLine(this.ini.size + 1, text);
@@ -27,6 +30,7 @@ export class Patch {
       commentChar: "#",
       deduplicate: false
     });
+    this.deviceManager = new DeviceManager();
   }
 
   addCircuit(circuit: Circuit): void {
@@ -45,10 +49,9 @@ export class Patch {
   }
 
   toString(): string {
-    const devices = ['p2b8', 'e4', 'm4'];
     this.ini.clear();
     this.ini.comments.setAtLine(1, "# LABELS: master=18");
-    devices.forEach(device => this.ini.setSection(device));
+    this.deviceManager.initializeDevices(this.ini);
     let lastSection = '';
     for (const circuit of this.circuits) {
       if (lastSection !== circuit.section) {
