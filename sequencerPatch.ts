@@ -1,11 +1,12 @@
-/// <reference types="bun-types" />
 import { IniMap } from "./ini";
+import type { MotoquencerConfig } from './types/circuits/sequencing/motoquencer';
+import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 
-interface MotoquencerConfig {
-  index: number;          // Track index
-  output: string;         // CV output
-  gate: string;          // Gate output
-  isLinked: boolean;     // Whether this track is linked to previous
+interface SequencerState extends Partial<MotoquencerConfig> {
+  index: number;
+  output: string;
+  gate: string;
+  isLinked: boolean;
 }
 
 interface SequencerConfig {
@@ -30,7 +31,7 @@ function validateConfig(config: SequencerConfig): void {
   }
 }
 
-function createTrackConfig(index: number, isLinked: boolean): MotoquencerConfig {
+function createTrackConfig(index: number, isLinked: boolean): SequencerState {
   return {
     index,
     output: `O${index * 2 + 1}`,
@@ -43,8 +44,10 @@ function generatePatch(config: SequencerConfig): string {
   validateConfig(config);
   const ini = new IniMap();
 
-  // Required controller
-  ini.setSection('m4');
+  ini.setComment("# LABELS: master=18");
+  ini.setSection("p2b8");
+  ini.setSection("e4");
+  ini.setSection("m4");
 
   // Configure tracks
   Array.from({ length: config.numTracks }, (_, i) => {
