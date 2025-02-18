@@ -6,7 +6,7 @@ import type { EncoderConfig } from './types/circuits/io/encoder';
 import type { ButtonConfig } from './types/circuits/io/button';
 import { DeviceType } from './types/devices';
 
-type Circuit = 
+export type Circuit = 
   | (LFOConfig & { section: 'lfo' })
   | (MotorFaderConfig & { section: 'motorfader' })
   | (EncoderConfig & { section: 'encoder' })
