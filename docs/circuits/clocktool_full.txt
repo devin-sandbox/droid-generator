@@ -1,0 +1,495 @@
+Input
+
+Type
+
+Default
+
+Description
+
+harmonicshift (has)
+
+1 2 3
+
+0
+
+This input can reduce harmonic complexity by disabling some of the scale or non-scale notes. It is an idea ﬁrst found
+in the Sinfonion and also provided by the circuit sinfonionlink (see page 353).
+harmonicshift is staged after the select... inputs and further ﬁlters out (disables) notes based on their relation to
+the current scale. This means that ﬁrst the 12 select... inputs select a subset of the 12 possible notes. After that
+harmonicshift can reduce this set further (it will never add notes).
+
+If harmonicshift is not zero, depending on its value some or more of the scale notes are disabled, even if they would
+be allowed by select.... Or in other words: the harmonic material is reduced.
+You also can use negative values. These create rather strange sounds by removing the simple chord functions instead
+of the complex ones ﬁrst.
+Here are the possible values:
+
+DROID manual for blue-6
+
+0
+
+off – all selected notes are allowed
+
+1
+
+disable all ﬁll notes (non-scale notes)
+
+2
+
+disable ﬁlls and 11th
+
+3
+
+disable ﬁlls, 11th and 13th
+
+4
+
+disable ﬁlls, 11th , 13th and 9th
+
+5
+
+disable ﬁlls, 11th , 13th , 9th and 7th
+
+6
+
+disable ﬁlls, 11th , 13th , 9th , 7th and 3rd
+
+7
+
+disable ﬁlls, 11th , 13th , 9th , 7th , 3rd and 5th
+
+-1
+
+disable the root note
+
+-2
+
+disable the root note and the 5th
+
+-3
+
+disable root, 3rd , 5th
+
+-4
+
+disable root, 3rd , 5th , 7th
+
+-5
+
+disable root, 3rd , 5th , 7th , 9th
+
+-6
+
+disable root, 3rd , 5th , 7th , 9th and 13th
+
+-7
+
+disable all scale notes (ﬁll notes untouched)
+
+160
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+noteshift (nos)
+
+1 2 3
+
+0
+
+Shifts the resulting output note(s) by this number of scale notes up or down (if negative). So the output note still is
+part of the scale but may be a note that is none of the selected ones. The maximum shift range is limited to -24 … +24.
+
+selectnoteshift (sns)
+
+1 2 3
+
+0
+
+Shifts the output note by this number of selected scale notes up or down (if negative). If you use noteshift at the
+same time, first selectnoteshift is applied, then noteshift. The maximum shift range is limited to -24 … +24.
+
+off
+
+While this is 1, the circuit will output the value set by tuningpitch instead of the actual pitch. This is ment to be a
+help for tuning your VCOs.
+
+tuningmode (tm)
+
+tuningpitch (tp)
+
+1V
+Oct
+
+0V
+
+This pitch CV will be output while the tuning mode is active.
+
+transpose (tr)
+
+1V
+Oct
+
+0V
+
+This value is being added to the output pitch when not in tuning mode. It can be used for musical transposition or
+adding a vibrato.
+
+Output
+output1 ... output4 (o)
+
+DROID manual for blue-6
+
+Type
+1V
+Oct
+
+Description
+1st ... 4th pitch output
+
+161
+
+Table of contents at page 2
+
+16.11
+
+clocktool – Clock divider / multiplier / shifter
+
+This circuit implements various clock modiﬁcations, such as a clock divider, a clock
+multiplier, a tool for changing the length
+of an incoming gate signal and a clock time
+shift.
+
+Multiply and divide
+
+Per default the outgoing clock has a duty cycle of 50%,
+which means that it is 50% of the time high and 50% of
+the time low – basically a symmetrical square wave. You
+can change this with the dutycycle input, e.g. to 20%:
+
+Please note that this is not a trigger delay, since it requires
+a steady input clock. Otherwise funny and strange things
+can happen. Also it should be obvious, that shifting a
+clock ahead needs knowledge when exactly the next input clock tick will happen.
+
+[clocktool]
+clock
+= I1 # patch a clock here
+output
+= O1
+dutycycle = 20% # same as 0.2
+
+Feeding a trigger sequencer like the algoquencer (see
+page 115) with a shifted clock allows you to ﬁne tune the
+exact timing of that voice. You can easily map the shift
+amount to a pot for tuning that live by ear:
+
+Here is an example of a simple clock divider that divides
+the incoming clock by 7 (i.e. for 7 incoming clocks one
+outgoing clock is being produced).
+Time shifting the clock
+[clocktool]
+clock
+output
+divide
+
+= I1 # patch a clock here
+= O1
+= 7
+
+This example doubles the speed of the clock by inserting
+one additional clock tick right in the middle between two
+incoming ones: right in the middle between
+[clocktool]
+clock
+= I1 # patch a clock here
+output
+= O1
+multiply = 2
+
+The input delay can be used to delay the clock signal. It
+needs a steady input clock to work. The possible range
+of delay is -1.0 …1.0. A value of 1.0 is equivalent of delaying each clock by exactly one cycle – which is pretty
+useless, since it results in the same output clock. But for
+example a value of 0.1 will delay the clock by 10%. Here
+is an example:
+[clocktool]
+clock
+output
+delay
+
+= I1 # patch a clock here
+= O1
+= 0.1 # same as 10%
+
+By using multiplication and division at the same time you
+can create rhythms like “two over three”:
+
+Using a negative number will result in a clock that is always slightly before the original clock. This example
+shifts the output clock 10% ahead of the input clock:
+
+[clocktool]
+clock
+= I1 # patch a clock here
+output
+= O1
+divide
+= 3
+multiply = 2
+
+[clocktool]
+clock
+output
+delay
+
+DROID manual for blue-6
+
+[clocktool]
+clock
+output
+delay
+
+= I1 # patch a clock here
+= _SHIFTED_CLOCK
+= P1.1 * 0.2 - 0.1 # limit to +/- 10%
+
+[algoquencer]
+clock
+= _SHIFTED_CLOCK
+...
+
+Please also have a look at timing (see page 365). That
+can do a similar thing but is also able to shift the timing
+differently for each beat in a sequence of several beats.
+If you combine delay with divide or multiply, the delay
+is applied first. This means that the amount of delay is in
+relation to one input clock cycle. The delayed input clock
+is then run through the divider and multiplier. If you like
+it vice versa, split things up into two clocktool circuit,
+where the ﬁrst one does the divide/multiply, feed that
+output into the second one and do the delaying there.
+
+= I1 # patch a clock here
+= O1
+= -0.1
+
+162
+
+Table of contents at page 2
+
+Gate length
+Per default the length of the output gate is 10 ms – independently of the length of the input gate. You can change
+the gate length either with the jack gatelength and specify a ﬁxed number of seconds, or by using dutycycle,
+which is a percentage of the output clock rate. Please
+note: if your gate length exceeds the time until the next
+output gate, both will be ”joined” and thus no new gate
+will be emitted.
+Please note if you use dutycycle: right at the start of
+the clock signal or after a greater speed change of the
+clock, clocktool needs a short time to learn the new
+clock speed and correctly adapt the new gate length. This
+might lead to two merging gates, which in turn causes a
+missing gate output.
+
+DROID manual for blue-6
+
+163
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+clock (c)
+
+Patch a steady clock here for this circuit to be of any use
+
+reset (r)
+
+A trigger here resets the internal counters. This is useful if you use the clock divider and want to restart the internal
+counting from 0, in order to align the clock divider with some external sequencers or the like
+
+divide (d)
+
+1 2 3
+
+1
+
+Number to divide the clock through. This will be rounded to the nearest integer number. Note: if you want to use an
+external CV then you need to multiply that with some useful number, since otherwise you will get a number between
+0 and 1 which is not useful at all. Remember: 10 V translates to a number of 1.
+
+multiply (m)
+
+1 2 3
+
+1
+
+Number to multiply the clock with. Same considerations hold as for divide.
+
+dutycycle (dc)
+
+0 0.5 1
+
++
+
+gatelength (gl)
+
++
+
+delay (dl)
+
+0.0
+
+Output duty cycle of the clock – which is essentially a square wave – in a range from 0.0 to 1.0 or 0% to 100%. If you
+don’t patch anything here, the length of the trigger output pulses will be 10 ms (
+’s standard trigger duration).
+This jack is alternative to dutycycle and will override it if it is used. It sets the length of each output pulse to a ﬁxed
+value that is independent of the incoming clock. A value of 0.5 (a CV of 5 volts) translates into a gate length of 0.5
+seconds.
+This CV allows you to shift the input clock beat around in time. A value of 0.1 will delay each beat by 10% of a clock
+cycle. A value of -0.1 is also allowed and shifts the beat 10% ahead.
+For an unmodulated delay -0.1 and 0.9 is just the same, because the output clock will have the same relation to the
+input clock. But if you modify the delay from 0.0 to 0.9, the next tick will be delayed by 90% of one cycle, where is a
+modiﬁcation from 0.0 to -0.1 will play the next tick by 10% earlier.
+
+Output
+
+Type
+
+Description
+
+output (o)
+
+Here comes the modiﬁed clock
+
+inputpitch (ip)
+
+Experimental output that outputs a representation of the input clock’s pitch on a 1V/octave base, based on the reference of 60 BPM (1 Hz). This means that an input clock of 120 BPM will output 1V (a value of 0.1), since 120 BPM it is
+one octave higher than 60 BPM. If you feed that value to the rate input of an LFO you get that running at exactly the
+same speed (not in the same phase, however).
+
+outputpitch (op)
+
+Same for the modiﬁed output clock
+
+DROID manual for blue-6
+
+164
+
+Table of contents at page 2
+
+16.12
+
+compare – Compare two values
+
+This simple utility circuit allows you to
+make a decision by comparing an input
+value (at input) against a reference value
+(at compare) and output one of three values depending on whether the input is less
+than, greater than or equal to the reference.
+
+[compare]
+input = B1.1
+compare = 1
+ifequal = 4
+else = 8
+output = O1
+
+The following simple example checks if the pot P1.1 is
+left of the center (a value less than 0.5). If that is so, it
+outputs 1, otherwise 0.
+
+Now while you hold the button B1.1 this circuit will output the value 4 and otherwise 8.
+
+[compare]
+input = P1.1
+compare = 0.5
+ifless = 1
+output = O1
+
+You can change the default output value of 0 with the input else. That speciﬁes what happens if the condition
+is not met. The following example outputs -1, if P1.1 is
+greater or equal to 0.5.
+[compare]
+input = P1.1
+compare = 0.5
+ifless = 1
+else = -1
+output = O1
+
+Equality, analog unprecision
+You can also check if two values are equal. This is done
+with ifequal. Check this out:
+
+DROID manual for blue-6
+
+Now the inputs I1 and I2 are being treated as equal as
+long as their difference is 0.1 (1 V) at most.
+
+Makeing a three-way switch
+
+Note: equality can be tricky when it comes to values from
+analog things like inputs or potentiometers. They always
+undergo tiny random ﬂuctiations. So the following example, that should compare the current voltages of two
+inputs, will never really work:
+[compare]
+input = I1
+compare = I2
+ifequal = 1 # will never happen!
+output = O1 # This won't work!
+
+If you try this out, you will probably never get both inputs equal. Even a single electron too much could theoretically make the difference. So in order to make such
+comparisons possible, there is a way to allow for a slight
+unprecision when doing the comparison. This is set with
+the precision parameter:
+
+It is possible to check all three relations at once. Make
+sure that you apply a precision if you deal with analog
+values:
+[compare]
+input = I1
+compare = I2
+precision = 0.1
+ifless = 0
+ifequal = 1
+ifgreater = 2
+output = O1
+
+Now you get 0, 1 or 2, depending on wether I1 is less,
+equal or greater than I2.
+Note: Better do not use just ifless and ifgreater without using ifequal or else. This lets the equality undeﬁned and will output 0 if for any chance the two input
+values are equal. Better use ifless / ifgreater in combination with else if you are not interested in the exact
+equality.
+
+Omitted inputs
+
+[compare]
+input = I1
+compare = I2
+precision = 0.1
+ifequal = 1
+output = O1
+
+It is allowed to omit any of the inputs ifless, ifequal,
+ifgreater or else. Any of these is treated as 0 with one
+exception: If you omit all four, ifequal defaults to 1.
+This make a super basic compare circuit just check if two
+values are equal:
+165
+
+Table of contents at page 2
+
+

@@ -1,0 +1,239 @@
+Input
+
+Type
+
+Default
+
+Description
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+Output
+
+0
+
+Type
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+Description
+
+output (o)
+
+Output the current value if the virtual motor fader (don’t use this if you are using sharewithnext).
+
+button (b)
+
+This output provides you with the current state of the touch button below the fader, but only if the circuit is selected.
+While you could do this with an extra button (see page 141) circuit, using this output is more convenient in some
+situations. While the circuit is not selected, the output is set to 0.
+
+DROID manual for blue-6
+
+314
+
+Table of contents at page 2
+
+16.46
+
+multicompare – Compare in input with up to eight possible values
+
+With this circuit you can assign a different
+output value for up to eight different input
+values. It allows you to pick one of eight
+signals based on the current value of the input.
+
+• If the input is 7, use triangle
+• If the input is 98, use square
+• else use sine
+Here is an example:
+
+There is some overlap with switch (see page 361), but
+there the offset needs to be an integer in the range 0, 1,
+2, etc. without any “holes”. With multicompare you can
+do a logic like the following:
+
+[lfo]
+sawtooth = _SAWTOOTH
+triangle = _TRIANGLE
+square = _SQUARE
+sine = sine
+
+[multicompare]
+input = _WAVEFORMSWITCH # from somewhere
+compare1 = 5
+ifequal1 = _SAWTOOTH
+compare1 = 7
+ifequal1 = _TRIANGLE
+compare1 = 98
+ifequal1 = _SQUARE
+else = _SINE
+output = O1
+
+• If the input is 5, use sawtooth
+
+Input
+
+Type
+
+input (i)
+
+Default
+
+Description
+
+0.0
+
+A value to compare.
+
+compare1 ... compare8 (c)
+
+Up to eight reference values to compare the input with.
+
+ifequal1 ... ifequal8
+(if)
+
+The output values if the according comparison value is found at the input.
+
+else (e)
+
+Output
+output (o)
+
+DROID manual for blue-6
+
+0.0
+
+Type
+
+Speciﬁes the output value in case non of comparison values is found at the input.
+
+Description
+The vaue of the matching ifequal or else input.
+
+315
+
+Table of contents at page 2
+
+16.47
+
+notchedpot – Helper circuit for pots (OBSOLETE)
+
+This circuit has been superseded by the
+new circuit pot (see page 329). It will be
+removed in the next ﬁrmware version. If
+you use it in your patch, better replace it.
+
+available range. You can set the size of the notch via the
+notch input. Here is an example:
+
+pot can do all notchedpot can do and much more. So
+notchedpot will be removed soon.
+
+This little circuit simulates a potentiometer with a notch
+at the center. It helps you exactly selecting the center position by deﬁning a range that is considered to be the center. This range is called “notch” and defaults to 10% of the
+
+Input
+
+Type
+
+pot (p)
+
+0
+
+Default
+
+[algoquencer]
+activity = _ACTIVITY
+...
+
+0.1
+
+Description
+
+Optionally set the notch size, if you do not like the default of 0.1. The maximum allowed value is 0.5. Greater values
+will be reduced to that.
+
+Output
+
+Type
+
+Description
+
+output (o)
+
+0
+
+Your pot output comes here. It still goes from 0.0 to 1.0.
+
+1
+
+[notchedpot]
+pot
+= P1.1
+notch
+= 0
+bipolar = O1 # Send -10V ... +10V to O1
+
+Wire your pot here, e.g. P1.1
+
+1
+
+notch (no)
+
+[notchedpot]
+pot
+= P1.1
+notch
+= 15%
+output
+= _ACTIVITY
+
+For a second use case there is the output bipolar. That
+converts a normal pot into one with range from -1.0 to
+1.0. This example also shows how to disable the notch, if
+you do not need it here:
+
+bipolar (b)
+
+Optional output with a range from -1.0 to 1.0, where the center notch is at 0.0.
+
+absbipolar (ab)
+
+A variation of bipolar that always outputs a positive value, i.e. the pot will go 1 ... 0.5 ... 0 ... 0.5 ... 1
+
+lefthalf (l)
+
+This output allows you to split the pot into two hemispheres. Here you get 1.0 ... 0.0 while the pot is in the left half.
+In the middle and right of it you always get 0.
+
+righthalf (r)
+
+This is the same but for the right half. It outputs 0 while the pot is in the left half and 0.0 ... 1.0 from the middle to the
+fully right position.
+
+lefthalfinv (li)
+
+This outputs 1.0 - lefthalf, i.e. the value range 0.0 ... 1.0 ... 1.0 when the pot moves left → mid → right.
+
+righthalfinv (ri)
+
+This outputs 1.0 - righthalf, i.e. the value range 1.0 ... 1.0 ... 0.0 when the pot moves left → mid → right.
+
+DROID manual for blue-6
+
+316
+
+Table of contents at page 2
+
+

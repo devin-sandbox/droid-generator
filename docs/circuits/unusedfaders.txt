@@ -1,0 +1,49 @@
+# DROID Circuit Input/Output Keys
+
+## unusedfaders - Unused Motor Fader Declaration
+
+### Inputs
+- firstfader - Starting fader
+  - Type: integer
+  - Default: 1
+  - Description: Number of first unused motor fader
+
+- numfaders - Fader count
+  - Type: integer
+  - Default: 1
+  - Description: Number of consecutive unused faders
+
+- select - Selection control
+  - Type: gate
+  - Description: Enables fader disabling when high/matching selectat
+
+- selectat - Selection value
+  - Type: integer
+  - Description: Value at which select input activates circuit
+
+### Outputs
+Note: This circuit has no outputs as it only manages fader states.
+
+Note: Utility circuit with features:
+- Fader range specification
+- Selection-based activation
+- Multiple fader control
+- State management
+- Interface cleanup
+- Resource management
+
+Example applications:
+- Menu system cleanup
+- Interface organization
+- Resource optimization
+- State management
+- Visual feedback
+- User experience
+
+Limitations:
+- No direct outputs
+- No state feedback
+- No individual control
+- Sequential faders only
+- Fixed behavior
+- No dynamic allocation

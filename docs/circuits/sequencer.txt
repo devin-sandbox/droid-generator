@@ -1,0 +1,104 @@
+# DROID Circuit Input/Output Keys
+
+## sequencer - Eight Step Sequencer
+
+### Inputs
+- clock - Clock input
+  - Type: trigger
+  - Description: Advances sequence on each trigger
+
+- reset - Reset trigger
+  - Type: trigger
+  - Description: Returns sequence to first step
+
+- stages - Active stages
+  - Type: integer
+  - Description: Number of stages to use (overrides auto-detection)
+
+- steps - Cycle length
+  - Type: integer
+  - Default: 0
+  - Description: Number of clocks before reset (0=use all stages)
+
+- transpose - Pitch offset
+  - Type: float
+  - Default: 0.0
+  - Description: Voltage added to pitch output
+
+- outputscaling - Output scaling
+  - Type: float
+  - Default: 1.0
+  - Description: Multiplier for pitch output
+
+- gatelength - Gate duration
+  - Type: float
+  - Range: 0-1
+  - Description: Gate length relative to clock period
+  - Note: Unpatched uses clock duty cycle
+
+- pitch1...pitch8 - Step pitches
+  - Type: float
+  - Default: 0.0
+  - Description: Pitch value for each step
+
+- cv1...cv8 - Step CV
+  - Type: float
+  - Default: 0.0
+  - Description: Additional CV per step for modulation
+
+- gate1...gate8 - Step gates
+  - Type: binary
+  - Default: 1
+  - Description: Enable/disable gate output per step
+
+- slew1...slew8 - Step slew
+  - Type: float
+  - Default: 0.0
+  - Description: Slew rate for each step transition
+
+- repeat1...repeat8 - Step repeats
+  - Type: integer
+  - Default: 1
+  - Description: Number of times to repeat each step
+
+- chaintonext - Chain control
+  - Type: binary
+  - Description: Connect to next sequencer instance
+
+### Outputs
+- pitchoutput - Pitch CV
+  - Type: float
+  - Description: Current step pitch value
+
+- cvoutput - Modulation CV
+  - Type: float
+  - Description: Current step CV value
+
+- gateoutput - Gate signal
+  - Type: gate
+  - Description: Current step gate state
+
+Note: Advanced step sequencer with features:
+- Eight step sequence
+- Multiple step parameters
+- Chainable instances
+- Variable gate lengths
+- Step repetition
+- Slew control
+- CV modulation
+
+Example applications:
+- Melodic sequencing
+- Rhythm generation
+- CV pattern creation
+- Multi-track sequencing
+- Complex modulation
+- Pattern chaining
+
+Limitations:
+- Fixed 8 steps per instance
+- No probability control
+- No step conditions
+- No direction control
+- No step skipping
+- Linear sequence only

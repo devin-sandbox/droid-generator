@@ -1,0 +1,16 @@
+# DROID Circuit Input/Output Keys
+
+## copy - Copy signal with attenuation and offset
+
+### Inputs
+- input (i) - Input signal
+  - Type: float
+  - Default: 0.0
+  - Description: Connect the signal you want to copy here
+
+### Outputs
+- output (o) - Output signal
+  - Type: float
+  - Description: The resulting signal will be sent here
+
+Note: Simple utility for copying signals with optional attenuation and offset. Can be used for scaling, offsetting, and basic signal processing. Inversion can be achieved by subtracting from 10V.

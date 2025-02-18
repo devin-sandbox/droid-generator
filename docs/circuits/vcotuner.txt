@@ -1,0 +1,106 @@
+# DROID Circuit Input/Output Keys
+
+## vcotuner - VCO Frequency Measurement and Tuning
+
+### Inputs
+- tuningnote - Reference note
+  - Type: integer
+  - Default: -1
+  - Range: -1 to 11
+  - Description: Note to tune to (0=C, 1=C#, etc., -1=nearest)
+
+- concertpitch - Reference frequency
+  - Type: float
+  - Default: 440.0
+  - Description: Frequency of A1 in Hz
+
+- basepitch - Voltage reference
+  - Type: voltage (1V/Oct)
+  - Default: 0V
+  - Description: Voltage corresponding to C0
+
+- smooth - Filter amount
+  - Type: float
+  - Default: 0.01
+  - Range: 0-1
+  - Description: Frequency measurement smoothing
+
+- precision - Tuning tolerance
+  - Type: float
+  - Default: 3.0
+  - Description: Acceptable deviation in cents
+
+- select - Selection control
+  - Type: gate
+  - Description: Enables LED outputs when high/matching selectat
+
+- selectat - Selection value
+  - Type: integer
+  - Description: Value at which select input activates circuit
+
+### Outputs
+- hz - Measured frequency
+  - Type: float
+  - Description: Current input frequency (0 if no signal)
+
+- ledflat - Flat indicator
+  - Type: float
+  - Range: 0-1
+  - Description: LED brightness for flat tuning
+
+- ledsharp - Sharp indicator
+  - Type: float
+  - Range: 0-1
+  - Description: LED brightness for sharp tuning
+
+- ledintune - In-tune indicator
+  - Type: binary
+  - Description: LED control for in-tune state (selected only)
+
+- intune - Tuning state
+  - Type: binary
+  - Description: In-tune indicator (always active)
+
+- tuning - Tuning deviation
+  - Type: voltage (1V/Oct)
+  - Description: Current tuning offset
+
+- cents - Cent deviation
+  - Type: float
+  - Description: Tuning error in cents
+
+- pitch - Measured pitch
+  - Type: voltage (1V/Oct)
+  - Description: Current pitch with basepitch reference
+
+- referencepitch - Target pitch
+  - Type: voltage (1V/Oct)
+  - Description: Locked reference note pitch
+
+- vcofound - Signal detection
+  - Type: binary
+  - Description: Indicates valid input signal present
+
+Note: Advanced tuning utility with features:
+- Precise frequency measurement
+- Multiple tuning indicators
+- Reference note selection
+- Pitch following output
+- LED feedback support
+- Configurable precision
+
+Example applications:
+- VCO calibration
+- Pitch measurement
+- Frequency detection
+- Tuning assistance
+- Pitch following
+- Clock measurement
+
+Limitations:
+- MASTER18 only
+- Basic waveforms only
+- No complex wave analysis
+- 1Hz-20kHz range only
+- Single input channel
+- No harmonic detection

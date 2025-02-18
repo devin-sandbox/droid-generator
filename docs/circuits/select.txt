@@ -1,0 +1,45 @@
+# DROID Circuit Input/Output Keys
+
+## select - Conditional Copy Circuit
+
+### Inputs
+- input - Signal input
+  - Type: float
+  - Default: 0.0
+  - Description: Signal to conditionally copy
+
+- select - Selection control
+  - Type: gate
+  - Description: Enables copying when high/matching selectat
+
+- selectat - Selection value
+  - Type: float
+  - Description: Value at which select input activates circuit
+
+### Outputs
+- output - Copied signal
+  - Type: float
+  - Description: Input value when selected, undefined otherwise
+
+Note: Conditional signal router with features:
+- Gate-controlled copying
+- Value-based selection
+- LED control support
+- Menu-style switching
+- Signal isolation
+- State preservation
+
+Example applications:
+- LED display control
+- Menu system building
+- Signal routing
+- State management
+- Interface design
+- Display multiplexing
+
+Limitations:
+- Single input channel
+- Undefined output when unselected
+- No value retention
+- No default output value
+- No signal mixing

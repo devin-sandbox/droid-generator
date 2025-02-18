@@ -1,0 +1,301 @@
+16.5
+
+burst – Generate burst of pulses
+
+This circuit produces – when triggered – a
+number of pulses. It can be used for solving
+various musical or technical tasks. Look at
+this example:
+[burst]
+trigger
+hz
+count
+output
+
+= I1
+= 10
+= 5
+= O1
+
+When a trigger arrives at I1, the output O1
+will send ﬁve triggers in a row, with a distance of 0.1 seconds (thus 10 Hz). The gate length is ﬁxed to half of the
+cycle (thus here 0.05 seconds). This means that the pulse
+width is 50% – or in other words – the faster the burst the
+shorter the outgoing triggers.
+Note: When a new trigger arrives while the current burst
+is still ongoing, it will not be ﬁnished but restarted from
+the beginning immediately.
+If you want the bursts to be synchronized to a musical
+clock, you can use the taptempo input (here I2):
+[burst]
+taptempo = I2
+count
+= 4
+trigger = I1
+output
+= O1
+
+Similar to the circuit lfo (see page 239), there is a third input for selecting the speed: rate. This works on a 1 V/Oct
+base, so here is an example for outputting the bursts at
+half of the clock speed (-1 V pitches down one octave,
+which is the same as half of the speed):
+DROID manual for blue-6
+
+Simple clocked trigger delay
+
+[burst]
+taptempo = I2
+rate
+= -1V
+count
+= 4
+trigger = I1
+output
+= O1
+
+Another application of burst is a clocked trigger delay.
+Consider the following patch:
+
+burst can also be used for very fast switching through
+
+things like presets in external gear. Here you might want
+fast updates. Simply set a very high frequency. Burst
+makes sure that the actual output rate is limited to the
+maximum the DROID hardware can do, so not one single
+burst can get lost. Also you might want to use the skip
+input, which skips a certain number of ticks before starting. This can be used to send out a reset signal to some input and after that sending a couple of skip forward triggers to some other input:
+[burst]
+hz = 5000
+skip = 5
+count = 3
+trigger = I1
+output
+= O1
+
+[burst]
+taptempo = I1
+trigger = I2
+skip = 7
+output = O1
+
+A trigger at I2 will be delayed by 7 clock cycles.
+Note: This simple trigger delay has no memory of more
+than one trigger. Any ongoing trigger currently being delayed is overridden and forgotten as soon as the next trigger arrives. If that is what you want, ﬁne. If you are looking for a more complex trigger delay, you ﬁnd one in the
+circuit triggerdelay (see page 371) circuit.
+
+Another very simple yet useful application of burst is
+converting a gate signal into a short trigger. That way you
+can for example convert a running state from MIDI into a
+reset trigger. Since count defaults to 1, you don’t need
+any parameters except the input and output:
+[burst]
+trigger = _MIDI_RUNNING
+output = _RESET
+
+In this example the trigger is emitted when the running
+state goes from 0 to 1.
+139
+
+Table of contents at page 2
+
+Input
+
+Type
+
+rate (ra)
+
+Default
+
+Description
+
+0.0
+
+Frequency control: The default frequency of the burst rate is 1 Hz (one trigger per second or 60 BPM if you like). Each
+volt doubles the frequency. So an input of 1 V (a number of 0.1) speeds up to two triggers per second (120 BPM), 2 V
+(0.2) creates triggers at 4 Hz (240 BPM) and so on. On the other hand negative voltages reduce the speed, so -1 V
+(-0.1) will give 0.5 Hz (30 BPM) and so on.
+Feed a reference clock here and the burst will run at the speed of that clock – albeit optionally modiﬁed by rate. Please
+see page 23 for details on using taptempo inputs.
+
+taptempo (tt)
+
+hz ()
+
+1.0
+
+Set the frequency in Hz directly by setting a number here. This is exclusive to taptempo, but will work in combination
+with rate.
+
+trigger (t)
+
+Send a trigger here in order to start the bursts
+
+reset (r)
+
+Send a trigger here to immediately stop any ongoing burst.
+
+count (c)
+
+1 2 3
+
+1
+
+Number of triggers to send in one burst.
+
+skip (s)
+
+1 2 3
+
+0
+
+Number of time slots to wait before starting with the burst.
+
+Output
+
+Type
+
+output (o)
+
+DROID manual for blue-6
+
+Description
+The triggers are output here.
+
+140
+
+Table of contents at page 2
+
+16.6
+
+button – Does all sorts of useful things with buttons
+
+This is a utility circuit for efﬁciently working with the buttons of your controllers.
+It can implement toggle buttons (that do
+on/off) or even have three or four states.
+It can detect long presses and double clicks
+and also helps you to overload one button with several
+switchable functions. Note: If you just need a plain momentary button without any of these or other nifty features, you can use the register B1.1, B1.2, etc. directly
+and do not need this circuit.
+Note: don’t forget to declare your controllers at the top
+of your patch with lines like [p2b8] or [b32]. In the below examples I’ve omitted these declarations for sake of
+simplicity.
+This circuit is designed to build user interfaces. It is executed at a lower speed. Don’t use it for other purposes.
+
+[button]
+button
+led
+
+= B1.4
+= L1.4
+
+[cvlooper]
+loop
+
+= L1.4
+
+If you do not want the state of the button to be persisted
+on the SD card, use dontsave = 1. This make sense for
+the CV looper since the loop is apparently empty anyway
+when your
+starts.
+[button]
+button
+led
+dontsave
+
+= B1.4
+= L1.4
+= 1
+
+[cvlooper]
+loop
+
+= L1.4
+
+Toggle buttons
+The most common use of button is to implement a toggle
+button. That’s a button that changes from on to off and
+back at each press of the button. The current state of the
+button will persist on your SD card so you don’t lose your
+state if you switch off your rack.
+Typically you will wire the button input to one of your
+controller’s buttons like B1.1 and led to the LED in that
+button (L1.1). LED will then always visualise the current
+state of the button. As a side effect the LED register L1.1
+will store the button state as a value 0 or 1 and hence can
+be used by some other circuit as an input.
+Here is a typical example. The button is being used for
+enabling the loop in a CV looper:
+
+DROID manual for blue-6
+
+Usually the button switches between the two values 0
+and 1. Sometimes, however, you need different values.
+For this purpose there are the two inputs offvalue and
+onvalue. They set two alternative values for the ”off” and
+”on” states. And the output output outputs the selected
+value (led still goes to 0 and 1). Here is an example for
+a toggle button that switches a clock divider between 2
+and 4:
+[button]
+button
+led
+offvalue
+onvalue
+output
+
+= B1.4
+= L1.4
+= 2
+= 4
+= _CLOCK_DIV
+
+141
+
+[clocktool]
+input
+output
+divide
+
+= G1 # external clock
+= G2
+= _CLOCK_DIV
+
+Of course offvalue and onvalue are CV controllable.
+How can this make sense? Well – as they can take variable inputs you can use a button for directly switching between two different input CV signals. The following example will use a button to switch between two different
+wave forms of an LFO (see page 239). The button B3.1
+switches between sawtooth and sine and sends the result
+to O1.
+[lfo]
+hz
+sawtooth
+sine
+
+= 2
+= _SAWTOOTH
+= _SINE
+
+[button]
+button
+led
+offvalue
+onvalue
+output
+
+= B3.1
+= L3.1
+= _SAWTOOTH
+= _SINE
+= O1
+
+Buttons with three or four states
+Sometime you might want more than just two values.
+button supports switching between up to four values.
+Use the states input and set it to 3 or 4. In the following
+examples output will go through the values 0, 1, 2 and 3:
+[button]
+button = B1.1
+
+Table of contents at page 2
+
+

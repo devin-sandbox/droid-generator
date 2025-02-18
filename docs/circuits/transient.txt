@@ -1,0 +1,81 @@
+# DROID Circuit Input/Output Keys
+
+## transient - Transient Generator
+
+### Inputs
+- start - Initial value
+  - Type: float
+  - Default: 0.0
+  - Description: Starting value of transient
+
+- end - Target value
+  - Type: float
+  - Default: 1.0
+  - Description: Final value of transient
+
+- duration - Transition time
+  - Type: float
+  - Default: 1.0
+  - Description: Length in seconds or clock ticks
+  - Note: Zero/negative treated as instant transition
+
+- loop - Repeat control
+  - Type: binary
+  - Default: 0
+  - Description: Restarts transient when end reached
+
+- pingpong - Bidirectional mode
+  - Type: binary
+  - Default: 0
+  - Description: Alternates between start and end values
+
+- freeze - Pause control
+  - Type: binary
+  - Default: 0
+  - Description: Holds transient at current position
+
+- reset - Reset trigger
+  - Type: trigger
+  - Description: Returns to start value immediately
+
+- clock - Timing source
+  - Type: trigger
+  - Description: Optional clock for tick-based timing
+
+### Outputs
+- output - Current value
+  - Type: float
+  - Description: Current transient value
+
+- phase - Progress indicator
+  - Type: float
+  - Description: Normalized progress (0 to 1)
+
+- endoftransient - Completion flag
+  - Type: trigger/gate
+  - Description: Signals completion based on mode
+  - Note: Behavior varies with loop/pingpong settings
+
+Note: Advanced transient generator with features:
+- Linear transitions
+- Time or clock-based
+- Looping capability
+- Bidirectional mode
+- Progress monitoring
+- Long duration support
+
+Example applications:
+- Complex envelopes
+- Timed transitions
+- Parameter morphing
+- Long form changes
+- Oscillator modulation
+- Sequencer control
+
+Limitations:
+- Linear only (no curves)
+- No acceleration control
+- Single shape type
+- No segment chaining
+- No voltage scaling
+- No time multiplication

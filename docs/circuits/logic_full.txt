@@ -1,0 +1,235 @@
+Input
+
+Type
+
+waveform (w)
+
+Output
+
+Type
+
+Default
+
+Description
+
+0.0
+
+If you use output – rather than the individual waveform outputs like square, saw and so on – this input selects the Wave
+form. An integer number from 0 to 6 selects one of the seven available waveforms. Any number in between selects a
+mixture of the two neighboring waveforms. That way you can smoothly morph through all the available waveforms.
+The codes for the waveforms are:
+0
+
+square
+
+1
+
+sawtooth
+
+2
+
+triangle
+
+3
+
+ramp
+
+4
+
+paraboloid
+
+5
+
+sine
+
+6
+
+cosine
+
+Description
+
+output (o)
+
+Main output of the LFO.
+
+square (q)
+
+A square waveform – modiﬁed by pulsewidth.
+
+sawtooth (st)
+
+Outputs a sawtooth waveform – i.e. a rising ramp
+
+triangle (t)
+
+Outputs a triangle waveform – modiﬁed by skew.
+
+ramp (rp)
+
+Outputs a falling ramp – like a sawtooth that is mirrored. Note: if the LFO is set to bipolar then this is the negation of
+sawtooth. If it is set to unipolar then this is not the case. The waveform will be positive then!
+
+paraboloid (pb)
+
+An experimental waveform that looks very similar to a sine wave but is derived from a triangle by computing the square
+of each waypoint’s distance to level.
+
+sine (si)
+
+A sine waveform.
+
+cosine (cs)
+
+A sine waveform shifted by 90◦ . This output is for your convenience and avoids needing two LFO circuits in cases
+where you want to make quadrature applications. Please note that 180◦ and 270◦ can easily be achieved by negating
+the outputs sine and cosine at a later stage.
+
+DROID manual for blue-6
+
+244
+
+Table of contents at page 2
+
+16.35
+
+logic – Logic operations utility
+
+Utility circuit for logic operations on gate
+signals. It can do operations like AND, OR,
+NAND, NOR, etc.
+
+Basic operation
+In this example we do an and operation. O1
+will output 1 (on) if all of I1, I2 and I3 see on (voltage
+above 1 V):
+[logic]
+input1
+input2
+input3
+and
+
+= I1
+= I2
+= I3
+= O1
+
+Here is how to do a logic negate of a signal:
+[logic]
+input
+= I1
+negated = O1
+
+If you do not like the 1 V threshold, you can change it:
+[logic]
+input
+= I1
+negated
+= O1
+threshold = 5V
+
+Doing logic without this circuit
+Please note, that many times when you think you need
+the logic circuit you can do the same much simpler. Here
+DROID manual for blue-6
+
+is an example, where you use a toggle button to switch on
+a clock, which is sent to output O1. The idea is to make
+an AND combination of the clock signal and the button
+state:
+[button]
+button = B1.1
+led
+= L1.1
+
+[button]
+button
+led
+
+= B1.1
+= L1.1
+
+[lfo]
+hz
+square
+level
+
+= 2
+= _LFO
+= L1.1
+
+[lfo]
+hz
+= 2
+square = _LFO
+[logic]
+input1 = L1.1
+input2 = _LFO
+and
+= O1
+
+While this works pretty well, here is a solution that makes
+use of the fact, that the multiplication of two gate signals
+is in fact a kind of AND combination, since A × B is just
+1, if A and B are 1 and 0 otherwise:
+[button]
+button = B1.1
+led
+= L1.1
+[lfo]
+hz
+= 2
+square = _LFO
+[copy]
+input = _LFO * L1.1
+output = O1
+
+You even can avoid the Copy-circuit if you make use of
+the level input of the LFO, since setting the level to 0
+disables it:
+245
+
+Table of contents at page 2
+
+Another nice solution is to make use of offvalue and
+onvalue of the button circuit. offvalue is 0 per default,
+so we just need to deﬁne onvalue:
+[lfo]
+hz
+square
+
+= 2
+= _LFO
+
+[button]
+button
+led
+onvalue
+
+= B1.1
+= L1.1
+= _LFO
+
+If you need to combine two gates in order to create a common gate pattern, you can use addition – which is very
+similar to a logic OR combination. The following example creates two overlayed euclidean rhythms:
+[euklid]
+length = 16
+beats = 3
+output = _E1
+[euklid]
+length = 13
+beats = 2
+output = _E2
+[copy]
+input = _E1 + _E2
+output = O1
+
+Note: When both _E1 and _E2 are 1 at the same time, the
+sum is 2, of course. This does not matter, since the output voltage is capped at 10 V (1.0) anyway.
+
+DROID manual for blue-6
+
+246
+
+Table of contents at page 2
+
+

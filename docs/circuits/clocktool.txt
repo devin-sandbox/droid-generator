@@ -1,0 +1,54 @@
+# DROID Circuit Input/Output Keys
+
+## clocktool - Clock divider/multiplier/shifter
+
+### Inputs
+- clock (c) - Clock input
+  - Type: trigger
+  - Default: none
+  - Description: Input for steady clock signal
+
+- reset (r) - Reset trigger
+  - Type: trigger
+  - Default: none
+  - Description: Resets internal counters for clock division alignment
+
+- divide (d) - Division factor
+  - Type: integer
+  - Default: 1
+  - Description: Clock division factor (rounded to nearest integer)
+
+- multiply (m) - Multiplication factor
+  - Type: integer
+  - Default: 1
+  - Description: Clock multiplication factor
+
+- dutycycle (dc) - Output duty cycle
+  - Type: float
+  - Default: none
+  - Description: Output clock duty cycle (0.0-1.0 or 0%-100%)
+
+- gatelength (gl) - Gate duration
+  - Type: float
+  - Default: none
+  - Description: Fixed output pulse length in seconds (overrides dutycycle)
+
+- delay (dl) - Time shift
+  - Type: float
+  - Default: 0.0
+  - Description: Clock shift amount (-1.0 to 1.0, negative=ahead, positive=delay)
+
+### Outputs
+- output (o) - Modified clock
+  - Type: trigger
+  - Description: The processed clock signal output
+
+- inputpitch (ip) - Input clock pitch
+  - Type: V/Oct
+  - Description: Input clock speed as V/Oct (60 BPM = 0V reference)
+
+- outputpitch (op) - Output clock pitch
+  - Type: V/Oct
+  - Description: Output clock speed as V/Oct (60 BPM = 0V reference)
+
+Note: This circuit provides comprehensive clock manipulation with division, multiplication, time shifting, and gate length control. Requires steady input clock for reliable operation, especially with time shifting.

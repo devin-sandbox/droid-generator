@@ -1,0 +1,323 @@
+Input
+
+Type
+
+Default
+
+Description
+
+mass (m)
+
+1.0
+
+The mass of the object on the spring. The heavier it is, the farther the spring will move up and down.
+
+gravity (g)
+
+1.0
+
+The gravity of the simulated planet the spring is mounted at. If you set the gravity to zero, the mass will move exactly
+around the zero position from positive to negative and back. But you need to shove it or set a start position other than
+0, in order to get it started.
+
+springforce (f)
+
+1.0
+
+The force of the string per m it is stretched. In an ideal spring the force is proportional to the current elongation.
+
+flowresistance (fr)
+
+0.0
+
+Setting this to a value > 0 will dampen the oscillation in a way, that higher velocities will be damped more then slower
+ones. This means that impact of the friction will get less and less as time goes by and the movement slows down.
+
+friction (fi)
+
+0.0
+
+Setting this to a value > 0 will also dampen the oscillation, but in a way that is independent of the current speed of
+the mass.
+
+speed (sp)
+
+0.0
+
+This parameter speeds up or slows down the perceived time. It works on a 1V/Oct base. Every positive 1V (or 0.1)
+doubles the speed. So if you set speed to 2V or 0.2 it will speed up the movement by a factor of 4. An input of -1V will
+slow down the movement to the half.
+
+shove (sh)
+
+0
+
+While this gate input is logical 1, an extra force of 1 N is applied to the mass pointing downwards. You can change that
+force with shoveforce.
+
+shoveforce (sf)
+
+1.0
+
+This is the force being applied to the mass while shove is active
+Resets the whole system to its start position.
+
+reset (r)
+startvelocity (sv)
+
+0.0
+
+Sets the velocity the mass has which
+
+starts of a reset is triggered
+
+startposition (spo)
+
+0.0
+
+Sets the position the spring has which
+
+starts of a reset is triggered
+
+Output
+
+Type
+
+Description
+
+velocity (v)
+
+Outputs the current velocity of the mass
+
+position (p)
+
+Output the current length of the string. If the string goes upwards (which is possible with certain modulations), this
+can be negative.
+
+DROID manual for blue-6
+
+358
+
+Table of contents at page 2
+
+16.65
+
+superjust – Perfect intonation of up to eight voices
+
+This circuit automatically creates a perfect pure intonation for up to eight input
+pitches.
+
+Introduction
+This means that all pitches are in just intervals, which correspond to small whole number ratios such
+as 32 or 54 . Assuming that you have perfectly tuned and
+calibrated VCOs, If these pitches are used to play a chord,
+there will be no or just minimal audible beatings and the
+chord will sound very pure.
+In normal equal
+√temperament intonation all intervals are
+12
+2 and thus there is no pure interval at all,
+a multiple of
+with the exception of the octave. So all chords will sound
+impure.
+The problem about pure or just intonation is, that you
+need to decide for just one scale, e.g. C major, and then
+tune all 12 notes in a way that chords from that scale
+sound good. But as soon as you change the scale, the intervals will sound ugly.
+What makes the superjust unique is that fact, that it automatically creates a pure intonation in a dynamic way. It
+constantly “listens” to the notes that are currently being
+played and creates a perfect intonation just for those, not
+for a scale or so. As soon as at least one note changes, all
+notes are retuned in order to ﬁnd a new perfect tuning.
+This is a bit like a well-trained string ensemble or choir,
+where each musician listens and adjusts his or her pitch
+in relation to all others.
+
+Usage
+
+led = L1.1
+
+The nice thing is: you don’t need any conﬁguration. You
+need not specify any information about the root note,
+the scale or anything else. Neither need the inputs be
+quantized so some scale or tuned to 440 Hz. The circuit
+will simply analyse all input pitches, apply its algorithm
+(patent pending) and then just slightly raises or lowers
+each note so that at the end each pair of frequencies have
+a rational oscillation ratio with small numerator and denominator. This is done in a way that the average pitch
+does not change. Just pipe your pitches through that circuit and you are done. And if you want to use a quantizer,
+use superjust after quantization.
+Here an example for three voices:
+[superjust]
+input1 = I1
+input2 = I2
+input3 = I3
+output1 = O1
+output2 = O2
+output3 = O3
+
+Now when the button B1.1 is active, all outputs will output zero volts. Tuning with 0 V is not optimal in some
+cases. You should tune your VCOs always roughly in the
+average pitch you play them. So you can set the tuning
+voltage with the parameter tuningpitch. Here it is set
+to 2 V (2 octaves higher then 0 V):
+[button]
+button = B1.1
+led = L1.1
+
+Tuning
+Of course, an exact tuning of your VCOs is crucial, since
+the pitch differences between a normal tempered intonation and a perfect intonation are quite small. The circuit helps you in the process of tuning with the inputs
+tuningmode, which you can map to a toggle button:
+[button]
+button = B1.1
+
+DROID manual for blue-6
+
+[superjust]
+input1 = I1
+input2 = I2
+input3 = I3
+output1 = O1
+output2 = O2
+output3 = O3
+tuningmode = L1.1
+
+359
+
+[superjust]
+input1 = I1
+input2 = I2
+input3 = I3
+output1 = O1
+output2 = O2
+output3 = O3
+tuningmode = L1.1
+tuningpitch = 2V
+
+Sometimes it is desirable to change the tuning pitch to
+other octaves on the ﬂy. This example uses pot P1.1 for
+going through several octaves, and uses a quantizer for
+creating steps of 1 V each:
+
+Table of contents at page 2
+
+Perfect VCO calibration
+
+[button]
+button = B1.1
+led = L1.1
+
+If you really want to eliminate all beatings in your chords
+while using analog VCOs, you probably need something
+to correct tracking deviations. Here I strongly recommend using the circuit calibrator (see page 150). Here
+is an example with three voices, where buttons of a P2B8
+are used for ﬁne tuning the VCO tracking in each octave:
+
+[quantizer]
+input = P1.1
+steps = 1 # 1 step per octave
+output = _TUNINGPITCH
+[superjust]
+input1 = I1
+input2 = I2
+input3 = I3
+output1 = O1
+output2 = O2
+output3 = O3
+tuningmode = L1.1
+tuningpitch = _TUNINGPITCH
+
+[superjust]
+input1 = I1
+input2 = I2
+input3 = I3
+output1 = _O1
+output2 = _O2
+output3 = _O3
+
+input1 ... input8 (i)
+
+Type
+1V
+Oct
+
+tuningmode (tm)
+
+tuningpitch (tp)
+
+1V
+Oct
+
+bypass (b)
+transpose (tr)
+
+Output
+output1 ... output8 (o)
+
+DROID manual for blue-6
+
+1V
+Oct
+
+Type
+1V
+Oct
+
+[calibrator]
+input = _O2
+output = O2
+nudgeup = B1.2
+nudgedown = B1.4
+[calibrator]
+input = _O3
+output = O3
+nudgeup = B1.5
+nudgedown = B1.7
+
+The number of pitch inputs and pitch outputs you patch
+should be identical.
+
+[calibrator]
+
+Input
+
+input = _O1
+output = O1
+nudgeup = B1.1
+nudgedown = B1.3
+
+Default
+
+Description
+
++
+
+1st ... 8th pitch input
+
+0
+
+While this is 1, all outputs output the value set by tuningpitch. This is for tuning all outputs. Since perfect tuning is
+crucial for perfect intonation, this is quite useful.
+
+0V
+
+This pitch CV will be output while the tuning mode is active.
+
+0
+
+While this is 1, all inputs are passed through to the outputs without changes.
+
+0V
+
+This value is being added to all outputs, but not in tuning or bypass mode. It can e.g. be used for making a vibrato on
+a chord.
+
+Description
+1st ... 8th pitch output
+
+360
+
+Table of contents at page 2
+
+

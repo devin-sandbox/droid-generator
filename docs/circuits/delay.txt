@@ -1,0 +1,58 @@
+# DROID Circuit Input/Output Keys
+
+## delay - Tape delay for CVs, gates and numbers
+
+### Inputs
+- delay (dl) - Delay time
+  - Type: float
+  - Default: 1.0
+  - Description: The CVs are delayed by this amount of seconds. If you patch clock as well, the delay is specified in clock tick, so then delay = 1 means "delay by one clock tick".
+
+- cvin (ci) - CV input
+  - Type: float
+  - Default: 0.0
+  - Description: Continuous input CV
+
+- numberin (ni) - Number input
+  - Type: int
+  - Description: Discrete input number in the range 0 ... 255
+
+- gatein1 ... gatein8 (gi) - Gate inputs
+  - Type: binary
+  - Description: Input gates
+
+- clock (c) - Clock input
+  - Type: trigger
+  - Description: If you use this clock input, all time inputs are measured in clock ticks instead of seconds.
+
+- sample (sm) - Sample trigger
+  - Type: trigger
+  - Description: If you patch this input, "triggered" mode is enabled. In this mode, the virtual tape just records a new CV on each trigger at sample.
+
+- save - Save trigger
+  - Type: trigger
+  - Description: Saves the current tape content to SD card when triggered.
+
+- load - Load trigger
+  - Type: trigger
+  - Description: Loads tape content from SD card when triggered.
+
+- filenumber - File number
+  - Type: int
+  - Range: 1-9999
+  - Description: Specifies which tape file number to save/load (e.g., tape0001.bin).
+
+### Outputs
+- cvout - CV output
+  - Type: float
+  - Description: Delayed version of the input CV
+
+- numberout - Number output
+  - Type: int
+  - Description: Delayed version of the input number
+
+- gateout1 ... gateout8 - Gate outputs
+  - Type: binary
+  - Description: Delayed versions of the input gates
+
+Note: Experimental tape delay with 256 sample memory. CV range limited to -1...+1 (-10V...+10V). Uses intelligent interpolation for smooth CV changes. In normal mode, minimum tape length is 5.12 seconds. In triggered mode, can store up to 256 discrete steps.

@@ -1,0 +1,280 @@
+Input
+pressure1 ... pressure8
+(pr)
+
+Type
+
+Default
+
+0
+
++
+
+1
+
+Description
+Sends key pressure events for individually played notes via the MIDI event “polyphonic key pressure” (this is not a CC!).
+These values are not processed at the time of note on/off events but all the time and can also change while a note is
+already being played. This corresponds to “aftertouch” key pressure on keyboards that have a pressure sensor per key.
+If nothing is patched here, no pressure events are sent.
+
+channelpressure (cp)
+
+0
+
+1
+
++
+
+Whenever this CV changes, sends a MIDI channel pressure event, also known as “aftertouch”. This corresponds to
+keyboards that just have one global pressure sensor and not one per key.
+If nothing is patched here, no channel pressure events are sent.
+
+pitchstabilization (ps)
+
+1
+
+Enables or disables pitch stabilization. It is on per default and can be disabled by setting this jack to 0. Pitch stabilization ﬁxes timing issues where the input pitch needs some time for reaching the target pitch after a gate.
+
+triggerdelay (td)
+
+0.0
+
+Introduces a delay between in the incoming gate signal (just the positive edge) and the “note on” event. This can tackle
+the problem when your pitch input (sequencer etc.) needs some time after the gate in order to reach and stabilize the
+target pitch. The delay is speciﬁed in milliseconds, so a typical useful value would be 5 (5 ms). This is an alternative to
+the automatic pitchstabilization. Note: triggerdelay disables pitchstabilization, as long as that is not set
+to 1 explicitly. If both are used at the same time, the triggerdelay happens before the pitch stabilization. So it is a
+minimum delay.
+
+lowestnote (ln)
+
+1 2 3
+
+0
+
+With this input you can restrict the notes being played by setting a lower bound. In MIDI the notes range from 0 (C-2)
+to 127 (G9). By setting lowestnote to 24 (C0), all notes below this note are simply ignored. This allows for example for
+a keyboard split by using a second circuit with a highestnote of 23. Note gates are not being affected by this bound.
+
+highestnote (hn)
+
+1 2 3
+
+127
+
+Sets an upper limit to the note being played, similar to lowestnote. Note gates are not being affected by this bound.
+You can deﬁne up to 16 notes that can be directly controlled with a dedicated gate. This is convenient for playing drum
+sounds directly from triggers and also for using DROID controllers as MIDI controllers. A trigger or gate to notegate1
+will directly play the note whose pitch is set by note1.
+
+notegate1 ... notegate16
+(ng)
+
+note1 ... note16 (n)
+
+notegatevelocity1 ...
+notegatevelocity16 (ngv)
+
+modwheel (w)
+
+DROID manual for blue-6
+
+1 2 3
+
++
+
+0
+
+1
+
+1.0
+
+Here you can set the velocities use by the notegates. In order to keep it simple, this velocity is used for note on and
+note off events (nobody cares about the note off velocity anyway). If you do not use these jacks, the note gates will
+always use the maximum velocity.
+
+0
+
+1
+
+0.0
+
+Sets the current value of the modulation wheel. Any change here sends a midi CC#1 with a new value for the modulation wheel. The input range is 0.0 ... 1.0 and will be converted into the MIDI range of 0 ... 127. Note: in future we
+might support CC#33, which is the LSB value of CC#1 and increases the resolution from 128 to 16384 different values,
+at the cost – however – of two additional bytes being sent.
+
+MIDI notes to played via notegate. The range is from 0 to 127. Per default the notes are set to the MIDI notes 0, 1, 2
+... 15.
+
+272
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+volume (vo)
+
+0
+
+1.0
+
+Sets the volume of the target device. This is done by sending the MIDI CC#7 (VOLUME MSB) and MIDI CC#39 (VOLUME
+LSB). Using these two CCs enables a 14 bit high resolution 16384 levels (not just 127). Some devices to not react to
+CC#39 and simply ignore the LSB (least signiﬁcant byte). The volume CV ranges from 0.0 (silent) to 1.0 (the default).
+
+0.0
+
+Bends the pitches of all currently played notes up and down by a range that is conﬁgured or elsewhere deﬁned by the
+device that plays our stuff. The range of this CV is -1.0 ... 1.0 for covering the maximum pitch bend range. Most times
+that range is two semitones up and down. This CV does not behave in a 1V/oct way!
+
+0
+
+Pitch tracking is an advanced feature that allows you to track continuous changes in the incoming pitch CV while the
+note is already playing. It does this by listening to the input CV and converting any change into a MIDI “pitch bend”
+change.
+
+1
+
+pitchbend (pb)
+
+pitchtracking (pt)
+
+1 2 3
+
+This feature has two limitations: First, there is just one global pitch bend value per channel, not one per note. So this
+feature only works in a monophonic situation. Only the value of pitch1 is being tracked. When you play more than
+one note per channel, funny things might probably happen. Also The maximum range is limited by the pitch bend
+range of your target device. That is usually preset to 2 semitones up and down. If you can increase it, please also adapt
+pitchbandrange so this circuit knows about it.
+Pitch tracking has two levels: pitchbandrange = 1 will alter the pitch of the current note within the maximum range
+of pitch bend and will clip any further changes. pitchbendrange = 2, in contrast, plays a new note if the current range
+is exceeded. Depending on your sound settings this “dent” might be audible or not.
+0
+
+pitch tracking is off
+
+1
+
+just use MIDI pitch bend
+
+2
+
+use new note on larger changes
+
+Note: When you use pitch tracking at the same time as pitchbend, both pitch alterations will add up.
+pitchbendrange (pbr)
+
+1V
+Oct
+
+1
+6V
+
+Deﬁnes the range of the effect of pitch bend at the target device on a 1V/oct base. Note: You cannot change that actual
+range here. You just can make sure that this circuit has the correct assumption of that range.
+If your target device has a conﬁguration for extending the range, and you have set that for example to 1 octave, set
+pitchbendrange to 1 V. This allows pitchtracking to correctly adapt in-note pitch changes. Note: This has no effect
+on the pitchbend CV.
+
+ccnumber1 ... ccnumber8
+(cn)
+
+DROID manual for blue-6
+
+1 2 3
+
+0
+
+Speciﬁes up to eight different CC numbers that can be continuously updated via the corresponding cc1 through cc8
+inputs. The value needs to be an integer number from 0 to 127.
+
+273
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+cc1 ... cc8 ()
+
+0
+
++
+
+1
+
+Description
+The current value of the CCs that are speciﬁed with ccnumber1 through ccnumber8. The range is always from 0.0 to
+1.0 (which is mapped to the number 0 to 127 on the MIDI wire).
+If you don’t patch anything here, no CC events will be sent, of course.
+Usually midiout will send out a new CC event every time the input value of a CC has changed (with some rate limit in
+order not to to ﬂood the MIDI stream).
+
+cctrigger1 ... cctrigger8
+(ct)
+
+When you use these inputs, an alternative method is enabled. Now CC events are created whenever a trigger arrives
+here. No more updates will be sent automatically.
+This is useful for target devices that use CCs just as messages, i.e. as one time events and not for updating a continous
+value.
+A trigger here sends an update for all CCs that you have in use (used ccX inputs). Normally an update is just sent once
+initially and then when the input CV at one of the cc inputs changes its value. With the trigger you can force updates.
+This might be neccessary if the receiving device has lost memory of the current states of the CCs (e.g. due to a power
+cycle).
+
+updateccs (uc)
+
+Note: Unlike the cctriggerX inputs, this trigger does not change the way the CC inputs work. It is just a hint for
+that forces one additonal update.
+delayinitialccs (dc)
+
+1.0
+
+When the Droid starts it needs a short time until the X7 is operating and your PC / DAW is able to receive the MIDI
+events via USB. Initial CC updates during that short time period might get lost and you are missing the correct CC
+states (which are updated later only on changes).
+In order to avoid that, the Droid wait a short time after starting before it sends the ﬁrst CC events. That delay can be
+tuned here. It is a time in seconds.
+
+bank (ba)
+
+1 2 3
+
++
+
+program (pm)
+
+1 2 3
+
++
+
+programchange (pc)
+
+DROID manual for blue-6
+
+Selects the current “bank”. Some MIDI devices have more than 128 programs (i.e., patches, instruments, preset, etc).
+A MIDI Program Change message supports switching between only 128 programs. So, “Bank Select” (sometimes also
+called bank switch) is sometimes used to allow switching between groups of 128 programs. Bank select uses the MIDI
+CCs #0 (MSB) and #32 (LSB) together to form a number of 16384 different banks. The input value thus ranges from
+1 to 16384. Most devices, however, restrict themselves to just 128 banks and just use the MSB (CC#0). If that is the
+case, you need to set bank to 128 for bank 2, 256 for bank 3 and so on. This can be done by simply multiplying the
+actual bank number with 128.
+Select the current “program”. This is a number from 1 to 128.
+A trigger here will send out a “program change” MIDI message even if the value of bank or program has not changed.
+
+274
+
+Table of contents at page 2
+
+

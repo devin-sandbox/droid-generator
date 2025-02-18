@@ -1,0 +1,46 @@
+# DROID Circuit Input/Output Keys
+
+## compare - Compare two values
+
+### Inputs
+- input (i) - Input value
+  - Type: float
+  - Default: 0.0
+  - Description: A value to compare
+
+- compare (c) - Reference value
+  - Type: float
+  - Default: 0.0
+  - Description: A reference value to compare the input with
+
+- ifgreater (g) - Greater than output
+  - Type: float
+  - Default: none
+  - Description: Value to output if input is greater than compare
+
+- ifless (l) - Less than output
+  - Type: float
+  - Default: none
+  - Description: Value to output if input is less than compare
+
+- ifequal (q) - Equal output
+  - Type: float
+  - Default: none
+  - Description: Value to output if input equals compare within precision
+
+- else (e) - Default output
+  - Type: float
+  - Default: 0.0
+  - Description: Value to output when no conditions are met
+
+- precision (pc) - Equality precision
+  - Type: float
+  - Default: 0.0
+  - Description: Allowed difference for equality comparison
+
+### Outputs
+- output (o) - Comparison result
+  - Type: float
+  - Description: Outputs one of ifgreater/ifless/ifequal/else based on comparison
+
+Note: This circuit provides value comparison with optional precision for analog values. When all condition outputs are omitted, ifequal defaults to 1.0.

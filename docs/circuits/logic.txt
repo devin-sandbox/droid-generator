@@ -1,0 +1,81 @@
+# DROID Circuit Input/Output Keys
+
+## logic - Logic operations utility
+
+### Inputs
+- input1...input8 (i) - Logic inputs
+  - Type: gate/cv
+  - Description: Gate/CV inputs for logic operations. Can be used as CV inputs with threshold
+
+- threshold (t) - Input threshold
+  - Type: float
+  - Default: 0.1
+  - Description: Values >= threshold considered high/on (default 0.1 = 1V)
+
+- lowvalue (l) - Low output value
+  - Type: float
+  - Default: 0.0
+  - Description: Value output for logic low/false/off state
+
+- highvalue (h) - High output value
+  - Type: float
+  - Default: 1.0
+  - Description: Value output for logic high/true/on state
+
+- countvalue (cv) - Count increment
+  - Type: float
+  - Default: 0.1
+  - Description: Value added to count output for each high input
+
+### Outputs
+- and (a) - AND operation
+  - Type: float
+  - Description: High when all inputs are high, else low
+
+- or (o) - OR operation
+  - Type: float
+  - Description: High when any input is high
+
+- xor (x) - XOR operation
+  - Type: float
+  - Description: High when odd number of inputs are high
+
+- nand (na) - NAND operation
+  - Type: float
+  - Description: Negated AND output
+
+- nor (no) - NOR operation
+  - Type: float
+  - Description: Negated OR output
+
+- negated (n) - NOT operation
+  - Type: float
+  - Description: Logical negation of input1 (ignores other inputs)
+
+- count (c) - High count
+  - Type: float
+  - Description: Sum of countvalue for each high input
+
+- countlow (cl) - Low count
+  - Type: float
+  - Description: Sum of countvalue for each low input
+
+Note: Utility circuit for logic operations on gate signals. Key features:
+- Multiple logic operations (AND, OR, XOR, NAND, NOR)
+- Configurable threshold for high/low detection
+- Customizable output values for high/low states
+- Input counting functionality
+- Up to 8 inputs
+
+Alternative approaches:
+- Multiplication for AND operations
+- Addition for OR operations
+- Button circuit onvalue/offvalue for simple gates
+- Copy circuit for basic combinations
+
+Example applications:
+- Gate signal combination
+- Complex trigger patterns
+- Multi-condition switching
+- Input state counting
+- Threshold detection

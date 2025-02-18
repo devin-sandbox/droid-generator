@@ -1,0 +1,141 @@
+Output
+
+Type
+
+Description
+
+righthalfinv (ri)
+
+This outputs 1.0 - righthalf, i.e. the value range 1.0 ... 1.0 ... 0.0 when the pot moves left → mid → right (and the
+scaled by outputscale).
+
+onchange (c)
+
+This output emits a trigger whenever the pot is turned in either direction.
+
+DROID manual for blue-6
+
+336
+
+Table of contents at page 2
+
+16.55
+
+quantizer – Non-musical quantizer
+
+This quantizer circuit is very simple. It
+reads an input voltage, quantizes it to the
+next discrete step that you conﬁgured and
+outputs it.
+You can use it for musical purposes by setting the number of steps to 12 per Volt (which is default).
+It will quantize the input to semitones.
+The following example scales down a pot P1.1 to 1 V (i.e.
+one octave) and then quantizes it to semitones. Since 12
+is the default value for steps this parameter can be omit-
+
+Input
+
+Type
+
+input (i)
+
+DROID manual for blue-6
+
+[quantizer]
+input = P1.1 * 1V
+output = O1
+
+You can use the Quantizer circuit as a sample & hold circuit if you set steps to 0 and use the trigger input:
+
+Note1 : In fact you can select 13 semitones here because
+if you turn the pot fully CW it will output 1, which will be
+scaled to 1 V and then quantized to 1 V – which is the 13th
+semitone above the lowest possible note.
+
+[quantizer]
+input
+= I1
+steps
+= 0
+trigger = I2
+output = O1
+
+Description
+
+0.0
+
+Patch the unquantized input voltage here
+This jack is optional. If you patch it, the quantizer will work in triggered mode. Here the output pitch is always frozen
+until the next trigger happens.
+
+1 2 3
+
+bypass (b)
+direction (d)
+
+Note2 : if you are looking for a more musical quantizer
+then have a look at the Minifonion circuit.
+
+Default
+
+trigger (t)
+
+steps (s)
+
+ted here:
+
+1 2 3
+
+12
+
+Number of steps that one Volt should be divided in. The default is 12 and will quantize the input voltage to semitones.
+The number of steps is related to a value of 1 V which means 0.1. It is allowed to use a fractional number here. E.g.
+the value 1.2 will quantize to 12 steps per 10 V (which means 12 steps per 1.0, which can make sense. A value of 0 (or
+lower) will basically mean an infinite number of steps and thus practically disable quantization.
+
+0
+
+If you set this gate input to 1 then quantization is bypassed and the input voltage is directly copied to the output.
+
+1
+
+This parameter selects which value is chosen if the input value lies between two allowed quantized values (which is
+almost always the case). The default is to choose the nearest value.
+0
+
+quantized down
+
+1
+
+quantize to nearest allowed value
+
+2
+
+quantize up
+
+337
+
+Table of contents at page 2
+
+Output
+
+Type
+
+Description
+
+output (o)
+
+Here comes your quantized output voltage
+
+changed (c)
+
+Whenever the quantization changes to a new output value a trigger with the duration 10 ms is output here. No trigger
+is output in bypass mode.
+
+DROID manual for blue-6
+
+338
+
+Table of contents at page 2
+
+

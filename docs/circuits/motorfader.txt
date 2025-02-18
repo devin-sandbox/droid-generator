@@ -1,0 +1,68 @@
+# DROID Circuit Input/Output Keys
+
+## motorfader - Virtual Fader in M4 Controller
+
+### Inputs
+- fader - Fader number
+  - Type: integer
+  - Description: Selects which physical fader to control (1-32)
+
+- preset - Preset selection
+  - Type: integer
+  - Description: Selects active preset (0-3)
+
+- select - Function selection
+  - Type: gate
+  - Description: Enables fader when gate is high
+
+- selectat - Selection value
+  - Type: integer
+  - Description: Value at which select input activates fader
+
+- notches - Force feedback notches
+  - Type: integer
+  - Range: 0-201
+  - Description: Number of discrete positions with force feedback
+  - Note: Force feedback disabled above 25 notches
+
+- sharewithnext - Share control
+  - Type: binary
+  - Default: 0
+  - Description: Share control with next motorfader circuit
+
+- loadpreset - Load preset trigger
+  - Type: trigger
+  - Description: Loads selected preset
+
+- savepreset - Save preset trigger
+  - Type: trigger
+  - Description: Saves current state to selected preset
+
+### Outputs
+- output - Fader value
+  - Type: float
+  - Range: 0-1 (0V to 10V)
+  - Description: Current fader position/value
+
+Note: Virtual fader interface with features:
+- Up to 32 physical faders supported
+- 4 presets per fader
+- Function switching capability
+- Force feedback with notches
+- Pitch bend mode
+- Binary switch mode
+- Shared control between circuits
+
+Example applications:
+- CV control
+- Preset management
+- Multi-function controls
+- Performance interfaces
+- Binary switches
+- Spring-return controls
+
+Limitations:
+- Maximum 201 notches
+- Force feedback limited to 25 notches
+- Requires M4 controller hardware
+- 4 preset maximum per fader

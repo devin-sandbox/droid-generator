@@ -1,0 +1,67 @@
+# DROID Circuit Input/Output Keys
+
+## cvlooper - Clocked CV looper
+
+### Inputs
+- cvin (ci) - CV input
+  - Type: float
+  - Default: 0.0
+  - Description: Input CV that should be looped.
+
+- gatein (gi) - Gate input
+  - Type: binary
+  - Default: 1
+  - Description: Optional input gate. If you do not patch something here, the gate is assumed to be always high.
+
+- clock (c) - Clock input
+  - Type: trigger
+  - Description: Input clock. The clock is mandatory and is the base for the definition of the loop length. Also the loop switch is quantized in time to the nearest clock.
+
+- reset (r) - Reset trigger
+  - Type: trigger
+  - Description: A trigger here resets the playback head immediately to the start of the loop, if you are in playback mode.
+
+- length (l) - Loop length
+  - Type: int
+  - Default: 16
+  - Description: Length of the loop in clock ticks. Example: You get a length of 16 ticks by patching the number 16 to length.
+
+- tapespeed (s) - Tape speed
+  - Type: float
+  - Default: 1.0
+  - Description: Relative tape speed, where 1.0 is the normal speed. So a value of 0.5 slows down the speed thus increasing the effective tape length.
+
+- loopswitch (ls) - Loop activation
+  - Type: binary
+  - Description: Mandatory parameter: While off, copies inputs to outputs while recording. When on, plays back recorded loop.
+
+- pause (p) - Pause playback
+  - Type: binary
+  - Default: off
+  - Description: If you send a high signal here, the looper pauses. This only works in playback mode.
+
+- overlay (ov) - Overlay mode
+  - Type: binary
+  - Default: off
+  - Description: If overlay is set to on, while the input gate is active the gate and CV will be sent directly from the inputs.
+
+- overdub (od) - Overdub mode
+  - Type: binary
+  - Default: off
+  - Description: If active then while the input gate is high the input gate and CV will be written to the tape.
+
+- bypass (b) - Bypass mode
+  - Type: binary
+  - Default: off
+  - Description: Copies inputs to outputs while keeping loop content untouched.
+
+### Outputs
+- cvout (co) - CV output
+  - Type: float
+  - Description: Output of the bypassed or looped CV
+
+- gateout (go) - Gate output
+  - Type: binary
+  - Description: Output of the bypassed or looped gate
+
+Note: Clocked CV looper with 8-second tape length at normal speed. Supports gate recording, overlay/overdub modes, and variable tape speed. Maximum 128 clock ticks per loop. Memory limited to 8000 samples.

@@ -1,0 +1,47 @@
+# DROID Circuit Input/Output Keys
+
+## multicompare - Multiple Value Comparison Circuit
+
+### Inputs
+- input - Value to compare
+  - Type: float
+  - Default: 0.0
+  - Description: Input value to compare against reference values
+
+- compare1...compare8 - Reference values
+  - Type: float
+  - Description: Up to 8 values to compare against input
+
+- ifequal1...ifequal8 - Output values
+  - Type: float
+  - Description: Values to output when input matches corresponding compare value
+
+- else - Default output
+  - Type: float
+  - Default: 0.0
+  - Description: Value to output when no comparison matches
+
+### Outputs
+- output - Selected value
+  - Type: float
+  - Description: Value from matching ifequal input or else value
+
+Note: Multiple value comparison with features:
+- Up to 8 comparison values
+- Flexible input/output value mapping
+- Default else case handling
+- Non-sequential comparison values allowed
+
+Example applications:
+- Waveform selection
+- Multi-state switching
+- Complex routing control
+- State-based value mapping
+- Signal multiplexing
+- Conditional processing
+
+Limitations:
+- Maximum 8 comparison values
+- No range comparisons (exact matches only)
+- No inequality comparisons
+- No hysteresis support

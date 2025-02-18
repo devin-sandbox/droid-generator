@@ -1,0 +1,73 @@
+# DROID Circuit Input/Output Keys
+
+## nudge - Value Modification with Buttons
+
+### Inputs
+- buttonup - Increment button
+  - Type: gate
+  - Description: Button for increasing value
+
+- buttondown - Decrement button
+  - Type: gate
+  - Description: Button for decreasing value
+
+- minimum - Lower limit
+  - Type: float
+  - Description: Minimum allowed value (optional)
+
+- maximum - Upper limit
+  - Type: float
+  - Description: Maximum allowed value (optional)
+
+- amount - Step size
+  - Type: float
+  - Description: Value change per button press
+
+- offset - Value offset
+  - Type: float
+  - Default: 0
+  - Description: Value added to output
+
+- wrap - Wrap around
+  - Type: binary
+  - Default: 0
+  - Description: Enable wrapping from max to min and vice versa
+
+### Outputs
+- output - Current value
+  - Type: float
+  - Description: Current modified value (with offset)
+
+- ledup - Up button LED
+  - Type: float
+  - Description: LED brightness for up button
+  - Note: Indicates distance from center/maximum
+
+- leddown - Down button LED
+  - Type: float
+  - Description: LED brightness for down button
+  - Note: Indicates distance from center/minimum
+
+Note: Value modification utility with features:
+- Two-button increment/decrement control
+- Configurable step size
+- Optional value limits
+- Value wrapping option
+- LED feedback system
+- Persistent value storage
+- Offset capability
+
+Example applications:
+- CV source generation
+- Oscillator fine tuning
+- Octave switching
+- Parameter adjustment
+- Beat count selection
+- Value range exploration
+
+Limitations:
+- Two buttons required
+- No acceleration/variable step size
+- LED feedback requires manual wiring
+- Reset only via dual button press
+- No direct value setting

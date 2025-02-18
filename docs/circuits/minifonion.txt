@@ -1,0 +1,89 @@
+# DROID Circuit Input/Output Keys
+
+## minifonion - Musical Quantizer
+
+### Inputs
+- input (i) - Unquantized pitch
+  - Type: float (1V/Oct)
+  - Default: 0V
+  - Description: Raw pitch CV input to be quantized
+
+- trigger (t) - Quantize trigger
+  - Type: trigger
+  - Description: Optional trigger for freezing output until next trigger
+
+- bypass (b) - Bypass quantization
+  - Type: binary
+  - Default: off
+  - Description: When high, passes input directly to output
+
+- root (ro) - Root note
+  - Type: integer
+  - Default: 0
+  - Range: 0-11
+  - Description: Base note for scale (0=C, 1=C#, etc.)
+
+- degree (dg) - Scale selection
+  - Type: integer
+  - Default: 0
+  - Range: 0-107
+  - Description: Select musical scale:
+    0 = Lydian major (♯4)
+    1 = Major/Ionian
+    2 = Mixolydian (dom7)
+    3 = Sus (mix with 3rd/4th swap)
+    4 = Altered
+    5 = Harmonic minor from 5th
+    6 = Dorian (minor with ♯13)
+    7 = Natural minor/Aeolian
+    8 = Harmonic minor
+    9 = Phrygian
+    10 = Diminished
+    11 = Augmented
+
+- select1...select13 (s1-s13) - Interval selection
+  - Type: gate
+  - Description: Enable specific scale intervals:
+    select1 = root
+    select3 = third
+    select5 = fifth
+    select7 = seventh
+    select9 = ninth/second
+    select11 = eleventh/fourth
+    select13 = thirteenth/sixth
+
+- selectfill1...selectfill5 (sf1-sf5) - Alternative intervals
+  - Type: binary
+  - Default: off
+  - Description: Enable non-scale intervals:
+    sf1 = alt ninth
+    sf2 = alt third
+    sf3 = alt fourth/fifth (usually dim5)
+    sf4 = alt thirteenth
+    sf5 = alt seventh
+
+### Outputs
+- output - Quantized pitch
+  - Type: float (1V/Oct)
+  - Description: Pitch CV output quantized to selected scale
+
+Note: Musical quantizer with features:
+- Scale-based pitch quantization
+- 108 available scales
+- Interval selection/filtering
+- Alternative interval options
+- Sinfonion compatibility
+- Triggered quantization mode
+
+Example applications:
+- Random CV quantization
+- Melodic sequence quantization
+- Live performance pitch control
+- Scale-based filtering
+- Harmonic CV processing
+- Musical transposition
+
+Limitations:
+- Root/degree inputs use 0-N integers (not semitones)
+- Must multiply by 120 for Sinfonion CV compatibility
+- All intervals disabled if no select inputs used

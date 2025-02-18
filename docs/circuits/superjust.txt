@@ -1,0 +1,57 @@
+# DROID Circuit Input/Output Keys
+
+## superjust - Perfect Intonation for Multiple Voices
+
+### Inputs
+- input1...input8 - Pitch inputs
+  - Type: voltage (1V/Oct)
+  - Description: Input pitches to be retuned for just intonation
+
+- tuningmode - Tuning enable
+  - Type: binary
+  - Default: 0
+  - Description: When 1, outputs tuningpitch for VCO calibration
+
+- tuningpitch - Reference pitch
+  - Type: voltage (1V/Oct)
+  - Default: 0V
+  - Description: Output voltage during tuning mode
+
+- bypass - Bypass control
+  - Type: binary
+  - Default: 0
+  - Description: When 1, passes inputs directly to outputs without retuning
+
+- transpose - Global transpose
+  - Type: voltage (1V/Oct)
+  - Default: 0V
+  - Description: Added to all outputs (except in tuning/bypass modes)
+
+### Outputs
+- output1...output8 - Retuned pitches
+  - Type: voltage (1V/Oct)
+  - Description: Just-intonation adjusted pitch outputs
+
+Note: Advanced tuning circuit with features:
+- Dynamic just intonation
+- Up to 8 voice polyphony
+- Automatic ratio detection
+- Built-in tuning mode
+- Global transposition
+- Bypass functionality
+
+Example applications:
+- Pure chord generation
+- Ensemble tuning
+- Microtonal music
+- Perfect intervals
+- Harmonic series
+- Multi-voice tuning
+
+Limitations:
+- Requires precise VCO calibration
+- Small pitch adjustments only
+- No scale memory
+- No historical temperaments
+- No manual ratio input
+- Maximum 8 voices

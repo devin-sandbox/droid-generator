@@ -1,0 +1,52 @@
+# DROID Circuit Input/Output Keys
+
+## octave - Multi-VCO Octave Animator
+
+### Inputs
+- input - Pitch input
+  - Type: 1V/Oct
+  - Default: 0V
+  - Description: Base pitch CV for all VCOs (1V/octave)
+
+- spread - Octave spread
+  - Type: float
+  - Default: 0
+  - Description: Amount of octave spread between outputs (1.0 = 4 octaves)
+
+- detune - Detune amount
+  - Type: float
+  - Default: 0.0
+  - Description: Linear frequency detune between VCOs (1.0 = 4 semitones at 0V)
+
+- fifths - Fifth intervals
+  - Type: binary
+  - Default: off
+  - Description: Enable perfect fifths as intermediate steps
+
+### Outputs
+- output1...output3 - VCO outputs
+  - Type: 1V/Oct
+  - Description: Pitch CV outputs for three VCOs
+  - Note: output1 is direct copy of input
+
+Note: VCO pitch animator with features:
+- Three VCO pitch control
+- Octave spreading
+- Linear frequency detuning
+- Perfect fifth intervals
+- CV-controllable parameters
+
+Example applications:
+- Fat oscillator sounds
+- Multi-octave patches
+- Animated chord voicings
+- Detuned unison effects
+- Pitch spread animation
+- Harmonic voice stacking
+
+Limitations:
+- Fixed three outputs
+- Linear detune only
+- No individual VCO control
+- No other intervals besides fifths
+- output1 is pass-through only

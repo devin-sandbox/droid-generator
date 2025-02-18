@@ -1,0 +1,262 @@
+Input
+
+Type
+
+Default
+
+Description
+
+autozoom (a)
+
+0
+
+0.0
+
+The “auto zoom” feature allows you to ﬁne adjust values when turning the knob slowly and coarse adjust when you
+turn it fast. If autozoom is at the maximum value of 1.0, turning the knob just slowly changes the value by super tiny
+amounts, while turning it fast operates way faster than usual. Use any value between 0.0 and 1.0 for autozoom to
+select the level of this slowing down for slow movements.
+
+1
+
+autozoom has no effect if discrete is used.
+
++
+
+color (co)
+
++
+
+negativecolor (nc)
+ledfill (lf)
+
+1 2 3
+
+1
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+preset (pr)
+
+1 2 3
+
++
+
+DROID manual for blue-6
+
+Color of the pointer in the LED ring. Here are some example color values:
+0.2
+
+cyan
+
+0.4
+
+green
+
+0.6
+
+yellow
+
+0.73
+
+orange
+
+0.8
+
+red
+
+1.0
+
+magenta
+
+1.1
+
+violet
+
+1.2
+
+blue
+
+If you use this parameter, it deﬁnes the color of the LEDs in case the current logical value is negative.
+Selects whether the LED ring displays the current value with just a single colored dot (ledfill = 0) or by additionally
+illuminating all LEDs between 0 and the current value in half brightness (ledfill = 1).
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+This is the preset number to save or to load. Note: the ﬁrst preset has the number 0, not 1! For the whole story on
+presets please refer to page 21. This circuit has 16 presets, so this number ranges from 0 to 15.
+
+196
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+loadpreset (lp)
+
+A trigger here loads a preset. As a speciality you can use the trigger for selecting a preset at the same time.
+
+savepreset (sp)
+
+A trigger here saves a preset.
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+Output
+
+0
+
+Type
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+Description
+
+output (o)
+
+Outputs the current virtual value of this circuit. Don’t use this if you are using sharewithnext.
+
+button (b)
+
+This output provides you with the current state of the push button in the encoder, but only if the circuit is selected.
+While you could do this with an extra button (see page 141) circuit, using this output is more convenient in some
+situations. While the circuit is not selected, the output is set to 0.
+
+moveddown (md)
+
+Outputs a trigger whenever you have turned the encoder left (counter clock wise) by a certain amount (which can be
+altered by movementticks. Beware: If you turn too fast, triggers might overlap and merge together.
+
+movedup (mu)
+
+Outputs a trigger whenever you have turned the encoder right ( clock wise) by a certain amount (which can be altered
+by movementticks). Beware: If you turn too fast, triggers might overlap and merge together.
+
+valuechanged (vc)
+
+Outputs a trigger whenever the virtual value has changed.
+
+DROID manual for blue-6
+
+197
+
+Table of contents at page 2
+
+16.23
+
+encoquencer – Performance sequencer using E4 encoders
+
+This circuit is an exact replica of the
+motoquencer (see page 286) circuit, but it
+uses encoders of the E4 controller instead
+of the motorfaders of an M4 controller.
+Here is a minimal example:
+[e4]
+[encoquencer]
+clock = I1
+cv = O1
+gate = O2
+
+The manual section of the motoquencer (see page 286)
+circuit is long and deep and we don’t want to duplicate it
+here. Please go to page 286 to learn about all features and
+see examples. Here are the only differences between the
+encoquencer and the motoquencer:
+• The circuit’s name is encoquencer and uses encoders.
+• For setting and removing gates, it uses the push
+buttons in the encoders.
+• It uses the LED rings around the encoders to visualize what’s going on.
+• The encoders do not give haptic feedback, of
+course.
+Please don’t get confused by the fact that many parameters have the word fader in their name or description.
+This is because we chose to use the same names as in
+the motoquencer. This allows you so to use all patch examples for the motoquencer. The only thing you have
+to do is to replace the circuit name motoquencer by
+encoquencer everywhere in these patches. When you
+read “fader” or “M4”, think of “encoder” and “E4”.
+DROID manual for blue-6
+
+LED visualization
+Unlike a fader, an encoder has no visible position. The E4
+uses a ring (or rather square) of LEDs, instead. Read the
+LEDs as follows:
+Every step of the sequence is represented by one encoder.
+The middle three LEDs below each encoder have the same
+function as the touch button’s LED in the M4: They reﬂect the current buttonmode. Usually they shows active
+gates (greenish blue). If the button mode is set to “start /
+end”, the three LEDs are green on the ﬁrst used step and
+a red LED on the last one.
+The two LEDs left and right of those for the gates are
+unused. The remaining 25 LED visualise the current
+setting of the sequencer step according to the current
+fadermode:
+• Pitch / CV: In quantized mode every scale note is
+represented by one colored LED. The color reﬂects
+the chord function of that note. For example root
+notes are blue, ﬁfths are green, thirds are red. That
+makes it easier to set the right note. In unquantized mode you just get a blue LED gauge starting
+from the bottom left.
+• Randomize CV: A light green LED gauge shows you
+the amount of randomization.
+• Gate propabilites: The eight possible settings are
+represendted by eight positions in the ring. The
+LEDs are blue for the various standard random positions of 100%, 50%, 25% and 12%. The positions
+for playing a note every 2nd or 4th turn are light
+green. And the special position 1 for playing a note
+when the last random was positive is magenta.
+• Repeats: The LEDs are purple and white. Purple
+means an odd number (1, 3, 5, 7, 9, 11, 13, or 15).
+198
+
+White means an even number 2, 4, 6, 8, 10, 12, 14,
+16. This funny scheme makes it easier to spot certain numbers.
+• Gate pattern: The for possible settings are represented by one colored corner of the ring, each. It
+order is cyan (just play the ﬁrst repetition), magenta (play all repetions), orange (play one long
+note), yellow (tie this note with the next one).
+• Ratchets: The number of ratchets are symbolized
+by purple LEDs for odd numbers (1, 3, 5, 7) and
+white LEDs for the even numbers (2, 4, 6, 8).
+• Gate: If the fader mode is set to 6 (gate), all LEDs
+are light blue for enabled gates.
+• Skip: If the fader mode is set to 7 (skip), all LEDs
+are violet for skipped notes.
+And the encoquencer has two inputs the motoquencer
+(see page 286) does not have: ledpreview and zorder.
+When you set ledpreview = 1, the LED ring always
+shows all possible values in dimmed colors. Try it out!
+And zorder swaps how the steps of the sequence are distributed on the encoders from “vertical ﬁrst” to “horizontal ﬁrst”.
+
+Table of contents at page 2
+
+

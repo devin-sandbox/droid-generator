@@ -1,0 +1,69 @@
+# DROID Circuit Input/Output Keys
+
+## triggerdelay - Trigger Delay with Multi-tap
+
+### Inputs
+- input - Trigger input
+  - Type: trigger/gate
+  - Default: 0
+  - Description: Triggers/gates to be delayed
+
+- delay - Delay time
+  - Type: float
+  - Default: 1.0
+  - Description: Delay amount in seconds or clock cycles
+  - Note: Clock-relative when clock input used
+
+- gatelength - Gate duration
+  - Type: float
+  - Description: Override input gate length
+  - Note: In seconds or clock cycles if clocked
+
+- repeats - Repeat count
+  - Type: integer
+  - Default: 1
+  - Description: Number of times to repeat delayed trigger
+
+- mute - Mute control
+  - Type: binary
+  - Default: 0
+  - Description: Suppresses new outputs when high
+
+- clock - Clock input
+  - Type: trigger
+  - Description: Enables clock-relative timing mode
+
+### Outputs
+- output - Delayed signal
+  - Type: trigger/gate
+  - Description: Delayed triggers/gates with preserved length
+  - Note: 10V for I1-I8, 5V for G8 expander
+
+- overflow - Memory warning
+  - Type: gate
+  - Description: 0.5s gate when memory limit exceeded
+  - Note: Can indicate via LED
+
+Note: Advanced trigger delay with features:
+- Up to 16 trigger memory
+- Gate length preservation
+- Clock synchronization
+- Multiple repetitions
+- Overflow detection
+- Mute control
+
+Example applications:
+- Pattern shifting
+- Rhythm manipulation
+- Echo effects
+- Clock compensation
+- Gate processing
+- Trigger sequencing
+
+Limitations:
+- Maximum 16 triggers in memory
+- Fixed output voltage levels
+- No feedback path
+- No tap tempo
+- No swing/shuffle
+- No individual tap control

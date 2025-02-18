@@ -1,0 +1,56 @@
+# DROID Circuit Input/Output Keys
+
+## sample - Sample & Hold Circuit
+
+### Inputs
+- input - Signal input
+  - Type: float
+  - Default: 0.0
+  - Description: Input signal to be sampled
+
+- sample - Trigger input
+  - Type: trigger
+  - Description: Captures input value on positive edge
+
+- gate - Gate input
+  - Type: gate
+  - Description: Samples continuously while high
+  - Note: Holds last value when gate goes low
+
+- timewindow - Settling time
+  - Type: float
+  - Default: 0.0
+  - Description: Time window after trigger for input settling
+  - Note: Useful for sequencer CV timing issues
+
+- bypass - Bypass control
+  - Type: gate
+  - Description: Copies input directly to output when high
+
+### Outputs
+- output - Sampled value
+  - Type: float
+  - Description: Most recently captured input value
+
+Note: Basic sample & hold utility with features:
+- Trigger or gate-based sampling
+- Input settling window
+- Bypass functionality
+- Continuous or discrete sampling
+- Sequencer compensation
+- Last value retention
+
+Example applications:
+- CV sampling
+- Sequencer timing compensation
+- Random voltage capture
+- Gate-controlled sampling
+- Signal freezing
+- Value memory
+
+Limitations:
+- Single input channel
+- Fixed trigger behavior
+- No slew limiting
+- No internal noise
+- No track/hold mode

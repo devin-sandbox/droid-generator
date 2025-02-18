@@ -1,0 +1,73 @@
+# DROID Circuit Input/Output Keys
+
+## outputcalibrator - CV Output Calibration Utility
+
+### Inputs
+- output - Output selection
+  - Type: integer
+  - Range: 1-8
+  - Default: 1
+  - Description: Select CV output to calibrate
+
+- referencepoint - Voltage reference
+  - Type: integer
+  - Range: 0-1
+  - Default: 0
+  - Description: Select reference voltage (0=0V, 1=5V)
+
+- nudgeup - Increase voltage
+  - Type: trigger
+  - Description: Increase output voltage by one step
+
+- nudgedown - Decrease voltage
+  - Type: trigger
+  - Description: Decrease output voltage by one step
+
+- save - Save calibration
+  - Type: trigger
+  - Description: Save calibration to flash and SD card
+
+- cancel - Restore calibration
+  - Type: trigger
+  - Description: Restore previous calibration from flash
+
+- loaddefaults - Reset calibration
+  - Type: trigger
+  - Description: Load default calibration values
+
+### Outputs
+- dirty - Modified state
+  - Type: binary
+  - Description: Indicates calibration has been modified
+
+- calibration - Calibration delta
+  - Type: float
+  - Description: Difference from default calibration value
+
+- uncalibrated - Progress indicator
+  - Type: float
+  - Range: 0-1
+  - Description: Percentage of uncalibrated outputs
+
+Note: CV output calibration utility with features:
+- 8 output calibration support
+- Two-point calibration (0V and 5V)
+- Fine adjustment controls
+- Persistent storage
+- Default value recovery
+- Progress tracking
+
+Example applications:
+- MASTER18 output calibration
+- Voltage reference adjustment
+- Output accuracy tuning
+- System maintenance
+- Factory calibration
+- Precision CV setup
+
+Limitations:
+- Manual calibration only
+- Requires voltmeter
+- Two fixed reference points
+- No automatic calibration
+- MASTER18 specific features

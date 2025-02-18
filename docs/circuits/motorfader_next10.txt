@@ -1,0 +1,264 @@
+Output
+
+Type
+
+Description
+
+gate (g)
+
+The gate output.
+
+startofsequence (ssq)
+
+Outputs a trigger whenever the sequencer starts playing from the beginning. This can be used for synchronizing with
+other sequencers. An external reset will also cause this output to trigger.
+
+startofpart (spa)
+
+Outputs a trigger whenever a form part starts again. This is only interesting when you use form.
+
+startstepout (sso)
+
+1 2 3
+
+Outputs the current start step. This is useful in case it has been interactively set with the buttons and you need that
+information for another circuit.
+
+endstepout (eso)
+
+1 2 3
+
+Outputs the current end step. This is useful in case it has been interactively set with the buttons and you need that
+information for another circuit.
+
+currentstep (cst)
+
+1 2 3
+
+Outputs the number of the step that is currently being played (starting from 0).
+
+currentpage (cpg)
+
+1 2 3
+
+Outputs the number of the fader page that is currently played, i.e. the value you would have to feed into page in order
+to see the currently being played step.
+
+accumulator (acc)
+
+1 2 3
+
+The current value of the pitch accumulator (an integer number in the range 0 … 16.
+
+DROID manual for blue-6
+
+310
+
+Table of contents at page 2
+
+16.45
+
+motorfader – Create virtual fader in M4 controller
+
+The circuit provides the most basic access
+to motor faders and supports switching
+between presets, overlayed functions and
+force feedback.
+
+This circuit will switch between the values 0, 1, 2 and 3
+and output that number to the intercal cable _PRESET.
+Now let’s add the fader deﬁnition:
+
+For the basics about these ideas and the
+M4 in general, please read the introduction to the M4 on
+page 71.
+
+[motorfader]
+fader = 1
+preset = _PRESET
+output = O1
+
+Presets
+
+That’s really all. fader = 1 selects the ﬁrst motor fader
+in your setup. All faders are simply enumerated, so fader
+= 7 would select the third fader on the second M4.
+
+Let’s start with presets and make a simple example with
+one P2B8 and one M4 controller. First we need to declare
+both in our patch:
+[p2b8]
+[m4]
+
+Let’s use the ﬁrst fader as a simple CV source to be output
+on O1. And four buttons should select four different presets of that fader. Those are grouped into a button with
+the circuit buttongroup (see page 146):
+[buttongroup]
+button1 = B1.1
+button2 = B1.2
+button3 = B1.3
+button4 = B1.4
+led1 = L1.1
+led2 = L1.2
+led3 = L1.3
+led4 = L1.4
+output = _PRESET
+
+The output O1 now always outputs the current setting of
+the fader. The range is 0 V ... 10 V – just like with pots of
+the controllers.
+Hitting the buttons will switch to one of the four presets
+and move the fader to the position corresponding to current value of that preset.
+
+No we need a separate motorfader circuit for each function. And instead of choosing a preset, we need to select
+each circuit when the active button selects its function:
+[motorfader]
+fader = 1
+select = _FUNCTION
+selectat = 0
+output = O1
+
+Faders with multiple functions
+
+[motorfader]
+fader = 1
+select = _FUNCTION
+selectat = 1
+output = O2
+
+The second way to use the motor faders is to assign multiple functions to one fader and then switch between those
+functions. The crucial difference to the presets is, that for
+every function there is a dedicated output.
+
+[motorfader]
+fader = 1
+select = _FUNCTION
+selectat = 2
+output = O3
+
+Let’s now change our example so that we use one fader
+controlling four CV sources, but without any presets for
+the while. The start is the same (just we renamed the internal cable to _FUNCTION:
+[buttongroup]
+button1 = B1.1
+
+DROID manual for blue-6
+
+button2 = B1.2
+button3 = B1.3
+button4 = B1.4
+led1 = L1.1
+led2 = L1.2
+led3 = L1.3
+led4 = L1.4
+output = _FUNCTION
+
+[motorfader]
+fader = 1
+select = _FUNCTION
+selectat = 3
+output = O4
+
+As you can see: each fader has a selectat input match311
+
+Table of contents at page 2
+
+ing one of the buttons of the buttongroup. And each
+fader also sends its output to one of the main outputs of
+the master.
+There is one possible simpliﬁcation: Instead of using
+_FUNCTION and selectat, we also could use the LED outputs of the button group directly:
+[buttongroup]
+button1 = B1.1
+button2 = B1.2
+button3 = B1.3
+button4 = B1.4
+led1 = L1.1
+led2 = L1.2
+led3 = L1.3
+led4 = L1.4
+[motorfader]
+fader = 1
+select = L1.1
+output = O1
+[motorfader]
+fader = 1
+select = L1.2
+output = O2
+[motorfader]
+fader = 1
+select = L1.3
+output = O3
+[motorfader]
+fader = 1
+select = L1.4
+output = O4
+
+DROID manual for blue-6
+
+Notches
+
+Pitch bend wheel
+
+Maybe the coolest feature of the M4 is the haptic feedback. The M4 uses its motors in order to give you force
+feedback. This is done in various forms.
+
+Setting notches = 1 will convert the fader into a kind of
+pitch bend wheel. It always wants to stay in the middle,
+where it outputs a value of 0.5. If you move it away from
+the center position, it creates a force back to the center
+that is the greater the nearer you are to the top or bottom.
+As soon as you release it, it snaps back to the middle.
+
+The most useful form is to use artiﬁcal “notches” or
+“dents”. Try that out be setting notches to a number, e.g.
+8:
+
+Modifying one value with two virtual faders
+
+notches = 8
+
+This changes the behaviour of the fader in two ways:
+1. The output value is now a discrete whole number
+from 0 up to 7.
+2. When you move the fader you feel eight artiﬁcial
+dents. That’s really hard to explain. Try it out!
+These notches are super helpful especially in live performances. You instantly feel where your are. You don’t
+need any visual feedback. You can very reliably set a
+value without looking.
+The maximum number of notches is 201. But if you select
+more than 25 notches, the force feedback is turned off as
+the notches would get too small to work.
+There are also two other variants of force feed back:
+
+Binary switch
+If you set notches = 2, you turn the fader into a binary
+switch. The output will be 0 if the fader is in the bottom
+position and 1 on the top. Just move the fader away from
+its position and it will immediately snap to the other side.
+
+312
+
+The sharing of virtual faders is a bit more tricky to explain
+and you probably won’t need it. It means that you use
+two motorfader circuits for controlling the same output
+value. Why would you do this?
+I have added that feature when building a motor fader
+based MIDI control for my audio interface. I have one
+mode where every of eight faders controls the main volume of one of eight voices.
+And then I have a “drill down” for each voice, where the
+ﬁrst fader is the main volume, the second fader the head
+phone, the third the volume of an aux channel and so on.
+So now I can control the volume of voice 3 either with the
+third fader in the “global” volume control or with the ﬁrst
+fader the drill down of voice 3. This leads to an output
+collision since two circuits would try to modify the same
+output, even if always just one of the two motor fader circuits is selected.
+The solution to this problem is the sharewithnext input. Put the two motorfader circuits next to each other
+into your patch. Put a sharewithnext = 1 into the ﬁrst
+one. Don’t use the output there. Now both virtual
+faders will control the output that is deﬁned in the second motorfader circuit:
+
+Table of contents at page 2
+
+

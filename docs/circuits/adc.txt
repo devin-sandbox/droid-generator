@@ -1,0 +1,23 @@
+# DROID Circuit Input/Output Keys
+
+## adc - AD Converter with 12 bits
+
+### Inputs
+- input (i) - Input signal to convert to binary representation
+  - Type: float
+  - Default: 0.0
+  
+- minimum (m) - The lowest assumed input value
+  - Type: float
+  - Default: 0.0
+  - Description: Values at or below this will convert to 000000000000
+  
+- maximum (x) - The highest assumed input value
+  - Type: float
+  - Default: 1.0
+  - Description: Values at or above this will convert to 111111111111
+
+### Outputs
+- bit1 through bit12 (b) - Binary representation of input value
+  - Type: digital (0/1)
+  - Description: 12-bit binary output where bit1 is MSB and bit12 is LSB

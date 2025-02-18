@@ -1,0 +1,122 @@
+# DROID Circuit Input/Output Keys
+
+## matrixmixer - Matrix mixer for CVs
+
+### Inputs
+- input1...input4 (i) - CV inputs
+  - Type: float
+  - Default: 0.0
+  - Description: Main CV inputs for mixing
+
+- auxin1...auxin4 (a) - Auxiliary inputs
+  - Type: float
+  - Description: Additional inputs for cascading multiple matrix mixers
+
+- mixmax (m) - Mix/Max mode
+  - Type: float
+  - Default: 0
+  - Description: 0.0=normal mixing (sum), 1.0=maximum of inputs, values between create weighted average
+
+- startvalue (sv) - Initial state
+  - Type: integer
+  - Default: 1
+  - Range: 0-2
+  - Description: Initial matrix state:
+    0=all cleared
+    1=diagonal active
+    2=all active
+
+- button11...button14 (b1) - Input1 routing
+  - Type: trigger
+  - Description: Toggle buttons for routing input1 to outputs 1-4
+
+- button21...button24 (b2) - Input2 routing
+  - Type: trigger
+  - Description: Toggle buttons for routing input2 to outputs 1-4
+
+- button31...button34 (b3) - Input3 routing
+  - Type: trigger
+  - Description: Toggle buttons for routing input3 to outputs 1-4
+
+- button41...button44 (b4) - Input4 routing
+  - Type: trigger
+  - Description: Toggle buttons for routing input4 to outputs 1-4
+
+- select (s) - Selection control
+  - Type: gate
+  - Description: Enables button/LED processing when high
+
+- selectat (sa) - Selection value
+  - Type: float
+  - Description: Value at which select input activates circuit
+
+- preset (pr) - Preset number
+  - Type: integer
+  - Range: 0-15
+  - Description: Preset to save/load (16 available presets)
+
+- loadpreset (lp) - Load preset
+  - Type: trigger
+  - Description: Trigger to load selected preset
+
+- savepreset (sp) - Save preset
+  - Type: trigger
+  - Description: Trigger to save current state to selected preset
+
+- clear (cl) - Clear state
+  - Type: trigger
+  - Description: Reset to default start state
+
+- clearall (ca) - Clear all
+  - Type: trigger
+  - Description: Reset state and all presets
+
+- dontsave (dos) - Disable persistence
+  - Type: binary
+  - Default: 0
+  - Description: When 1, state not saved/loaded from SD card
+
+### Outputs
+- output1...output4 (o) - Mixed outputs
+  - Type: float
+  - Description: Mixed CV outputs based on matrix routing
+
+- led11...led14 (l1) - Input1 LEDs
+  - Type: binary
+  - Range: 0-1
+  - Description: LED indicators for input1 routing buttons
+
+- led21...led24 (l2) - Input2 LEDs
+  - Type: binary
+  - Range: 0-1
+  - Description: LED indicators for input2 routing buttons
+
+- led31...led34 (l3) - Input3 LEDs
+  - Type: binary
+  - Range: 0-1
+  - Description: LED indicators for input3 routing buttons
+
+- led41...led44 (l4) - Input4 LEDs
+  - Type: binary
+  - Range: 0-1
+  - Description: LED indicators for input4 routing buttons
+
+Note: 4x4 matrix mixer with button control. Key features:
+- Unity gain mixing or maximum selection
+- Button toggle routing control
+- LED feedback
+- 16 saveable presets
+- Expandable via auxiliary inputs
+- Configurable startup state
+
+Example applications:
+- CV routing matrix
+- Multi-channel mixing
+- Envelope combining
+- Signal distribution
+- Preset-based routing
+
+Limitations:
+- Fixed 4x4 matrix size (expandable via cascading)
+- Unity gain mixing only
+- Button control required for routing

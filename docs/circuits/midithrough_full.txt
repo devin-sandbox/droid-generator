@@ -1,0 +1,354 @@
+So if you work with a clock that can change the speed,
+better use the jack midiclock instead and directly supply
+the MIDI clock (at a six times higher speed). Here is the
+same example but now we directly create the MIDI clock:
+[lfo]
+hz = 48 # 120 BPM MIDI clock
+square = _MIDICLOCK
+[midiout]
+midiclock = _MIDICLOCK
+
+Pitch stabilization
+MIDI output appears simple to implement, but isn’t when
+you look at the details. One tricky problem is that many
+modules that output pitch information are not very precise in timing. Sequencers often need a couple of milliseconds for the pitch CV to reach its ﬁnal value and stabilize
+after the gate is being output.
+The following diagram shows a gate signal going high
+(blue) and a pitch signal with a small ramp reaching its
+ﬁnal destination shortly afterwards (red):
+
+MIDI sequencers also output “start” and “stop” messages.
+You can send them either via triggers into start and stop
+or use the input running for both. When running goes
+high, a “start” message is sent, when it goes low a “stop”
+message.
+
+Pitch tracking
+Pitch tracking is an advanced feature that works in monophonic setups. Here midiout watches the input pitch
+all the time and adapts the pitch of the currently played
+note via MID pitchbend events in order to reﬂect the pitch
+changes. See the documentation of the pitchtracking
+jack for details.
+
+DROID manual for blue-6
+
+If that does not work out well for you, you can deactivate
+this algorithm. One reason could be that your pitch never
+stabilizes, since it is some ever evolving random data:
+[midiout]
+pitch = I1
+gate = I2
+pitchstabilization = 0
+
+The second method is introducing a ﬁxed delay of the
+gate signal with the input triggerdelay. Using that parameter automatically disables pitch stabilization:
+
+5
+Pitch
+Gate
+
+0
+Start, Stop, Reset
+
+delays the “note on” as long as the pitch is still moving. When it has stabilized – i.e. on the same level for
+at least some very short time – the note event is issued
+immediately. This keeps the latency at a minimum.
+
+10
+V olts
+
+Note: The input jack clock receives 16th clocks. The actual MIDI clock is derived from that by multiplying it by 6.
+This means that the circuit interpolates the clock by measuring its speed and introducing ﬁve artiﬁcal clocks ticks
+inbetween the original ticks. While this works reasonably
+well for a steady clock, changes in clocks speed cannot be
+picked up very fast.
+
+0
+
+10
+
+20
+
+30
+40
+time(ms)
+
+50
+
+60
+
+I’ve seen a very similar situation indeed when I attached
+an oscilloscope to the output of a very famous Eurorack
+sequencer.
+Now when you would issue “note on” right at the beginning of the gate, you would obviously output the wrong
+pitch. What you need to do is to ﬁrst wait for some time.
+You need to delay the note event until the pitch is stable.
+Of course this introduces some undesirable latency, so it
+is crucial to keep that as short as possible.
+
+[midiout]
+pitch = I1
+gate = I2
+triggerdelay = 3.5 # delay gate by 3.5 ms
+
+Now the gate is delayed exactly 3.5 ms every time. You
+need to try out various useful values yourself. The best
+value depends on your sequencer (or whatever other
+source you are using).
+You can also activate both methods at once. This makes
+sense in situations, where the pitch is stable for a very
+short time after the gate but afterwards begins to move,
+like in the following diagram:
+
+The midiout circuit has two methods for doing
+this. The ﬁrst one is enabled per default and called
+pitchstabilization. Here, as soon as the gate goes
+high, it watches how pitch evolves over time. And it
+
+270
+
+Table of contents at page 2
+
+V olts
+
+10
+
+5
+Pitch
+Gate
+
+0
+0
+
+10
+
+20
+
+30
+40
+time(ms)
+
+50
+
+starts. Here set the triggerdelay to 2 and explicitly set
+pitchstabilization = 1:
+
+knows notes from 0 (C-2) to 127. To do this, divide your
+number by 120 before sending it to pitch.
+
+[midiout]
+pitch = I1
+gate = I2
+triggerdelay = 2
+pitchstabilization = 1
+
+[midiout]
+pitch = _SOMENUMBER / 120
+gate = _SOMEGATE
+
+Why not 127? Because the pitch input counts notes by
+1
+semitones. And one semitone in modular is 12
+V, which
+1
+in Droid means 120 . Dividing by 127 will be slightly off
+and send wrong note numbers.
+
+60
+Sending notes by number
+
+As you can see, now after the gate comes high the
+pitch lingers on for 2 ms at its old value until the ramp
+
+If you are familiar with MIDI, you sometimes might want
+to send a certain note number rather than a pitch. MIDI
+
+Input
+
+Type
+
+Default
+
+Description
+
+channel (ch)
+
+1 2 3
+
+1
+
+Selects the MIDI channel to send the events on. Default is to send on channel 1. There are 16 channels. Make sure that
+the receiving device listens to this (or to all) channels.
+
+usb ()
+
++
+
+trs ()
+
++
+1V
+Oct
+
+pitch1 ... pitch8 (p)
+
+0V
+
+noteoffvelocity1 ...
+noteoffvelocity8 (nv)
+
+DROID manual for blue-6
+
+This controls wether the MIDI data is sent via the TRS output of the X7. If you just want the TRS output, you don’t need
+this, because that is the default. If you want the output both on USB and TRS, you need to set usb = 1 and trs = 1
+at the same time.
+Pitch of the notes to be played in modular style (1 V/octave). The range is from -2 V (MIDI note 0, usually C-2) to
+8.583 V (MIDI note 127, usually G9). You can use up to eight pitch inputs for playing up to eight notes in parallel.
+pitch1 can be abbreviated with just pitch.
+A positive edge into the gate jacks trigger note on messages (starts the note at the pitch set by the corresponding
+pitch input). A negative edge ends the currently played note.
+
+gate1 ... gate8 (g)
+
+velocity1 ... velocity8
+(v)
+
+Set usb = 1 if you want to send the MIDI output to the USB-C port. You can set trs = 1, as well, for sending the data
+to both outputs. If you don’t use usb nor trs, the output will be sent to the TRS output only.
+
+0
+
+1
+
+1.0
+
+0
+
+1
+
++
+
+The velocities for the up to eight notes. The velocity value is just picked up at the start of the note (at the positive edge
+of the corresponding gate inputs. It ranges from 0.0 to 1.0. A value of 0.0 is practically the same as “note off”. The
+default velocity is 1.0.
+MIDI also sends a velocity at the end of a note. The idea is to model the speed with which a key is being released. This
+is rarely used. If you don’t use these jacks, the velocity for “note off” events is the same as that for “note on” events.
+
+271
+
+Table of contents at page 2
+
+Input
+pressure1 ... pressure8
+(pr)
+
+Type
+
+Default
+
+0
+
++
+
+1
+
+Description
+Sends key pressure events for individually played notes via the MIDI event “polyphonic key pressure” (this is not a CC!).
+These values are not processed at the time of note on/off events but all the time and can also change while a note is
+already being played. This corresponds to “aftertouch” key pressure on keyboards that have a pressure sensor per key.
+If nothing is patched here, no pressure events are sent.
+
+channelpressure (cp)
+
+0
+
+1
+
++
+
+Whenever this CV changes, sends a MIDI channel pressure event, also known as “aftertouch”. This corresponds to
+keyboards that just have one global pressure sensor and not one per key.
+If nothing is patched here, no channel pressure events are sent.
+
+pitchstabilization (ps)
+
+1
+
+Enables or disables pitch stabilization. It is on per default and can be disabled by setting this jack to 0. Pitch stabilization ﬁxes timing issues where the input pitch needs some time for reaching the target pitch after a gate.
+
+triggerdelay (td)
+
+0.0
+
+Introduces a delay between in the incoming gate signal (just the positive edge) and the “note on” event. This can tackle
+the problem when your pitch input (sequencer etc.) needs some time after the gate in order to reach and stabilize the
+target pitch. The delay is speciﬁed in milliseconds, so a typical useful value would be 5 (5 ms). This is an alternative to
+the automatic pitchstabilization. Note: triggerdelay disables pitchstabilization, as long as that is not set
+to 1 explicitly. If both are used at the same time, the triggerdelay happens before the pitch stabilization. So it is a
+minimum delay.
+
+lowestnote (ln)
+
+1 2 3
+
+0
+
+With this input you can restrict the notes being played by setting a lower bound. In MIDI the notes range from 0 (C-2)
+to 127 (G9). By setting lowestnote to 24 (C0), all notes below this note are simply ignored. This allows for example for
+a keyboard split by using a second circuit with a highestnote of 23. Note gates are not being affected by this bound.
+
+highestnote (hn)
+
+1 2 3
+
+127
+
+Sets an upper limit to the note being played, similar to lowestnote. Note gates are not being affected by this bound.
+You can deﬁne up to 16 notes that can be directly controlled with a dedicated gate. This is convenient for playing drum
+sounds directly from triggers and also for using DROID controllers as MIDI controllers. A trigger or gate to notegate1
+will directly play the note whose pitch is set by note1.
+
+notegate1 ... notegate16
+(ng)
+
+note1 ... note16 (n)
+
+notegatevelocity1 ...
+notegatevelocity16 (ngv)
+
+modwheel (w)
+
+DROID manual for blue-6
+
+1 2 3
+
++
+
+0
+
+1
+
+1.0
+
+Here you can set the velocities use by the notegates. In order to keep it simple, this velocity is used for note on and
+note off events (nobody cares about the note off velocity anyway). If you do not use these jacks, the note gates will
+always use the maximum velocity.
+
+0
+
+1
+
+0.0
+
+Sets the current value of the modulation wheel. Any change here sends a midi CC#1 with a new value for the modulation wheel. The input range is 0.0 ... 1.0 and will be converted into the MIDI range of 0 ... 127. Note: in future we
+might support CC#33, which is the LSB value of CC#1 and increases the resolution from 128 to 16384 different values,
+at the cost – however – of two additional bytes being sent.
+
+MIDI notes to played via notegate. The range is from 0 to 127. Per default the notes are set to the MIDI notes 0, 1, 2
+... 15.
+
+272
+
+Table of contents at page 2
+
+

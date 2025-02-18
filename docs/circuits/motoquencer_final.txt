@@ -1,0 +1,339 @@
+set to high for half a clock cycle (you can change all this,
+no worries).
+Steps with Skip enabled will be skipped. This shortens
+the duration of the sequence. Note: if all steps are set to
+skip, the sequencer repeats playing the most recent step
+over and over. If you change the repeats of a step, the
+skip is automatically removed.
+So let’s now make an example where we use a button
+group for setting fadermode:
+
+In buttonmode = 1, the start step has a green LED and
+the end step a red one. Both start and end can be at the
+same step (creating a one step sequence). The LED will
+then blink between red and green.
+
+gate = O5
+
+Button mode
+Very similar to the faders, also the touch buttons have
+modes. These can be switched with buttonmode and here
+are the possible settings:
+0
+
+gates
+
+[p2b8]
+[m4]
+
+1
+
+start / end
+
+2
+
+gate pattern
+
+[buttongroup]
+button1 = B1.1
+button2 = B1.2
+button3 = B1.3
+button4 = B1.4
+button5 = B1.5
+button6 = B1.6
+button7 = B1.7
+button8 = B1.8
+led1 = L1.1
+led2 = L1.2
+led3 = L1.3
+led4 = L1.4
+led5 = L1.5
+led6 = L1.6
+led7 = L1.7
+led8 = L1.8
+output = _FADERMODE
+
+3
+
+skip
+
+If the start step is after the end step, the play order is reversed.
+
+Quantization, root and scale
+
+Three of these settings you already know from the
+fadermode. When the buttons are set to gate pattern,
+you cycle through the four steps each time you touch the
+button (and the LED cycles through four colors).
+Fun fact: You can set fadermode = 6 and buttonmode =
+0. That way, both the button and the fader control the
+gates. Try this out and touch the buttons: the fader will
+move automatically.
+The mode “start / end” cannot be set with the faders.
+They set a sub range of the sequence to be played. Here
+is what it means:
+
+Start and end
+[lfo]
+hz = 20 * P1.1
+square = _CLOCK
+[motoquencer]
+clock = _CLOCK
+fadermode = _FADERMODE
+cv = O1
+
+DROID manual for blue-6
+
+Touching a button changes the end step. You can set the
+start step by ﬁrst setting an end step and holding that
+button and then – with a second ﬁnger – press another
+step. That will be the start step.
+
+Usually your sequence is played from the ﬁrst to the
+last step. But you can change this by setting a start
+step and an end step. This can either be done manually
+(with buttonmode = 1 or with the inputs startstep and
+endstep.
+
+288
+
+Per default, the CVs are quantized to the notes of a lydian
+C major scale, as is the default for many other circuits, as
+well. This means that the faders have one artiﬁcal notch
+for each scale note. You can feel the notes. This makes
+it easy to change the note in exact steps without any display.
+As with many other pitch-aware circuits, like for example
+minifonion (see page 279) or chords (see page ??), you
+can use root and degree for changing the scale. See in
+the table of inputs below for the different possible scales.
+Note: root has no effect on the lower CV boundary. It’s
+just for the selection of the allowed notes. Use cvbase for
+setting that.
+Furthermore, there are the inputs select1, select3, ...
+You can use them to further restrict the possible notes –
+or even add notes that are not contained in the scale. Refer to the minifonion (see page 279) circuit for a broader
+discussion of these inputs.
+Note: If you have set a melody with the faders and reduce
+the number of allowed notes afterwards, the faders will
+possibly move to new positions. But as long as you don’t
+
+Table of contents at page 2
+
+touch them, they will internally “remember” their original
+note. If you later re-add the missing notes, the faders will
+move back and your original melody is restored.
+With the input quantize you can switch off the musical mode. quantize = 0 disables quantiziation and the
+faders create a continous CV (the internal resolution is
+127 steps, just like in a MIDI CC). And quantize = 1 will
+1
+quantize to semitones ( 12
+V steps).
+Note: The maximum number of notches is 201. But if you
+select more than 25 notches, the force feedback is turned
+off as the notches would get too small to work. This number of 25 “real” notches nicely matches the 25 possible
+semitones of two octaves. If you increase that range, the
+notches are switched off.
+
+Direction, ping pong, movement patterns
+The Motoquencer has quite a bunch of interesting features for changing the order in which steps are being
+played. Some of them, like the playing direction or “ping
+pong”, are the usual suspects and common among sequencers. The “playing patterns” and “forms” go beyond
+this and create interesting creative possibilities.
+direction defaults to 0, which means “forwards”. Set
+this to 1 (e.g. with a toggle button) to run the sequence
+
+backwards.
+direction = 1 # backwards
+
+pingpong is another switch. Setting it to 1 enables “ping
+pong mode”. Here the direction switches back and forth.
+Depending on direction, the sequence starts at the start
+step or the end step, moves towards the other end and
+then turns around in order to come back. Note: Since
+
+DROID manual for blue-6
+
+the steps at the turning points are played just once, a sequence of 8 steps in ping pong mode has a duration of 14,
+not 16.
+pingpong = 1 # enable ping pong
+
+pattern changes the way how the sequencer steps
+through the sequence. Pattern 1 for example goes always two steps forwards (according to direction and
+pingpong) and then one step backwards. Assuming
+direction = 0 and pingpong = 0, the step order would
+
+be 1, 2, 3, 2, 3, 4, 3, 4, 5, 4, 5, 6 and so on. The available
+patterns are much the same as in the arpeggio (see page
+127) circuit with the addition of pattern 6, which goes forwards in small random steps.
+
+your parts won’t have equal size (which on the other hand
+could be funny anyway).
+The forms can be combined with direction, pingpong
+and pattern. Here stepping modiﬁcations are always applied within each individual part.
+The forms can also be combined with the start and end
+point. Here just the steps between start and end are divided into parts.
+
+Autoreset
+In contrast to the all the upper modiﬁcations of the step
+order, autoreset is super simple. It resets the whole
+sequence (including parts) to the very beginning after a
+speciﬁed number of clock ticks.
+
+pattern = 3 # set pattern 3
+
+Forms like AAAB
+Already confused? Then you probably won’t like the
+“Forms” feature! Here we create longer sequences by ﬁrst
+dividing the steps into two (or three parts), and then playing these parts in certain orders.
+The most useful form (except the trivial 0) is probably 1,
+which is AAAB. Here the steps are divided into a ﬁrst half,
+which is called A, and a second half, which is called B. The
+A part is always played thrice and then once the B part.
+Assuming you have 8 steps (and all the other fancy stuff
+is off), the step order would be 1, 2, 3, 4, 1, 2, 3, 4, 1, 2,
+3, 4, 5, 6, 7, 8.
+The patterns with the three parts A, B, and C divide the
+steps into three equal sized parts. You better make sure
+that you have 6 or 12 or 24 steps in that case, or else
+
+289
+
+There are two typical applications: First, if you want to
+make sure that the pattern repeats in some regular way
+despite crazy modiﬁcations, set autoreset = 16 and the
+sequence will restart exactly very 16th clock tick. If it is
+longer, it will be truncated. If it is shorter, it ﬁrst repeats,
+but then the repetition is truncated.
+On the other hand you can make a regular sequence irregular, if you set e.g. autoreset = 7 in a sequence with
+usually 16 steps, thus forcing polymetric shifts with other
+parallel rhythms.
+When you use the special gate “propabilities” odd and
+even in combination with autoreset, please note that after a reset the odd / even count always starts with odd.
+
+The Metric Saver
+The Metric Saver™ is a very musical feature that allows
+you to go bonkers with all start, end, direction, ping pong,
+Table of contents at page 2
+
+pattern, form, repeats, autoreset and skips without loosing the sync to the rest of your music.
+If The Metric Saver™ is turned on (which is the default),
+the motoquencer automatically keeps track of the original incoming clock count. As soon as – after a polymetric journey – you come back to “normal”, it jumps to the
+step that would have been the current one without those
+alterations.
+An example: You set autoreset to 7 in order to create
+polymetric tension. Later you set it back to 0. Now the
+sequence immediately jumps to the step where it would
+have been without autoreset (this requires that none of
+the other step changing features are in use). You snap
+back to your original groove and are in sync again with
+the rest of your modular “band”.
+Note: The Metric Saver™ is only activated when really
+all modiﬁcations to the normal step order are turned off.
+That also includes steps where “repeats” or “skip” is used,
+since they also introduce time shifts.
+
+[motoquencer]
+... usual stuff goes here ...
+luckychance = P1.1
+luckyamount = P1.2
+luckycvs = B1.1 # press to reroll CVs
+
+All lucky operations honor the luckychance input. This
+sets the relative number of steps that is affected by the
+randomization. Setting it to 1 will affect all steps. At 0,
+no step is affected. At 0.5 exactly half of the steps is affected, randomly chosen from all steps between start and
+end.
+A trigger to luckycvs sets a new random CV value for
+each affected step. And with the pot luckyamount you
+control the maximum CV that’s possible here.
+You can use this mechanism also to reset things. A trigger
+at luckycvs whith luckyamount = 0 and luckychance
+= 1 will bring all steps back to the CV set by cvbase.
+Please have a look at the table of inputs for all the other
+lucky... triggers and ... feel lucky!
+
+I Feel Lucky
+Pitch accumulator
+
+settings are now dedicated to the accumulator while the
+lower three settings still do pitch randomization:
+7
+
+accumulator: shift up twice each turn
+
+6
+
+accumulator: shift up each turn
+
+5
+
+accumulator: shift down each turn
+
+4
+
+accumulator: shift down twice each turn
+
+3
+
+strong pitch randomization
+
+2
+
+medium pitch randomization
+
+1
+
+slight pitch randomization
+
+0
+
+randomization + accumulator off
+
+Let’s assume you set a step to 6 (shift up each turn). Now
+the note of this step is increased by one note every repetition of the sequence. Every time it restarts from step 1,
+the internal accumulator is increased by one and the note
+is moved up one one within the selected scale notes.
+If accumulatorrange = 4, the accumulator is reset after
+the sequence has played four times and all notes are restored to their original values. The same does an extern
+reset signal.
+
+The Motoquencer has a powerful system of one time randomization, which is called I Feel Lucky™ . While setting random CVs or gate propabilities is quite common
+amongst sequencers, here we talk of something different. By sending a trigger to a certain input, some of your
+steps are randomly modiﬁed – and stay that way. If your
+faders currently show these steps, you will immediately
+see them moving around. And they stay there, so that
+you can manually modify the random decision if you like.
+Those triggers are most times sent by buttons, but also
+slowly running LFOs or using the startofsequence as a
+trigger are ﬁne.
+
+The pitch accumulator – or just short accumulator – is a
+way to alter the notes of certain steps in a predictable way
+as the sequence goes on. It works like this:
+
+With the four fader positions 4, 5, 6 and 7 of a step, you
+can have the note moved up once or twice or on the contrary moved downwards once or twice per repetition.
+
+First you turn it on by setting accumulatorrange to a
+non-zero number. Let’s assume you set it to 4.
+
+If you enable a form like AAAB, the accumulator is increased at the end of the complete form. So even if the
+A part repeated three times, the accumulator-sensitive
+steps change their note note for each repetition of A but
+just at the and of the whole sequence.
+
+Let’s make a simpliﬁed example:
+
+If you do this, the fader in the fader mode ”pitch randomization” changes its meaning slightly. The upper four
+
+DROID manual for blue-6
+
+[motoquencer]
+accumulatorrange = 4
+...
+
+290
+
+Table of contents at page 2
+
+

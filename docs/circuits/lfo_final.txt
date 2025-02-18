@@ -1,0 +1,258 @@
+At 1.0 we get a saw tooth:
+[lfo]
+hz = 4
+output = O1
+waveform = 1.0
+
+V olts
+
+10
+5
+0
+
+0
+
+1
+
+2
+time(sec)
+
+3
+
+4
+
+And in between – at 0.5 – we get some mixture:
+[lfo]
+hz = 4
+output = O1
+waveform = 0.5
+
+V olts
+
+10
+5
+0
+
+0
+
+1
+
+DROID manual for blue-6
+
+2
+time(sec)
+
+3
+
+4
+
+242
+
+Table of contents at page 2
+
+Input
+
+Type
+
+rate (ra)
+
+Default
+
+Description
+
+0.0
+
+Frequency control: The default frequency of the LFO is 1 Hz (one cycle per second). Each volt doubles the frequency.
+So an input of 1 V (a number of 0.1) speeds up the LFO to 2 Hz, 2 V (0.2) create 4 Hz and so on. On the other hand
+negative voltages reduce the speed, so -1 V (-0.1) will give 0.5 Hz and so on.
+Feed a reference clock here and the LFO will run at the speed of that clock – albeit optionally modiﬁed by rate and hz.
+Please see page 23 for details on using taptempo inputs.
+
+taptempo (tt)
+
+hz ()
+
+1.0
+
+Set the frequency in Hz directly by setting a number here. Note: you cannot use hz at that same time as taptempo.
+But both can be combined with rate.
+
+level (l)
+
+1.0
+
+The maximum positive output level of the LFO. The default of 1.0 means a swing between 0 V and 10 V – unless you
+enable bipolar, in which case it moves from -10 V to 10 V.
+
+0.0
+
+Randomization is an experimental new feature that combines random voltages with an LFO. If you turn this parameter
+up, then for each hill of the LFO’s waveform output a new random attenuation is being chosen and multiplied with the
+current level. The result is an output, where each cycle of the waveform has a different level.
+
+offset (of)
+
+0.0
+
+The output of the LFO is shifted by that voltage right before the output. This is the same as adding or mixing a ﬁxed
+voltage to the output. Not very fancy, but practical if you want to output a modulation voltage within a certain range.
+
+bipolar (b)
+
+0
+
+If this switch is set to on, then the LFO will output a full swing from -level to +level. When set to off it will swing
+between 0V and +level.
+
+randomize (r)
+
+0
+
+1
+
+phase (p)
+
+0
+
+1
+
+0.0
+
+Shift the LFOs phase by this value. A value of 0.0 leaves the LFO run in its normal phase. 0.5 will shift bei 180◦ . And
+1.0 will shift by a complete phase of 360◦ , which is the same as 0.0.
+
+pulsewidth (pw)
+
+0 0.5 1
+
+0.5
+
+This sets the pulse width of the square LFO and only affects the output square. It ranges from 0.0 to 1.0. Please note
+that a pulse width of exactly 0.0 or 1.0 will make the output stick to the respective lower or upper level.
+
+skew (sk)
+
+0 0.5 1
+
+0.5
+
+Modiﬁes the symmetry of the triangle output by shifting the “peak” of the triangle left and right. The default of 0.5
+creates a symmetric waveform. Smaller values speed up the rising part of the triangle and create more and more a
+ramp like waveform until a skew of 0.0 creates an exact ramp – just the same as the ramp output. A skew of 1.0 create
+a sawtooth waveform.
+A positive trigger edge at this input will reset the LFO. It will force to restart the waveform at its “beginning”. By using
+the input syncphase you can change that behaviour.
+
+sync (sy)
+
+syncphase (sp)
+
+DROID manual for blue-6
+
+0
+
+1
+
+0.0
+
+This input changes the behaviour of the sync input. I changes the phase the waveform restarts at when it receives a
+sync trigger. E.g. by setting this to 0.5 a sync trigger will restart the waveform right at its middle. This is an interesting
+feature that cannot be found in analog LFOs since it would be very hard to build in actual circuits.
+
+243
+
+Table of contents at page 2
+
+Input
+
+Type
+
+waveform (w)
+
+Output
+
+Type
+
+Default
+
+Description
+
+0.0
+
+If you use output – rather than the individual waveform outputs like square, saw and so on – this input selects the Wave
+form. An integer number from 0 to 6 selects one of the seven available waveforms. Any number in between selects a
+mixture of the two neighboring waveforms. That way you can smoothly morph through all the available waveforms.
+The codes for the waveforms are:
+0
+
+square
+
+1
+
+sawtooth
+
+2
+
+triangle
+
+3
+
+ramp
+
+4
+
+paraboloid
+
+5
+
+sine
+
+6
+
+cosine
+
+Description
+
+output (o)
+
+Main output of the LFO.
+
+square (q)
+
+A square waveform – modiﬁed by pulsewidth.
+
+sawtooth (st)
+
+Outputs a sawtooth waveform – i.e. a rising ramp
+
+triangle (t)
+
+Outputs a triangle waveform – modiﬁed by skew.
+
+ramp (rp)
+
+Outputs a falling ramp – like a sawtooth that is mirrored. Note: if the LFO is set to bipolar then this is the negation of
+sawtooth. If it is set to unipolar then this is not the case. The waveform will be positive then!
+
+paraboloid (pb)
+
+An experimental waveform that looks very similar to a sine wave but is derived from a triangle by computing the square
+of each waypoint’s distance to level.
+
+sine (si)
+
+A sine waveform.
+
+cosine (cs)
+
+A sine waveform shifted by 90◦ . This output is for your convenience and avoids needing two LFO circuits in cases
+where you want to make quadrature applications. Please note that 180◦ and 270◦ can easily be achieved by negating
+the outputs sine and cosine at a later stage.
+
+DROID manual for blue-6
+
+244
+
+Table of contents at page 2
+
+

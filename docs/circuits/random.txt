@@ -1,0 +1,54 @@
+# DROID Circuit Input/Output Keys
+
+## random - Random Number Generator
+
+### Inputs
+- clock - Trigger input
+  - Type: trigger
+  - Description: Optional clock for sample & hold operation
+  - Note: Holds value until next clock when used
+
+- minimum - Lower bound
+  - Type: float
+  - Default: 0.0
+  - Description: Minimum possible random value
+
+- maximum - Upper bound
+  - Type: float
+  - Default: 1.0
+  - Description: Maximum possible random value
+
+- steps - Quantization
+  - Type: integer
+  - Default: 0
+  - Description: Number of discrete output levels
+  - Note: 0=continuous, 1=fixed, 2=min/max only
+
+### Outputs
+- output - Random value
+  - Type: float
+  - Description: Generated random number/voltage
+  - Note: Updates at ~6000Hz when unclocked
+
+Note: Random number generator with features:
+- Clocked or free-running operation
+- Configurable value range
+- Optional value quantization
+- Sample & hold capability
+- High-speed generation
+- Continuous or discrete values
+
+Example applications:
+- Random voltage generation
+- Noise source
+- Random modulation
+- Probability control
+- Random sequencing
+- Stochastic processes
+
+Limitations:
+- Fixed update rate when unclocked
+- No probability distribution control
+- No correlation between outputs
+- Single output channel
+- No seed control

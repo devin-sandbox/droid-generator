@@ -1,0 +1,73 @@
+# DROID Circuit Input/Output Keys
+
+## sinfonionlink - Sinfonion Harmonic State Sync
+
+### Inputs
+Note: This circuit only requires connecting Sinfonion's OUT 1 to MASTER18's I1 jack.
+
+### Outputs
+- root - Root note
+  - Type: integer
+  - Description: Current root note (C=0, C♯=1, D=2, etc.)
+
+- degree - Scale selection
+  - Type: integer
+  - Description: Current scale/degree number (see manual p.107)
+
+- transpose - Global transposition
+  - Type: voltage
+  - Scale: 1V/Oct
+  - Description: Current global transposition value
+
+- chaoticdetune - Detune amount
+  - Type: float
+  - Description: Current chaotic detune value for detune circuit
+
+- harmonicshift - Harmonic complexity
+  - Type: integer
+  - Range: -7 to 7
+  - Description: Current harmonic shift value for scale complexity
+
+- linkstate - Connection status
+  - Type: binary
+  - Description: 1 when link is active, 0 otherwise
+
+- clock - Timing clock
+  - Type: trigger
+  - Description: Copy of Sinfonion's clock input
+
+- reset - Song reset
+  - Type: trigger
+  - Description: Triggers at first bar of song in Song mode
+
+- step - Song step
+  - Type: trigger
+  - Description: Triggers for each song step
+
+- beat - Beat trigger
+  - Type: trigger
+  - Description: Triggers for each beat subdivision
+
+Note: Specialized sync circuit with features:
+- Harmonic state synchronization
+- Musical scale coordination
+- Global transposition sync
+- Timing synchronization
+- Song position tracking
+- Beat/step triggering
+
+Example applications:
+- Multi-device scale sync
+- Harmonic complexity control
+- Musical timing coordination
+- Song position tracking
+- Beat/bar synchronization
+- Scale-based quantization
+
+Limitations:
+- Receive-only (no sync master capability)
+- Requires MASTER18 hardware
+- Single input connection
+- No CV input parameters
+- Fixed sync protocol
+- No custom sync options
