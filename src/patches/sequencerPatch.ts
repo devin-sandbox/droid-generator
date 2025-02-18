@@ -39,7 +39,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     buttonmode: '0',              // 0 = gates mode
     
     // CV and quantization
-    cvbase: '1',                  // Full positive range
+    cvbase: '0',                  // Base value for CV range
     cvrange: '1',                 // Full range (0 to 1)
     quantize: '1',                // 1 = semitones
     
