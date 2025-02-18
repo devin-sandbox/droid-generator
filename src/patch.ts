@@ -10,7 +10,8 @@ export type Circuit =
   | (LFOConfig & { section: 'lfo' })
   | (MotorFaderConfig & { section: 'motorfader' })
   | (EncoderConfig & { section: 'encoder' })
-  | (ButtonConfig & { section: 'button' });
+  | (ButtonConfig & { section: 'button' })
+  | (MotoquencerConfig & { section: 'motoquencer' });
 
 export class Patch {
   private circuits: Circuit[] = [];
