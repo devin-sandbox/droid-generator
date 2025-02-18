@@ -91,17 +91,11 @@ function generatePatch(numLfos: number): string {
   // Configure encoder for layer selection and pagination
   const enc = ini.setSection("encoder");
   ini.set(enc.id ?? enc.sec, "encoder", "E2.1");
-  ini.set(enc.id ?? enc.sec, "input", "_BUTTON");  // Button state output
+  ini.set(enc.id ?? enc.sec, "button", "1");  // Enable button functionality
+  ini.set(enc.id ?? enc.sec, "buttonmode", "toggle");  // Toggle between layers
   ini.set(enc.id ?? enc.sec, "led", LAYER_SELECT);
-  ini.set(enc.id ?? enc.sec, "output", LFO_SELECT);  // Still controls LFO selection
-
-  // Configure button for layer switching
-  const layerButton = ini.setSection("button");
-  ini.set(layerButton.id ?? layerButton.sec, "input", "_BUTTON");
-  ini.set(layerButton.id ?? layerButton.sec, "states", "2");  // LFO and mixer layers
-  ini.set(layerButton.id ?? layerButton.sec, "output", LAYER_SELECT);
-  ini.set(layerButton.id ?? layerButton.sec, "value1", `${LAYER_LFO}`);
-  ini.set(layerButton.id ?? layerButton.sec, "value2", `${LAYER_MIXER}`);
+  ini.set(enc.id ?? enc.sec, "output", LFO_SELECT);  // Controls LFO selection
+  ini.set(enc.id ?? enc.sec, "buttonoutput", LAYER_SELECT);  // Button press controls layer selection
 
   // Configure layer colors for visual feedback
   const lfoColor = ini.setSection("color");
