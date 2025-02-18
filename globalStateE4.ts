@@ -1,17 +1,10 @@
 /// <reference types="bun-types" />
 import { IniMap } from "./ini";
-<<<<<<< ours
-interface LfoConfig {
-||||||| base
-
-interface LfoConfig {
-=======
 import type { LFOConfig } from './types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { EncoderConfig } from './types/circuits/io/encoder';
 
 interface LfoState extends Partial<LFOConfig> {
->>>>>>> theirs
   index: number;
   output: string;  // For O1-O8 format
   level: string;   // For _LEVEL_X format
