@@ -1,4 +1,4 @@
-import { IniMap } from './index';
+import { IniMap } from './lib/ini';
 import type { BaseCircuitConfig } from './types/base';
 import type { LFOConfig } from './types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
@@ -17,13 +17,6 @@ export class Patch {
 
   addComment(text: string): void {
     this.ini.comments.setAtLine(this.ini.size + 1, text);
-  }
-
-  addSectionHeader(title: string): void {
-    this.addComment("-------------------------------------------------");
-    this.addComment(title);
-    this.addComment("-------------------------------------------------");
-    this.addComment("");
   }
 
   constructor() {
@@ -46,27 +39,22 @@ export class Patch {
     
     for (const [key, value] of entries) {
       if (value !== undefined) {
-        this.ini.set(section.id ?? section.sec, `    ${key}`, ` = ${value}`);
+        this.ini.set(section.id ?? section.sec, `    ${key} = `, value);
       }
     }
   }
 
   toString(): string {
-    // Reset INI
     this.ini.clear();
     this.ini.comments.setAtLine(1, "# LABELS: master=18");
     this.ini.setSection('p2b8');
     this.ini.setSection('e4');
     this.ini.setSection('m4');
     this.ini.comments.setAtLine(this.ini.size + 1, "");
-    
-    // Add section headers
-    this.addComment("# -------------------------------------------------");
-    this.addComment("# test2");
-    this.addComment("# -------------------------------------------------");
-    this.addComment("");
-    
-    // Serialize all circuits with proper spacing
+    this.ini.comments.setAtLine(this.ini.size + 1, "# -------------------------------------------------");
+    this.ini.comments.setAtLine(this.ini.size + 1, "# test2");
+    this.ini.comments.setAtLine(this.ini.size + 1, "# -------------------------------------------------");
+    this.ini.comments.setAtLine(this.ini.size + 1, "");
     let lastSection = '';
     for (const circuit of this.circuits) {
       if (lastSection !== circuit.section) {
@@ -78,12 +66,10 @@ export class Patch {
       lastSection = circuit.section;
     }
     
-    // Add final section header
     this.ini.comments.setAtLine(this.ini.size + 1, "");
-    this.addComment("# -------------------------------------------------");
-    this.addComment("# test3");
-    this.addComment("# -------------------------------------------------");
-    
+    this.ini.comments.setAtLine(this.ini.size + 1, "# -------------------------------------------------");
+    this.ini.comments.setAtLine(this.ini.size + 1, "# test3");
+    this.ini.comments.setAtLine(this.ini.size + 1, "# -------------------------------------------------");
     return this.ini.toString();
   }
 }

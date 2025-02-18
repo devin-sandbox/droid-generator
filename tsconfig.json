@@ -25,7 +25,7 @@
     "noPropertyAccessFromIndexSignature": false,
 
     // Type definitions
-    "types": ["bun-types", "node"]
+    "types": ["bun-types"]
   },
   "include": ["src/**/*"]
 }
