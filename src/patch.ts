@@ -25,7 +25,7 @@ export class Patch {
     this.devices = devices;
     this.ini = new IniMap({
       pretty: false,
-      assignment: " = ",
+      assignment: "=",
       lineBreak: "\n",
       commentChar: "#",
       deduplicate: false
