@@ -1,4 +1,4 @@
-import { Patch } from '../patch';
+import { Patch, type Circuit } from '../patch';
 import type { LFOConfig } from '../types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from '../types/circuits/io/motorfader';
 import type { EncoderConfig } from '../types/circuits/io/encoder';
