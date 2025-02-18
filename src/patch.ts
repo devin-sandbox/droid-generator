@@ -20,6 +20,10 @@ export class Patch {
   private ini: IniMap;
   private devices: DeviceType[];
 
+  protected get _circuits(): readonly Circuit[] {
+    return this.circuits;
+  }
+
   addComment(text: string): void {
     this.ini.comments.setAtLine(this.ini.size + 1, text);
   }
