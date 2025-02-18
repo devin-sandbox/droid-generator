@@ -29,7 +29,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   const button = {
     section: 'button' as const,
     button: 'E2.1',  // Use encoder's button
-    led: 'E2.1',     // Use encoder's LED
+    l: 'E2.1',       // Use encoder's LED (DROID manual: 'l' for LED output)
     states: '2'      // Two states for future layer switching
   };
   patch.addCircuit(button);
