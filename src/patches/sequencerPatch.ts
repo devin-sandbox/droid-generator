@@ -37,7 +37,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   // Configure motoquencer for basic 4-step sequence
   const motoquencer = {
     section: 'motoquencer' as const,
-    clock: 'I2',      // Use external clock input
+    clock: 'I1',      // Use LFO square output as clock
     firstfader: '1',  // Use faders 1-4
     numfaders: '4',   // All 4 faders on M4
     numsteps: '4',    // 4-step sequence
