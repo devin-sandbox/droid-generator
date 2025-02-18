@@ -5,7 +5,6 @@ import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { EncoderConfig } from './types/circuits/io/encoder';
 import type { ButtonConfig } from './types/circuits/io/button';
 import { DeviceType } from './types/devices';
-import { DeviceManager } from './lib/device';
 
 type Circuit = 
   | (LFOConfig & { section: 'lfo' })
@@ -16,13 +15,14 @@ type Circuit =
 export class Patch {
   private circuits: Circuit[] = [];
   private ini: IniMap;
-  private deviceManager: DeviceManager;
+  private devices: DeviceType[];
 
   addComment(text: string): void {
     this.ini.comments.setAtLine(this.ini.size + 1, text);
   }
 
-  constructor() {
+  constructor(devices: DeviceType[] = [DeviceType.P2B8, DeviceType.E4, DeviceType.M4]) {
+    this.devices = devices;
     this.ini = new IniMap({
       pretty: true,
       assignment: " = ",
@@ -30,7 +30,6 @@ export class Patch {
       commentChar: "#",
       deduplicate: false
     });
-    this.deviceManager = new DeviceManager();
   }
 
   addCircuit(circuit: Circuit): void {
@@ -43,7 +42,7 @@ export class Patch {
     
     for (const [key, value] of entries) {
       if (value !== undefined) {
-        this.ini.set(section.id ?? section.sec, `    ${key} = `, value);
+        this.ini.set(section.id ?? section.sec, `    ${key}`, value);
       }
     }
   }
@@ -51,19 +50,12 @@ export class Patch {
   toString(): string {
     this.ini.clear();
     this.ini.comments.setAtLine(1, "# LABELS: master=18");
-    this.deviceManager.initializeDevices(this.ini);
-    let lastSection = '';
-    for (const circuit of this.circuits) {
-      if (lastSection !== circuit.section) {
-        if (lastSection !== '') {
-          this.ini.comments.setAtLine(this.ini.size + 1, "");
-        }
-      }
-      this.serializeCircuit(circuit);
-      lastSection = circuit.section;
-    }
-    
+    this.devices.forEach(device => this.ini.setSection(device));
     this.ini.comments.setAtLine(this.ini.size + 1, "");
+    
+    for (const circuit of this.circuits) {
+      this.serializeCircuit(circuit);
+    }
     return this.ini.toString();
   }
 }
