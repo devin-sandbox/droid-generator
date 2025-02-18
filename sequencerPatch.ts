@@ -3,6 +3,15 @@ import type { MotoquencerConfig } from './types/circuits/sequencing/motoquencer'
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { LFOConfig } from './types/circuits/modulation/lfo';
 
+// Constants for layer selection
+const LAYER_SELECT = "_LAYER_SELECT";
+const LAYER_STEPS = 0;    // Step control layer
+const LAYER_CLOCK = 1;    // Clock control layer
+const LAYER_TRACKS = 2;   // Track selection layer
+
+// Constants for track selection
+const TRACK_SELECT = "_TRACK_SELECT";
+
 // Constants for clock configuration
 const CLOCK_OUTPUT = "O1";
 const CLOCK_HZ = "_CLOCK_HZ";
@@ -45,9 +54,14 @@ function validateConfig(config: SequencerConfig): void {
 function configureStepEncoder(ini: IniMap): void {
   const enc = ini.setSection("encoder");
   ini.set(enc.id ?? enc.sec, "encoder", "E2.1");
-  ini.set(enc.id ?? enc.sec, "discrete", "4");  // 4 pages of 4 steps each
+  ini.set(enc.id ?? enc.sec, "discrete", "4");  // 4 pages of 4 steps
   ini.set(enc.id ?? enc.sec, "output", STEP_SELECT);
+  ini.set(enc.id ?? enc.sec, "button", "1");  // Enable button for layer switching
+  ini.set(enc.id ?? enc.sec, "buttonmode", "cycle");  // Cycle through layers
+  ini.set(enc.id ?? enc.sec, "buttonoutput", LAYER_SELECT);  // Button controls layer
   ini.set(enc.id ?? enc.sec, "color", STEP_SELECT);  // Visual feedback for current page
+  ini.set(enc.id ?? enc.sec, "negativecolor", "0.2");  // Cyan for clock layer
+  ini.set(enc.id ?? enc.sec, "positivecolor", "0.4");  // Green for track layer
 }
 
 function configureClockLFO(ini: IniMap): void {
@@ -56,30 +70,51 @@ function configureClockLFO(ini: IniMap): void {
   ini.set(lfo.id ?? lfo.sec, "waveform", "0");  // Square wave for clock
   ini.set(lfo.id ?? lfo.sec, "level", CLOCK_LEVEL);
   ini.set(lfo.id ?? lfo.sec, "hz", `${CLOCK_HZ} * 100`);
+}
 
-  // Configure clock speed fader
+function configureClockFaders(ini: IniMap): void {
+  // Clock speed fader
   const speedFader = ini.setSection("motorfader");
   ini.set(speedFader.id ?? speedFader.sec, "fader", "1");
+  ini.set(speedFader.id ?? speedFader.sec, "select", LAYER_SELECT);
+  ini.set(speedFader.id ?? speedFader.sec, "selectat", LAYER_CLOCK.toString());
   ini.set(speedFader.id ?? speedFader.sec, "output", CLOCK_HZ);
 
-  // Configure clock level fader
+  // Clock level fader
   const levelFader = ini.setSection("motorfader");
   ini.set(levelFader.id ?? levelFader.sec, "fader", "2");
+  ini.set(levelFader.id ?? levelFader.sec, "select", LAYER_SELECT);
+  ini.set(levelFader.id ?? levelFader.sec, "selectat", LAYER_CLOCK.toString());
   ini.set(levelFader.id ?? levelFader.sec, "output", CLOCK_LEVEL);
 }
 
-function configureStepFaders(ini: IniMap): void {
-  // CV value fader
-  const cvFader = ini.setSection("motorfader");
-  ini.set(cvFader.id ?? cvFader.sec, "fader", "3");
-  ini.set(cvFader.id ?? cvFader.sec, "select", STEP_SELECT);
-  ini.set(cvFader.id ?? cvFader.sec, "output", STEP_CV);
+function configureTrackFaders(ini: IniMap): void {
+  // Configure 4 faders for track control
+  Array.from({ length: 4 }, (_, i) => {
+    const fader = ini.setSection("motorfader");
+    ini.set(fader.id ?? fader.sec, "fader", (i + 1).toString());
+    ini.set(fader.id ?? fader.sec, "select", LAYER_SELECT);
+    ini.set(fader.id ?? fader.sec, "selectat", LAYER_TRACKS.toString());
+    ini.set(fader.id ?? fader.sec, "output", `_TRACK_${i + 1}_SELECT`);
+  });
+}
 
-  // Gate length fader
-  const gateFader = ini.setSection("motorfader");
-  ini.set(gateFader.id ?? gateFader.sec, "fader", "4");
-  ini.set(gateFader.id ?? gateFader.sec, "select", STEP_SELECT);
-  ini.set(gateFader.id ?? gateFader.sec, "output", STEP_GATE);
+function configureStepFaders(ini: IniMap): void {
+  // Configure 4 faders for step control
+  Array.from({ length: 4 }, (_, i) => {
+    const fader = ini.setSection("motorfader");
+    ini.set(fader.id ?? fader.sec, "fader", (i + 1).toString());
+    ini.set(fader.id ?? fader.sec, "select", LAYER_SELECT);
+    ini.set(fader.id ?? fader.sec, "selectat", LAYER_STEPS.toString());
+    ini.set(fader.id ?? fader.sec, "output", `_STEP_${i + 1}_CV`);
+    
+    // Configure gate length
+    const gateFader = ini.setSection("motorfader");
+    ini.set(gateFader.id ?? gateFader.sec, "fader", (i + 1).toString());
+    ini.set(gateFader.id ?? gateFader.sec, "select", LAYER_SELECT);
+    ini.set(gateFader.id ?? gateFader.sec, "selectat", LAYER_STEPS.toString());
+    ini.set(gateFader.id ?? gateFader.sec, "output", `_STEP_${i + 1}_GATE`);
+  });
 }
 
 function createTrackConfig(index: number, isLinked: boolean): SequencerState {
@@ -103,9 +138,13 @@ function generatePatch(config: SequencerConfig): string {
   // Configure clock LFO first
   configureClockLFO(ini);
 
-  // Configure step encoder and faders
+  // Configure encoder for layer switching and step selection
   configureStepEncoder(ini);
-  configureStepFaders(ini);
+
+  // Configure faders for all layers
+  configureClockFaders(ini);   // Layer 1: Clock control
+  configureStepFaders(ini);    // Layer 0: Step control
+  configureTrackFaders(ini);   // Layer 2: Track selection
 
   // Configure tracks
   Array.from({ length: config.numTracks }, (_, i) => {
