@@ -38,24 +38,29 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   const motoquencer = {
     section: 'motoquencer' as const,
     clock: '_INTERNAL_CLOCK',      // Use LFO square output as clock
-    firstfader: '1',  // Use faders 1-4
-    numfaders: '4',   // All 4 faders on M4
-    numsteps: '4',    // 4-step sequence
-    cv: 'O1',        // CV output on O1
-    gate: 'G1',      // Gate output on G1
-    button: 'E2.1',   // Connect to encoder button
+    firstfader: '1',              // Use faders 1-4
+    numfaders: '4',               // All 4 faders on M4
+    numsteps: '4',                // 4-step sequence
+    cv: 'O1',                     // CV output on O1
+    gate: 'G1',                   // Gate output on G1
+    button: 'E2.1',               // Connect to encoder button
     
     // Basic parameter control
-    fadermode: '0',  // 0 = pitch/CV mode
-    buttonmode: '0', // 0 = gates mode
+    fadermode: '0',               // 0 = pitch/CV mode
+    buttonmode: '0',              // 0 = gates mode
     
     // CV and quantization
-    cvbase: '-1',    // Full negative range
-    cvrange: '1',    // Full range (0 to 1)
-    quantize: '1',   // 1 = semitones
+    cvbase: '-1',                 // Full negative range
+    cvrange: '1',                 // Full range (0 to 1)
+    quantize: '1',                // 1 = semitones
+    
+    // Pattern control
+    pattern: '0',                 // Default pattern
+    form: '0',                    // Default form
     
     // Randomization
-    luckychance: '0' // No random probability
+    luckychance: '0',             // No random probability
+    luckyamount: '0'              // No random amount
   };
   patch.addCircuit(motoquencer);
   
