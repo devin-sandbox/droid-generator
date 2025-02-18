@@ -1,6 +1,5 @@
 import { expect, test, describe } from "bun:test";
 import { createSequencerPatch } from "../patches/sequencerPatch";
-import { DeviceType } from "../types/devices";
 
 describe("SequencerPatch", () => {
   test("creates valid 4-step sequencer patch", () => {

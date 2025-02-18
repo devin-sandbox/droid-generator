@@ -46,5 +46,6 @@ function generatePatch(numLfos: number): string {
   return patch.toString();
 }
 
-const numLfos = Bun.argv[2] ? parseInt(Bun.argv[2], 10) : MAX_ALLOWED_LFOS;
-console.log(generatePatch(numLfos));
+export function generatePatch(numLfos: number = MAX_ALLOWED_LFOS): string {
+  return generatePatch(validateNumLfos(numLfos));
+}
