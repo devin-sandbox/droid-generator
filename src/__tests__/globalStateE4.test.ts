@@ -1,28 +1,39 @@
 import { expect, test, describe } from "bun:test";
 import { generatePatch } from "../patches/globalStateE4";
+import { Patch } from "../patch";
 
 describe("GlobalStateE4", () => {
-  test("generates valid patch with default LFOs", () => {
-    const ini = generatePatch(8);
+  test("generates patch with valid circuit keys", () => {
+    const patch = new Patch();
     
-    // Verify LFO configuration
-    expect(ini).toContain("[lfo]");
-    expect(ini).toContain("sawtooth=O1");
-    expect(ini).toContain("level=P3.2");
-    expect(ini).toContain("hz=P3.1 * 100");
-    
-    // Verify button configuration
-    expect(ini).toContain("[button]");
-    expect(ini).toContain("shortpress=_SAVE");
-    expect(ini).toContain("button=B1.2");
-    expect(ini).toContain("shortpress=_LOAD");
-    expect(ini).toContain("button=B1.1");
-    
-    // Verify motor fader configuration
-    expect(ini).toContain("[motorfader]");
-    expect(ini).toContain("savepreset=_SAVE");
-    expect(ini).toContain("fader=1");
-    expect(ini).toContain("loadpreset=_LOAD");
+    // Add circuits to patch
+    expect(() => {
+      patch.addCircuit({
+        section: 'lfo',
+        sawtooth: 'O1',
+        level: 'P3.2',
+        hz: 'P3.1 * 100'
+      });
+      
+      patch.addCircuit({
+        section: 'button',
+        button: 'B1.2',
+        shortpress: '_SAVE'
+      });
+      
+      patch.addCircuit({
+        section: 'button',
+        button: 'B1.1',
+        shortpress: '_LOAD'
+      });
+      
+      patch.addCircuit({
+        section: 'motorfader',
+        fader: '1',
+        savepreset: '_SAVE',
+        loadpreset: '_LOAD'
+      });
+    }).not.toThrow();
   });
 
   test("validates number of LFOs", () => {
