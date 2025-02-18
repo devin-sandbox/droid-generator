@@ -1,0 +1,80 @@
+# DROID Circuit Input/Output Keys
+
+## buttongroup - Connected buttons
+
+### Inputs
+- minactive (ma) - Minimum active buttons
+  - Type: integer
+  - Default: 1
+  - Description: Minimum number of buttons that must be active (0 allows all off)
+
+- maxactive (xa) - Maximum active buttons
+  - Type: integer
+  - Default: 1
+  - Description: Maximum number of buttons that can be active simultaneously
+
+- longpresstime (lt) - Long press duration
+  - Type: float
+  - Default: 1.5
+  - Description: Seconds after which a press is considered long
+
+- button1...button32 (b) - Button inputs
+  - Type: trigger
+  - Default: none
+  - Description: Individual button inputs, positive trigger toggles button state
+
+- value1...value32 (v) - Button values
+  - Type: float
+  - Default: 0,1,2...31
+  - Description: Values output when corresponding button is active
+
+- startbutton (sb) - Initial button
+  - Type: integer
+  - Default: 1
+  - Description: Button selected at start/clear (-1 for max buttons, 0 for none if minactive=0)
+
+- select (s) - Layer selection
+  - Type: trigger
+  - Default: none
+  - Description: When active, enables button/LED interaction
+
+- selectat (sa) - Selection value
+  - Type: float
+  - Default: none
+  - Description: Value at which select input activates the circuit
+
+- dontsave (dos) - Disable state saving
+  - Type: trigger
+  - Default: 0
+  - Description: When 1, state is not saved to SD card
+
+### Outputs
+- led1...led32 (l) - LED outputs
+  - Type: float
+  - Description: 1.0 when corresponding button active, 0.0 when inactive
+
+- buttonoutput1...buttonoutput32 (bo) - Individual outputs
+  - Type: float
+  - Description: Outputs button's value when active, 0 when inactive
+
+- output (o) - Combined output
+  - Type: float
+  - Description: Sum of all active button values
+
+- buttonpress (bp) - Press indicator
+  - Type: trigger
+  - Description: Triggers when any button is pressed
+
+- longpress (lop) - Long press indicator
+  - Type: trigger
+  - Description: Triggers when any button is held for longpresstime
+
+- selectionchanged (sc) - Change indicator
+  - Type: trigger
+  - Description: Triggers when button selection changes
+
+- extrapress (ep) - Extra press indicator
+  - Type: trigger
+  - Description: Triggers when pressed button was already selected
+
+Note: This circuit is designed for user interfaces and runs at reduced speed. For fast logic operations, use other circuits instead.

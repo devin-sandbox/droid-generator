@@ -1,0 +1,202 @@
+Input
+
+Type
+
+Default
+
+Description
+
+firstfader (f)
+
+1 2 3
+
+1
+
+First M4 fader of the sequencer (starting with 1). If you omit this, it starts at the ﬁrst fader of your ﬁrst M4.
+
+numfaders (n)
+
+1 2 3
+
+Number of faders to use for your sequencer. The typical numbers are 4, 8, 16 and 32. 32 is the maximum (eight M4
+units). If you omit this, all of your M4 faders will be used.
+
+numsteps (ns)
+
+1 2 3
+
+Number of steps your sequence consists of (at maximum). The number of steps can be greater than the number of
+faders. In that case use page for paging your faders so that you can edit all of the steps. Having the number of steps
+less than the faders, makes no sense – it’s just a waste of faders. The maximum number of steps is 32.
+If you don’t set this parameter, the number of steps will be set to the number of faders.
+Note: changing this setting dynamically can provoke various surprising behaviours. For example the number of pages
+(see parameter page) might be reduced. Or the end marker is forcibly moved around. If you want to change the length
+of the sequence via CV, better use endstep or autoreset.
+Another note: Setting numsteps will not restrict the number of faders. If you set numsteps = 4 but have eight faders
+available, the circuit will use all these, even if faders 5, 6, 7 and 8 will be useless. You need to set numfaders = 4 in
+this situation.
+
+page (p)
+
+1 2 3
+
+0
+
+Use this parameter, if you have less faders than steps. The ﬁrst page is 0, not 1. For example if you have 4 faders but
+16 steps, you can select between the four “pages” of four faders each, by settings bar to 0, 1, 2 or 3. The output of a
+buttongroup (see page 146) with one button per page is a good match for this parameter.
+
+clock (c)
+
+Patch an input clock here. If you want to use ratcheting, that clock needs to be stable and regular, because the sequencer needs to interpolate the clock and create evenly distributed new beats within two clock ticks. If you don’t use
+ratching, you can use any rhythm you like here – may it be shufﬂed, euklidean, the output from another sequencer or
+whatever you like. Each clock tick will advance the sequence to the next step (or to the next repition of the current
+step).
+
+taptempo (tt)
+
+If your clock is not steady but might be stopped and restarted, you should patch a steady clock here. This avoids
+problems with the computation of the gate length right after starting the clock. The tap tempo computation needs a
+series of at least two clock pulses so the gate length of the ﬁrst step is wrong after the clock has stopped for a while.
+
+reset (r)
+
+A trigger here resets the sequencer to its start step. The next clock tick (or a tick that is roughly at the same time as
+the reset) will play step 1. Note: If there is a reset without a clock tick at the same time, the sequencer will go to “step
+0”, which is a special state where it waits for the clock to advance to the ﬁrst step. Without that fancy logic, a reset
+plus clock would skip step 1 and start with step 2.
+
+DROID manual for blue-6
+
+294
+
+Table of contents at page 2
+
+Input
+run (ru)
+
+Type
+
+Default
+
+Description
+
+1
+
+If you set this input to 0, the sequencer will ignore all incoming clock ticks. It stops. The default of 1 is normal operation,
+where it runs. This input is a better way to temporarily stop the sequencer than to stop the clock. The reason: for
+computing the gate length and ratchets a steady input clock is needed. If you stop the clock, the next gate length
+and ratches right after the next start will have the wrong duration since at least two clock ticks are neccessary for
+computing its speed.
+Note: This input is not a replacement for mute, since a muted sequencer leaves the clock running and advances steps.
+It just mutes the gate output.
+
+composemode (cm)
+
+Enabling “compose mode” makes it easier to ﬁnd the right note in a step, when creating more complex melodies. When
+composemode is set to 1, the sequencer stops clocking. Instead – every time you change the CV of a step, it immediately
+jumps to that step, outputs the changed CV and opens the gate for a short time, so you can listen to the changed note.
+
+mute (m)
+
+If you set this to 1, the gate output of the sequencer is muted (will always be 0). Any changes of the CV output still
+happen.
+
+cvbase (cb)
+
+0.0
+
+Here you set the voltage the sequencer will output if the CV fader is at the bottom position. The allowed range is -1 …
+1 (which is the same as the range from -10 V to +10 V, if you output the CV directly to an output).
+
+cvrange (cr)
+
+0.2
+
+CV range of the faders. So the resulting CV lies somewhere between cvbase and cvbase + cvrange. The CV range
+cannot be negative and is capped at 1. If you need a greater range, consider multiplying the output value of the cv
+output of the sequencer.
+
+invert (iv)
+
+0
+
+Inverts the CV or pitch output. This is like mirroring the fader position. Now if the fader is up, the output is low and
+vice versa. In scale quantized mode, the melody still stays within the scale.
+
+DROID manual for blue-6
+
+295
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+quantize (q)
+
+1 2 3
+
+2
+
+Switches on quantization in two levels. At 0, the faders run freely and output a continous CV.
+1
+At 1, the output is quantized to semitones, which is 12
+V steps. Also the faders will get artiﬁcal notches – one for each
+semitone. That is, unless your range is too large. The maximum number of notches with force feedback is 25, so if
+your range exceeds two octaves (0.2), the notches are turned off.
+
+At 2, the output is quantized to the scale that root and degree deﬁne. Furthermore the individual scale notes can be
+switched on or off with the parameters select1, select3 and so on. Note: the root input does not select the lowest
+note of the CV range. That is still set with cvbase. It is just used for selecting the scale.
+
+cvnotches (cn)
+
+1 2 3
+
+0
+
+0
+
+no quantization
+
+1
+
+quantize to semitones (1/12V steps)
+
+2
+
+quantize to the scale set by root and degree
+
+Usually the CVs of the steps are ment to be note pitches (when quantize is 1 or 2), or just free CVs (quantize = 0).
+There is an alternative mode, however, that allows you to assign integer values like 0, 1, 2 and so on to each step.
+To do this set cvnotches to a value of 2 or greater. This deﬁnes the number of discrete values (and hence notches)
+for each step and put CVs of the sequence into notched mode. 1 makes no sense, of course, since in this “pitch bend
+mode” the faders would always return to the neutral position.
+In notched mode the cv output does not output a pitch but a notch number starting from 0. cvbase, cvrange and
+quantize are ignored.
+The maximum number of notches is 127, but the haptic force feedback of the motor faders is disabled starting at 26.
+
+shiftsteps (sh)
+
+1 2 3
+
+0
+
+Shifts all your steps by that number to the left (negative numbers shift to the right). So if shiftsteps is 1, right after
+a reset, the sequencer will not play step 1, but step 2. The shifting wraps around at the end of your sequence, so if you
+have 24 steps and shift is 1, the sequencer will play step 1 instead of step 24.
+Note: Other things like startstep, endstep, playmode, from and autoreset take place after shifting.
+
+DROID manual for blue-6
+
+296
+
+Table of contents at page 2
+
+

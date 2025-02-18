@@ -1,0 +1,118 @@
+# DROID Circuit Input/Output Keys
+
+## chord - Chord generator
+
+### Inputs
+- pitch (p) - Base pitch
+  - Type: V/Oct
+  - Default: 0V
+  - Description: Sets the minimum pitch of the lowest note of the chord
+
+- spread (s) - Note spread
+  - Type: V/Oct
+  - Default: 0V
+  - Description: Range between lowest and highest note (0V=one octave, 1V=two octaves)
+
+- inversion (iv) - Chord inversion
+  - Type: integer
+  - Default: 0
+  - Description: 0=auto, 1-4 forces specific note as lowest (1=root, 2=second, etc)
+
+- trigger (t) - Update trigger
+  - Type: trigger
+  - Default: none
+  - Description: Optional - freezes outputs until triggered when connected
+
+- root (ro) - Root note
+  - Type: integer
+  - Default: 0
+  - Description: Sets root note (0=C, 1=C#, etc., up to 11=B)
+
+- degree (dg) - Scale selection
+  - Type: integer
+  - Default: 0
+  - Description: Selects musical scale (0-107, e.g., 0=Lydian, 1=Major, 7=Natural minor)
+
+- select1 (s1) - Root note select
+  - Type: trigger
+  - Default: none
+  - Description: Gate input for selecting root note as interval
+
+- select3 (s3) - Third select
+  - Type: trigger
+  - Default: none
+  - Description: Gate input for selecting the 3rd
+
+- select5 (s5) - Fifth select
+  - Type: trigger
+  - Default: none
+  - Description: Gate input for selecting the 5th
+
+- select7 (s7) - Seventh select
+  - Type: trigger
+  - Default: none
+  - Description: Gate input for selecting the 7th
+
+- select9 (s9) - Ninth select
+  - Type: trigger
+  - Default: none
+  - Description: Gate input for selecting the 9th (2nd)
+
+- select11 (s11) - Eleventh select
+  - Type: trigger
+  - Default: none
+  - Description: Gate input for selecting the 11th (4th)
+
+- select13 (s13) - Thirteenth select
+  - Type: trigger
+  - Default: none
+  - Description: Gate input for selecting the 13th (6th)
+
+- selectfill1 (sf1) - Alt ninth
+  - Type: trigger
+  - Default: off
+  - Description: Selects alternative 9th not in scale
+
+- selectfill2 (sf2) - Alt third
+  - Type: trigger
+  - Default: off
+  - Description: Selects alternative 3rd not in scale
+
+- selectfill3 (sf3) - Alt fifth
+  - Type: trigger
+  - Default: off
+  - Description: Selects alternative 4th/5th (usually diminished 5th)
+
+- selectfill4 (sf4) - Alt thirteenth
+  - Type: trigger
+  - Default: off
+  - Description: Selects alternative 13th not in scale
+
+- selectfill5 (sf5) - Alt seventh
+  - Type: trigger
+  - Default: off
+  - Description: Selects alternative 7th not in scale
+
+- harmonicshift (has) - Harmonic complexity
+  - Type: integer
+  - Default: 0
+  - Description: Reduces harmonic complexity by disabling notes (-7 to 7)
+
+### Outputs
+- output1 (o1) - First voice
+  - Type: V/Oct
+  - Description: Pitch CV for first voice of chord
+
+- output2 (o2) - Second voice
+  - Type: V/Oct
+  - Description: Pitch CV for second voice of chord
+
+- output3 (o3) - Third voice
+  - Type: V/Oct
+  - Description: Pitch CV for third voice of chord
+
+- output4 (o4) - Fourth voice
+  - Type: V/Oct
+  - Description: Pitch CV for fourth voice of chord (optional)
+
+Note: This circuit generates up to 4 voices of musical chords with flexible note selection, inversions, and harmonic complexity control. Supports 2, 3, or 4-voice modes automatically based on connected outputs.

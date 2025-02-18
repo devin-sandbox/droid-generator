@@ -1,0 +1,126 @@
+# DROID Circuit Input/Output Keys
+
+## lfo - Low frequency oscillator
+
+### Inputs
+- rate (ra) - Frequency control
+  - Type: float
+  - Default: 0.0
+  - Description: 1V/octave frequency control. Each volt doubles frequency from 1Hz base (e.g., 1V=2Hz, 2V=4Hz)
+
+- taptempo (tt) - Clock sync
+  - Type: trigger
+  - Description: Reference clock input for synchronizing LFO speed, can be modified by rate and hz
+
+- hz (h) - Direct frequency
+  - Type: float
+  - Default: 1.0
+  - Description: Sets frequency directly in Hz. Cannot be used with taptempo but can combine with rate
+
+- level (l) - Output level
+  - Type: float
+  - Default: 1.0
+  - Description: Maximum output level. 1.0 = 0V to 10V range (unipolar) or -10V to 10V (bipolar)
+
+- randomize (r) - Randomization amount
+  - Type: float
+  - Default: 0.0
+  - Description: Randomizes amplitude of each waveform cycle. 0.0=off, higher values=more random
+
+- offset (of) - DC offset
+  - Type: float
+  - Default: 0.0
+  - Description: Shifts output voltage by fixed amount
+
+- bipolar (b) - Bipolar mode
+  - Type: binary
+  - Default: 0
+  - Description: When on, output swings +/- level. When off, swings 0 to +level
+
+- phase (p) - Phase shift
+  - Type: float
+  - Default: 0.0
+  - Description: Shifts LFO phase. 0.0=normal, 0.5=180°, 1.0=360°
+
+- pulsewidth (pw) - Pulse width
+  - Type: float
+  - Default: 0.5
+  - Range: 0.0-1.0
+  - Description: Sets square wave pulse width. 0.0/1.0 = constant output
+
+- skew (sk) - Triangle skew
+  - Type: float
+  - Default: 0.5
+  - Range: 0.0-1.0
+  - Description: Modifies triangle symmetry. 0.0=ramp up, 0.5=symmetric, 1.0=sawtooth
+
+- sync (sy) - Sync trigger
+  - Type: trigger
+  - Description: Resets LFO to start phase on trigger
+
+- syncphase (sp) - Sync phase
+  - Type: float
+  - Default: 0.0
+  - Description: Sets phase point where LFO restarts on sync trigger
+
+- waveform (w) - Waveform select
+  - Type: float
+  - Default: 0.0
+  - Range: 0-6
+  - Description: Selects output waveform:
+    0=square, 1=sawtooth, 2=triangle, 3=ramp
+    4=paraboloid, 5=sine, 6=cosine
+    Fractional values blend between adjacent waveforms
+
+### Outputs
+- output (o) - Main output
+  - Type: float
+  - Description: Main LFO output using selected waveform
+
+- square (q) - Square wave
+  - Type: float
+  - Description: Square wave output, modified by pulsewidth
+
+- sawtooth (st) - Sawtooth wave
+  - Type: float
+  - Description: Rising sawtooth waveform
+
+- triangle (t) - Triangle wave
+  - Type: float
+  - Description: Triangle waveform, modified by skew
+
+- ramp (rp) - Ramp wave
+  - Type: float
+  - Description: Falling ramp waveform (inverted sawtooth)
+
+- paraboloid (pb) - Paraboloid wave
+  - Type: float
+  - Description: Sine-like wave derived from squared triangle distances
+
+- sine (si) - Sine wave
+  - Type: float
+  - Description: Sine waveform
+
+- cosine (cs) - Cosine wave
+  - Type: float
+  - Description: 90° phase-shifted sine wave
+
+Note: Versatile LFO with multiple waveforms and extensive modulation options. Key features:
+- Seven basic waveforms with morphing
+- Multiple frequency control methods
+- Randomization per cycle
+- Phase and sync control
+- Bipolar/unipolar operation
+- Waveform-specific controls (skew, pulsewidth)
+
+Limitations:
+- Not intended for audio rate use (max ~1000-1500 Hz)
+- Digital artifacts at high frequencies
+- Waveform randomization affects phase relationships
+
+Example applications:
+- Modulation source
+- Clock generation
+- Complex waveshaping
+- Quadrature LFO outputs
+- Synchronized modulation

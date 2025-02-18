@@ -1,0 +1,53 @@
+# DROID Circuit Input/Output Keys
+
+## flipflop - Simple flip flop
+
+### Inputs
+- toggle (t) - Toggle trigger
+  - Type: trigger
+  - Description: Inverts the state of the flip flop (changes 0 to 1 and 1 to 0)
+
+- set (s) - Set trigger
+  - Type: trigger
+  - Description: Sets the flip flop to 1
+
+- reset (r) - Reset trigger
+  - Type: trigger
+  - Description: Sets the flip flop to 0
+
+- clear (cl) - Clear trigger
+  - Type: trigger
+  - Description: Sets the flip flop to the value defined by startvalue
+
+- startvalue (sv) - Initial value
+  - Type: binary
+  - Default: 0
+  - Description: Value the flip flop starts with and returns to on clear
+
+- load (ld) - Load trigger
+  - Type: trigger
+  - Description: Loads the value specified by loadvalue into the flip flop
+
+- loadvalue (lv) - Load value
+  - Type: binary
+  - Default: 1
+  - Description: Value to set the flip flop to when load is triggered
+
+### Outputs
+- output (o) - Current state
+  - Type: binary
+  - Description: Outputs the current value of the flip flop (0 or 1)
+
+Note: Simple one-bit storage circuit with trigger controls. Key features:
+- Basic set/reset functionality
+- Toggle trigger for state inversion
+- Configurable start value
+- Load functionality for preset values
+- No state saving to SD card
+- No preset memory
+
+Example applications:
+- Clock division by 2 (using toggle)
+- Basic state storage
+- Trigger-controlled switching
+- Simple memory element

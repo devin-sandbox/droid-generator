@@ -1,0 +1,97 @@
+# DROID Circuit Input/Output Keys
+
+## fadermatrix - Matrix of up to 4x4 virtual motor faders
+
+### Inputs
+- firstfader (f) - Starting fader
+  - Type: int
+  - Default: 1
+  - Description: First M4 fader of the virtual fader matrix (starting with 1)
+
+- rowcolumn (rc) - Matrix selection
+  - Type: int
+  - Default: 0
+  - Range: 0-7
+  - Description: Selects row or column to control:
+    - 0: Control output11-14 (Row 1)
+    - 1: Control output21-24 (Row 2)
+    - 2: Control output31-34 (Row 3)
+    - 3: Control output41-44 (Row 4)
+    - 4: Control output11-41 (Column 1)
+    - 5: Control output12-42 (Column 2)
+    - 6: Control output13-43 (Column 3)
+    - 7: Control output14-44 (Column 4)
+
+- notches1...notches4 (n) - Column notches
+  - Type: int
+  - Default: 0
+  - Description: Sets number of notches for faders in each column. 0=disabled, 1=pitch bend, 2=binary switch, >2=positions. Max 201, force feedback disabled above 25.
+
+- startvalue1...startvalue4 (sv) - Column start values
+  - Type: float
+  - Description: Default start values for each column, used at startup or on clear trigger
+
+- ledvalue11...ledvalue44 (l1-l4) - LED values
+  - Type: float
+  - Description: Individual LED brightness control for each matrix position when selected
+
+- ledcolor1...ledcolor4 (lc) - LED colors
+  - Type: float
+  - Description: Sets LED color for each column of faders when selected
+
+- select (s) - Selection control
+  - Type: int
+  - Description: Enables/disables button and LED processing for overlay functionality
+
+- selectat (sa) - Selection value
+  - Type: int
+  - Description: Value at which select input activates circuit
+
+- preset (pr) - Preset number
+  - Type: int
+  - Range: 0-5
+  - Description: Preset selection (6 presets available)
+
+- loadpreset (lp) - Load preset
+  - Type: trigger
+  - Description: Loads selected preset
+
+- savepreset (sp) - Save preset
+  - Type: trigger
+  - Description: Saves current state to selected preset
+
+- clear (cl) - Clear state
+  - Type: trigger
+  - Description: Loads default start state
+
+- clearall (ca) - Clear all
+  - Type: trigger
+  - Description: Loads default state for current and all presets
+
+- dontsave (dos) - Disable state saving
+  - Type: binary
+  - Default: 0
+  - Description: Prevents saving state to SD card when 1
+
+### Outputs
+- output11...output44 (o1-o4) - Matrix outputs
+  - Type: float
+  - Description: 16 outputs arranged in 4x4 matrix, where first digit is row and second is column
+
+- button11...button14 (b1) - Button states
+  - Type: binary
+  - Description: Touch button states for first row when respective outputs are selected
+
+Note: Creates a matrix of up to 4x4 virtual faders that can be controlled by row or column selection. Key features:
+- Flexible matrix size (2x2, 3x3, 4x4)
+- Row/column selection via rowcolumn parameter
+- Per-column notch settings and LED colors
+- Individual LED brightness control
+- 6 preset memory slots
+- Expandable to 8x8 using multiple circuits
+
+Example applications:
+- Multi-envelope control (4 ADSR envelopes)
+- Multi-parameter control matrices
+- Modulation matrix control
+- Parameter morphing arrays

@@ -1,0 +1,164 @@
+# DROID Circuit Input/Output Keys
+
+## contour - Contour generator
+
+### Inputs
+- gate (g) - Gate input
+  - Type: trigger
+  - Default: none
+  - Description: Gate signal that triggers and holds envelope, length affects sustain phase
+
+- trigger (t) - Trigger input
+  - Type: trigger
+  - Default: none
+  - Description: Alternative trigger input, ignores length and skips decay/sustain phases
+
+- retrigger (rt) - Retrigger mode
+  - Type: trigger
+  - Default: 1
+  - Description: When 0, only retriggers during release phase
+
+- startfromzero (sz) - Reset mode
+  - Type: trigger
+  - Default: 0
+  - Description: When 1, resets envelope to zero on trigger (digital mode)
+
+- abortattack (aa) - Attack abort
+  - Type: trigger
+  - Default: 0
+  - Description: When 1, ends attack phase if gate ends during attack
+
+- loop (lo) - Loop mode
+  - Type: trigger
+  - Default: 0
+  - Description: When 1, restarts envelope automatically when finished
+
+- predelay (pd) - Initial delay
+  - Type: float
+  - Default: 0.0
+  - Description: Delay before envelope start (0.1 seconds per volt)
+
+- attack (a) - Attack time
+  - Type: float
+  - Default: 0.0
+  - Description: Duration of attack phase (0.1 sec at value 1.0)
+
+- hold (h) - Hold time
+  - Type: float
+  - Default: 0.0
+  - Description: Duration at maximum level after attack
+
+- decay (d) - Decay time
+  - Type: float
+  - Default: 0.2
+  - Description: Duration of decay phase
+
+- sustain (s) - Sustain level
+  - Type: float
+  - Default: 0.5
+  - Description: Level during sustain phase
+
+- swell (sw) - Swell enable
+  - Type: float
+  - Default: 0.0
+  - Description: Enables level change during sustain phase
+
+- swelltime (st) - Swell duration
+  - Type: float
+  - Default: 5.0
+  - Description: Duration of swell phase
+
+- swelllevel (sl) - Swell target
+  - Type: float
+  - Default: 1.0
+  - Description: Target level for swell phase
+
+- release (r) - Release time
+  - Type: float
+  - Default: 0.2
+  - Description: Duration of release phase
+
+- level (l) - Maximum level
+  - Type: float
+  - Default: 1.0
+  - Description: Overall envelope amplitude scaling
+
+- velocity (v) - Attack velocity
+  - Type: float
+  - Default: 1.0
+  - Description: Attack phase amplitude scaling
+
+- pitch (p) - Time scaling
+  - Type: V/Oct
+  - Default: 0V
+  - Description: V/Oct input affecting all time parameters
+
+- taptempo (tt) - Clock sync
+  - Type: trigger
+  - Default: none
+  - Description: Syncs envelope timing to external clock (120 BPM reference)
+
+- shape (sh) - Global shape
+  - Type: float
+  - Default: 0.5
+  - Description: Default curve shape for all phases
+
+- attackshape (as) - Attack shape
+  - Type: float
+  - Default: none
+  - Description: Attack phase curve shape (0=log, 0.5=linear, 1=exp)
+
+- decayshape (ds) - Decay shape
+  - Type: float
+  - Default: none
+  - Description: Decay phase curve shape
+
+- swellshape (ss) - Swell shape
+  - Type: float
+  - Default: none
+  - Description: Swell phase curve shape
+
+- releaseshape (rs) - Release shape
+  - Type: float
+  - Default: none
+  - Description: Release phase curve shape
+
+- zerocrossing (z) - Zero sync
+  - Type: float
+  - Default: none
+  - Description: Delays trigger to next zero crossing of input signal
+
+### Outputs
+- output (o) - Main output
+  - Type: float
+  - Description: Main envelope output signal
+
+- negated (n) - Inverted output
+  - Type: float
+  - Description: Negative version of main output
+
+- inverted (iv) - Level-inverted
+  - Type: float
+  - Description: Positive but level-inverted output
+
+- endofpredelay (ep) - Predelay end
+  - Type: trigger
+  - Description: Trigger when predelay phase ends
+
+- endofattack (ea) - Attack end
+  - Type: trigger
+  - Description: Trigger when attack phase ends
+
+- endofhold (eh) - Hold end
+  - Type: trigger
+  - Description: Trigger when hold phase ends
+
+- endofdecay (ed) - Decay end
+  - Type: trigger
+  - Description: Trigger when decay phase ends
+
+- endofrelease (er) - Release end
+  - Type: trigger
+  - Description: Trigger when release phase ends
+
+Note: Enhanced ADSR envelope with six phases (predelay, attack, hold, decay, sustain, release), shape control per phase, and multiple trigger modes. Attack time is scaled 1/20th of decay/release for musical purposes.

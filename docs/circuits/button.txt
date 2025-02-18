@@ -1,0 +1,86 @@
+# DROID Circuit Input/Output Keys
+
+## button - Button utility for controllers
+
+### Inputs
+- button (b) - Physical button input
+  - Type: trigger
+  - Default: none
+  - Description: The actual push button, typically wired to B1.1, B1.2 etc. Toggles state on rising edge
+
+- onvalue (ov) - On state value
+  - Type: float
+  - Default: 1.0
+  - Description: Value sent to output when button is on, same as value2
+
+- offvalue (fv) - Off state value
+  - Type: float
+  - Default: 0.0
+  - Description: Value sent to output when button is off, same as value1
+
+- value1...value4 (v) - State values
+  - Type: float
+  - Default: 0,1,2,3
+  - Description: Values to output for each button state, value1=offvalue, value2=onvalue
+
+- doubleclickmode (dm) - Double click mode
+  - Type: trigger
+  - Default: off
+  - Description: When enabled (1), button only toggles on double press, otherwise acts momentary
+
+- longpresstime (lt) - Long press duration
+  - Type: float
+  - Default: 1.5
+  - Description: Seconds after which a press is considered long
+
+- states (st) - Number of states
+  - Type: integer
+  - Default: 2
+  - Description: Number of button states (1-4), 1=momentary, 2=toggle, 3/4=multi-state
+
+- startvalue (sv) - Initial state
+  - Type: integer
+  - Default: 0
+  - Description: State when system starts or on clear trigger (0-3 depending on states)
+
+- select (s) - Layer selection
+  - Type: trigger
+  - Default: none
+  - Description: When active, enables button/LED interaction, otherwise maintains current state
+
+- selectat (sa) - Selection value
+  - Type: float
+  - Default: none
+  - Description: Value at which select input activates the circuit
+
+- dontsave (dos) - Disable state saving
+  - Type: trigger
+  - Default: 0
+  - Description: When 1, state is not saved to SD card
+
+### Outputs
+- led (l) - LED output
+  - Type: float
+  - Description: Controls button LED (0-1), uses intermediate values for 3/4 states
+
+- output (o) - Main output
+  - Type: float
+  - Description: Outputs current state value (modified by value1-4/offvalue/onvalue)
+
+- inverted (iv) - Inverted output
+  - Type: float
+  - Description: Like output but with onvalue/offvalue swapped
+
+- negated (n) - Negated output
+  - Type: float
+  - Description: Outputs 1 when off, 0 when on, ignores value settings
+
+- longpress (lop) - Long press indicator
+  - Type: trigger
+  - Description: Goes high after longpresstime seconds, prevents toggle
+
+- shortpress (shp) - Short press trigger
+  - Type: trigger
+  - Description: Triggers on short press when used with longpress
+
+Note: This circuit is designed for user interfaces and runs at reduced speed. For fast logic operations, use flipflop circuit instead.

@@ -1,0 +1,226 @@
+Output
+pressure1 ... pressure8
+(pr)
+
+Type
+0
+
+1
+
+Description
+MIDI provides two different messages for sending ”after-touch” information, i.e. information about how strong a
+key is pressed down after the initial hit. Some keyboards just have one pressure sensor in total and send the current
+maximum pressure information of all keys in one message (“channel pressure”). Others have one pressure sensor per
+key and send “polyphonic key pressure” messages. This circuit maps both to a pressure output per note that is being
+played. So if your keyboard (or sequencer or DAW or whatever) sends polyphonic key pressure events and you use
+multiple pitchX outputs, wire the individual pressureX outputs to wherever you like. Otherwise you can simply use
+pressure1 for all notes (which can be abbreviated with pressure), since it is the same for all note outputs anyway.
+pressure outputs a value from 0 to 1.
+
+gate1 ... gate8 (g)
+
+Gate outputs for the up to eight simultaneous note outputs.
+
+trigger1 ... trigger8 (t)
+
+Trigger outputs for the up to eight simultaneous note outputs. The difference to the gate outputs is, that these just
+send a short trigger of 5 ms at the start of the note. This can be interesting in situations where the notes have no gaps
+in between so that gate will never go low.
+
+cc1 ... cc4 ()
+
+0
+
+1
+
+Outputs the current value of the four CC number that are deﬁned with the inputs ccnumber1 ... ccnumber4. CCs have
+a range from 0 to 127, but this is converted in the range 0.0 .. 1.0 here, in order to make it easier to use that as a CV.
+If you need the raw number, multiply the output with 127. Note: as long as no CC message with the selected number
+happened, this output will be set to 0.
+
+cctrigger1 ... cctrigger4
+(ct)
+
+These outputs send a trigger whenever a CC event matching the corresponding ccnumber is processed. Some devices
+uses triggers in such a way – as events rather then indicating the change of a continous value. So if you set ccnumber2
+= 17, the output cctrigger2 sends a trigger whenever CC#17 is received.
+
+notegate1 ... notegate16
+(ng)
+
+Outputs a high gate whenever the corresponding note (which is selected by note1 through note16) is currently being
+played.
+
+pitchbend (pb)
+
+Outputs the current pitch bend value as a bipolar voltage. The range can be set with pitchbendrange.
+
+programchange (pc)
+
+Sends a trigger whenever a MIDI program change message arrives. Just before sending the trigger sets program to the
+new program number (something from 0 to 127). Note: This trigger is also being output when the program change
+messages sends the same program number as previously, i.e. if there is no actual change.
+
+program (pm)
+
+1 2 3
+
+The number of the last program change. This starts at 0.
+
+bank (ba)
+
+1 2 3
+
+Outputs the number of the currently selected bank – from 0 to 16384. MIDI deﬁnes the MSB of the bank to be changed
+with CC#0 and the LSB with CC#32. That means if you just use CC#0, you will only be able to select the banks 0, 128,
+256, and so on. As long as no bank select CC has been received, bank will output 0.
+
+modwheel (w)
+
+0
+
+DROID manual for blue-6
+
+1
+
+Output the current state of the mod wheel level – within the range from 0.0 to 1.0. The mod wheel is changed by MIDI
+control change 1.
+
+258
+
+Table of contents at page 2
+
+Output
+
+Type
+
+Description
+
+volume (vo)
+
+0
+
+Outputs the current global volume as set by MIDI control change 7.
+
+1
+
+portamento (po)
+
+This output gives you access to the current state of the “portamento pedal” (MIDI CC 65). You can use it to enable an
+external slew circuit for creating portamento effects.
+
+soft (so)
+
+This output gives you access to the current state of the “soft pedal” (MIDI CC 67). It is 1 while the pedal is hold and 0
+otherwise.
+
+DROID manual for blue-6
+
+259
+
+Table of contents at page 2
+
+16.39
+
+midiin – MIDI to CV converter
+
+This circuit converts incoming MIDI data
+into CV, gate and trigger signals. It needs
+the X7 expander in order to work (see page
+77 for general information about the X7).
+
+It’s really as simple as that! Connect your MIDI keyboard or sequencer with the X7 MIDI input, wire O1 to the
+1V/Oct input of a synth voice and O2 to its gate input and
+enjoy your music!
+
+There are various useful applications of
+this circuit, some of which are:
+
+You can also precisely specify which ports to receive data
+from. All details are explained below.
+
+• Attaching an external keyboard to your modular.
+• Using an external hardware sequencer for playing
+melodies and beats in your modular.
+• Use an external MIDI controller to inﬂuence your
+patch.
+• Use your phone or tablet as a MIDI controller to inﬂuence your patch (via USB).
+• Connect two DROIDs (both with X7) and exchange
+real time data.
+The X7 MIDI implementation is very comprehensive and
+gives you convenient access to most of the MIDI features.
+Please refer to the table of inputs and outputs for details.
+Here are just some very basic examples:
+
+[midiin]
+pitch = O1
+gate = O2
+
+DROID manual for blue-6
+
+When you use a MIDI sequencer for triggering drums, often each drum voice (bass drum, snare drum, etc.) is
+triggered by a certain note, for example C-2 for the bass
+drum, C♯-2 for the snare drum and so on. In this case it
+is more convenient to use the notegate outputs. Check
+the following example:
+
+Polyphonic patches
+Do you have more than one synth voice to control? Then
+you can play several notes at the same time by using up
+to eight pitch and gate outputs. Here is an example with
+three voices, which uses a G8 expander for the gates:
+
+[midiin]
+note1 = 24
+note2 = 25
+notegate1 = O1
+notegate2 = O2
+
+Now whenever note 24 is played by the sequencer,
+notegate1 will trigger. The note numbers range from 0
+to 127, with 0 being the lowest note and 127 the highest. The MIDI standard speciﬁes that note 0 is usually C-2
+(two octaves below C0). So note 24 would be C0 and note
+25 C♯0.
+
+[midiin]
+pitch1 = O1
+pitch2 = O2
+pitch3 = O3
+gate1 = G1
+gate2 = G2
+gate3 = G3
+
+Basic operation
+The basic operation is quite simple. Per default midiin
+listens on all available ports, both TRS and USB. The ﬁrst
+port to receive MIDI data is used. The following example controls one synth voice by converting MIDI note on /
+note off messages into CV / gate signals:
+
+Sequencing drums and triggers
+
+Here the parameters roundrobin and voiceallocation
+are interesting. roundrobin inﬂuences which of the
+three outputs should be used for the next note, in situations where more than one is free. voiceallocation, in
+contrast, controls what should happen if the MIDI stream
+wants to play more simultaneous notes than you have
+setup in midiin. The default is to cancel the oldest currently playing note, but you can change that behaviour in
+various ways.
+
+Another application of note gates is to use keys on a MIDI
+keyboard or touch pads of a MIDI controller as buttons in
+your
+patch! In fact the button circuit can be wired
+to such note gates. It’s just that you don’t have a corresponding LED. But you can use the
+’s own LEDs for
+that.
+The following example uses the note 24 in order to toggle
+a (virtual) button and use the ﬁrst input LED of the master as LED for the button:
+[midiin]
+note1 = 24
+notegate1 = _NOTE24
+
+260
+
+Table of contents at page 2
+
+

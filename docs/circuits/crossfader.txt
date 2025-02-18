@@ -1,0 +1,21 @@
+# DROID Circuit Input/Output Keys
+
+## crossfader - Morph between 8 inputs
+
+### Inputs
+- input1 ... input8 (i) - Input signals
+  - Type: float
+  - Default: 0.0
+  - Description: The input signals that you want to crossfade between. At least input1 and input2 need to be patched. Otherwise they are treated like 0 V signals.
+
+- fade (f) - Fade control
+  - Type: float
+  - Default: 0.5
+  - Description: This value decides which of the inputs should be mixed and to which degree each one should go into the mix. At 0.0 the mix consists of 100% of the first inputs, at 1.0 of 100% of the last patched input.
+
+### Outputs
+- output (o) - Mixed output
+  - Type: float
+  - Description: Output of the mix
+
+Note: CV-controlled mixer that can morph between up to 8 inputs. Values beyond 1.0 for fade are allowed and enable morphing from the last input back to the first one. For N inputs, using fade range 0.0 to (N-1)/N creates a smooth cyclic morph through all inputs.

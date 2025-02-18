@@ -1,0 +1,365 @@
+V olts
+
+10
+
+Frequency control
+
+5
+
+The frequency of the LFO can be controlled in various
+ways. In the upper examples we used the input hz. Here
+you specify the frequency of the LFO directly in Hz. This
+is ideal when you want to set a ﬁxed frequency with a
+discrete number, rather than a control voltage. Here is
+a rectangle LFO running at 1.5 cycles per second:
+
+0
+−5
+−10
+
+0
+
+0.2
+
+0.4
+0.6
+time(sec)
+
+0.8
+
+= 5
+= 1.5V
+= 2V
+= O4
+
+[lfo]
+hz
+rectangle
+
+= 1.5
+= O3
+
+Hz vs BPM
+
+A more eurorack-like way is using the rate input, which
+works on a 1 V / octave scheme. One “octave” here means
+that the frequency doubles. Here is an example for creating a triangle LFO running at 4 Hz, since 2 V doubles the
+base frequency of 1 Hz two times (instead of 2V you could
+also write 0.2):
+
+Sometimes people ask for help converting BPM into Hz
+or vice versa. And some even express their unhappyness
+about the fact that the Droid uses Hz rather than BPM.
+Well – that decision was made because in general I see
+the LFO rather as an oscillator than as a clock. And for
+oscillators Hz is the usual way to measure the speed or
+frequency.
+
+[lfo]
+rate
+= 2V
+bipolar = on
+triangle = O1
+
+So when you use an LFO as your master clock, how can
+you convert specify BPM as Hz? Simply divide your BPM
+by 15 to get the correct value for hz. So 120 BPM would
+be hz = 8.
+
+The third way is to use tap tempo by sending a steady
+clock into taptempo. The LFO then mimics the speed of
+that input clock. This can even be combined with rate:
+If you use both, then ﬁrst taptempo is being used to set
+the speed and then rate is used for altering that speed.
+So sending -1 V into rate will create an LFO running at
+half clock speed (since -1 V pitches down the LFO by one
+octave).
+
+That sounds surprising, since Hz means oscillations per
+second and BPM beats per minute. The point is: BPM
+means beats per minute, not clock ticks per minute. In
+a modular environment it is most common to run your
+clock at 16th notes. And the “beat” in BPM refers to quarter notes. For playing one quarter note we need to play
+four 16th notes, so after dividing by 60 to convert minutes into seconds, we need to multiply by 4, to convert
+quarters into 16th s.
+
+V olts
+
+4
+3
+2
+1
+0
+
+0
+
+0.2
+
+0.4
+0.6
+time(sec)
+
+0.8
+
+1
+
+[lfo]
+taptempo
+rate
+sawtooth
+
+DROID manual for blue-6
+
+[lfo]
+taptempo = G1
+hz = 3
+sawtooth = O2
+
+1
+
+The inputs level and offset can be used to control the
+voltage range of the outputs – which is here for your convenience and avoids the need for additional circuits for
+doing this. The following example outputs a sine wave at
+5 Hz to O4 that is gently oscillating between 2 V and 3.5V:
+[lfo]
+hz
+level
+offset
+sine
+
+And even hz can be used in combination. Now the speed
+of the taptempo is multiplied with the value of hz. Otherwise stated: 1 Hz is the reference. The following sets
+the LFO’s frequency to three times the tap tempo:
+
+= G1 # steady clock here
+= -1V # run at half clock speed
+= O2
+
+240
+
+That – of course – assumes that your master clock is
+running at 16th notes, sometimes written as 4 PPQN (4
+pulses per quarter note).
+Table of contents at page 2
+
+And this is how the output looks like:
+
+10
+
+[lfo]
+hz
+= 0.5
+randomize = 0.8
+sine
+= O1
+
+The original wave if printed light and the and the randomized wave at output O1 is magenta:
+
+Here is the complete list of available waveforms:
+
+5
+0
+−5
+−10
+
+Here is an example of a randomized sine wave:
+
+output = G1
+waveform = 2
+
+0
+
+1
+
+2
+
+3
+4
+time(sec)
+
+5
+
+6
+
+Note: Since not all waveform have there “hills” at the
+same place and the start and end of a hill might even
+be affected by skew or pulsewidth, each waveform output has its own independent randomization. Therefore
+cosine is not the phase shifted output of sine anymore,
+if you use randomization.
+
+V olts
+
+10
+Wave form selection and morphing
+
+5
+0
+
+0
+
+1
+
+2
+
+3
+4
+time(sec)
+
+5
+
+6
+
+Please note: If you turn bipolar on, then a “hill” is considered to be something above or below the zero line. That
+means that now the sine wave has twice as much hills and
+the randomization works different. Here is an example
+patch:
+[lfo]
+hz
+= 0.5
+randomize = 0.8
+sine
+= O1
+bipolar
+= 1
+
+DROID manual for blue-6
+
+As an alternative to the seven indiviual waveform outputs there is a common output simply called output. The
+waveform can be selected with the input waveform and
+defaults to 0, which means square wave. So for a simple
+clock you can write:
+
+0
+
+square
+
+1
+
+sawtooth
+
+2
+
+triangle
+
+3
+
+ramp
+
+4
+
+paraboloid
+
+5
+
+sine
+
+6
+
+cosine
+
+It is allowed to use non-integer values, like 0.5. This
+will create a mixture between two adjacent waveforms
+– while respecting the ratio. For example 2.1 will select
+90% triangle and 10% ramp. That way you can smoothly
+morph through the available waveforms. Here is an example. Let’s start with waveform = 0.0, which gives a
+plain square wave:
+[lfo]
+hz = 4
+output = O1
+waveform = 0.0
+
+And this is what it looks like:
+
+[lfo]
+hz = 2
+output = G1
+
+10
+
+A triangle wave is selected with the code 2:
+
+V olts
+
+Randomization is an experimental new feature that combines random voltages with an LFO. If you turn this parameter up, then for each “hill” of the output waveform
+has a different height. The parameter randomize controls how strong that effect is. With 0.0 randomization
+is turned off. At 1.0 it is at its strongest and the random
+level of each hill is in the range 0.0 … 1.0.
+
+V olts
+
+Randomization
+
+5
+0
+
+[lfo]
+hz = 2
+
+241
+
+0
+
+1
+
+2
+time(sec)
+
+3
+
+4
+
+Table of contents at page 2
+
+At 1.0 we get a saw tooth:
+[lfo]
+hz = 4
+output = O1
+waveform = 1.0
+
+V olts
+
+10
+5
+0
+
+0
+
+1
+
+2
+time(sec)
+
+3
+
+4
+
+And in between – at 0.5 – we get some mixture:
+[lfo]
+hz = 4
+output = O1
+waveform = 0.5
+
+V olts
+
+10
+5
+0
+
+0
+
+1
+
+DROID manual for blue-6
+
+2
+time(sec)
+
+3
+
+4
+
+242
+
+Table of contents at page 2
+
+

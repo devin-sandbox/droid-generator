@@ -1,0 +1,325 @@
+16.36
+
+math – Math utility circuit
+
+This circuit provides mathematic operations. Some of these use input1 and
+input2 – such as sum or product. Other
+ones just use input1 (which can be abbreviated as input) – such as negation or
+reciprocal.
+
+root
+
+Note: As long as you do not send a value directly to an
+output like O1, the range of the value is not limited by this
+circuit. You can generate almost arbitrary small or large
+positive and negative numbers. When you send a value
+to an output, it will be truncated into the range -1 ... +1
+(which corresonds to -10 V ... +10 V).
+
+Example for computing the quotient I1
+:
+I2
+[math]
+input1
+= I1
+input2
+= I2
+quotient = O1
+
+When you don’t use both inputs for an operation that
+usually needs to values, the omitted input will make the
+operation “neutral”. For example in the multiplication an
+omitted input will be treated as 1.0 where as in the sum
+it defaults to 0.0. This is useful when you want to temporarily disable a line in your patch. Consider the follow-
+
+= I1
+
+Input
+
+Type
+
+[math]
+input1 = I1
+# input2 = P1.2
+product = O1 # will be set to I1, not 0
+
+Description
+The two inputs
+
+input1, input2 (i)
+
+Output
+
+Default
+
+[math]
+input1 = I1
+input2 = P1.2
+product = O1
+
+If you now remove the line with input2, the output will
+simply copy the input, not set it to 0:
+
+Unused inputs
+
+Example for computing the square root of I1:
+[math]
+input
+
+ing patch, which multiplies the incoming CV from I1 with
+the pot value of P1.2 and outputs it to O1.
+
+= O1
+
+Type
+
+Description
+
+sum (s)
+
+input1 + input2
+
+difference (d)
+
+input1 − input2
+
+product (p)
+
+input1 × input2
+
+quotient (qu)
+
+input1 / input2. If input2 is zero, a very large number will be returned, while the correct sign is being kept. This is
+
+mathematically not correct but more useful than any other possible result.
+modulo (md)
+
+DROID manual for blue-6
+
+input1 modulo input2. This needs some explanation: With this operation you can “fold” the value from input1 into
+the range 0 ... input2. For example if input2 is 1 V, the output will convert 1.234 V to 0.234 V, -2.1 V to 0.9 V and
+0.5 V to 0.5 V. If input2 is zero or negative, the output will be zero.
+
+248
+
+Table of contents at page 2
+
+Output
+power (pw)
+
+Type
+
+Description
+input1 to the power of input2. Please note that the power has several cases where it is not deﬁned when either the
+base or the exponent is zero or less than zero. In order to be as useful for your music making as possible the math circuit
+
+behaves in the following way:
+• If input1 < 0, input2 is rounded to the nearest integer.
+• If input1 = 0 and input2 < 0, a very large number is output.
+average (a)
+
+The average of input1 and input2
+
+maximum (x)
+
+The maximum of input1 and input2
+
+minimum (m)
+
+The minimum of input1 and input2
+
+negation (n)
+
+−input1
+
+reciprocal (rc)
+
+1 / input1. If input1 is zero, a very large number is being output, while the sign is being kept.
+
+amount (am)
+
+The absolute value of input1 (i.e. −input1 if input1 < 0, else input1)
+
+sine (si)
+
+The sine of input1 in a way, the input range of 0.0 … 1.0 goes exactly through one wave cycle. Or more mathematically
+expressed: sin(2π × input1).
+
+cosine (cs)
+
+The cosine of input1 in a way, the input range of 0.0 … 1.0 goes exactly through one wave cycle. Or more mathematically expressed: cos(2π × input1).
+
+square (q)
+
+input12
+
+root (ro)
+
+input1. Please note that you cannot compute the square root of a negative number. In order to output something
+√
+useful anyway, the result will be − −input1, if input1 < 0.
+
+logarithm (l)
+
+√
+
+The natural logarithm of input1: ln input1 . The logarithm is only deﬁned for positive numbers. mathcircuit behaves
+like this:
+• If input1 = 0, a negative very large number is output.
+• If input2 < 0, −ln −input1 is output.
+
+round (rd)
+
+The integer number nearest to input1
+
+floor (f)
+
+The largest integer number that is not greater than input1
+
+ceil (c)
+
+The smallest integer number that is not less than input1
+
+DROID manual for blue-6
+
+249
+
+Table of contents at page 2
+
+16.37
+
+matrixmixer – Matrix mixer for CVs
+
+This circuit is a 4×4 matrix mixer with four
+inputs and four outputs that is operated by
+push buttons. Each of the 16 matrix nodes
+has a toggle button for adding or removing
+one speciﬁc input to or from one speciﬁc
+output. The mixing is always done with unity gain. This
+means that each output is the sum of all inputs that are
+enabled on its path.
+
+As an alternative operation, instead of summing the enabled signals you can compute the maximum signal. This
+is useful when combining envelope signals – e.g. from different rhythmic patterns. Adding envelope signals would
+either make them “too loud” or even distort them.
+
+The following picture shows a matrix with the four inputs
+I1 … I4 and the four outputs O1 … O4. As you can see the
+button 23 mixes input 2 to output 3.
+
+Of course it is possible to use a smaller part of the matrix,
+e.g. just 3×2, simply by not patching the according inputs, outputs and buttons. Here is an example of a 3×2
+mixer:
+
+The current state of the sixteen buttons is saved in the
+’s internal ﬂash memory.
+
+If you have not pushed any buttons yet, the mixer enables
+four buttons in a diagonal so that inputs I1 is connected
+to output O1 and so on:
+I1
+
+11
+
+12
+
+13
+
+[matrixmixer]
+input1
+= I1
+input2
+= I2
+input3
+= I3
+output1 = O1
+output2 = O2
+button11 = B1.1
+button12 = B1.2
+button21 = B2.1
+button22 = B1.3
+button31 = B1.4
+button32 = B2.3
+led11
+= L1.1
+led12
+= L1.2
+led21
+= L2.1
+led22
+= L1.3
+led31
+= L1.4
+led32
+= L2.3
+
+14
+This matrix looks like this:
+
+I2
+
+21
+
+22
+
+23
+
+24
+
+I3
+
+31
+
+32
+
+33
+
+34
+
+I4
+
+41
+
+42
+
+43
+
+44
+
+O1
+
+O2
+
+O3
+
+O4
+
+DROID manual for blue-6
+
+250
+
+I1
+
+11
+
+12
+
+I2
+
+21
+
+22
+
+I3
+
+31
+
+32
+
+O1
+
+O2
+
+Table of contents at page 2
+
+

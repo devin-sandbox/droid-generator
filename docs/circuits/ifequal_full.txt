@@ -1,0 +1,199 @@
+is never shorter than 10% and never longer that 90% of
+a clock tick:
+
+Building a clock divider
+The edge triggers can help you building a clock divider
+that divides by two. Of course you could do that with
+clocktool (see page 162), as well. But this example illustrates a bit, how the edge triggers work. Consider the
+following example:
+
+[gatetool]
+inputgate = I1
+taptempo = I2 # steady clock
+outputgate = O1
+mingatelength = 0.1
+maxgatelength = 0.9
+
+[gatetool]
+inputtrigger = I1
+outputedge = O1
+
+Now for every trigger in I1, the edge output changes it’s
+
+Input
+
+Type
+
+Default
+
+level. So in order to go from low to high and low again,
+you need two input triggers. The output signal at O1 then
+just outputs one gate signal in that time. So two triggers
+are converted into one.
+
+Use edges for pinging ﬁlters
+Another application of edges is pinging ﬁlters with a zero
+length impulse. Use the same patch snippet as above and
+patch O1 to the input of a resonant ﬁlter. By just using the
+edge, you really get exactly one ping. A trigger – regardless how short – always has two edges and thus pings the
+ﬁlter twice, which can sound unclean.
+
+Description
+
+inputgate (ig)
+
+Input gate. Use this if the length of the input gate is relevant.
+
+inputtrigger (it)
+
+Input trigger. Use this if the length of the input gate should be ignored.
+
+inputedge (ie)
+
+Input edge: Use this if every low/high or high/low transition should count as a trigger.
+
+gatelength (gl)
+
+Sets the length of the gate of outputgate in seconds. If you use taptempo the length is in fractions of a clock tick,
+instead.
+
+gatestretch (s)
+
+0.0
+
+Makes the output gate longer than the input gate by the given percentage. This parameter is ignored if gatelength is
+used.
+
+mingatelength (m)
+
+0.01
+
+Deﬁnes a minimum length of the output gate in seconds or clock ticks.
+
+maxgatelength (x)
+
+Deﬁnes a maximum length of the output gate in seconds or clock ticks.
+
+taptempo (tt)
+
+If you patch a reference clock here, gatelength, mingatelength and maxgatelength are fractions of one clock tick,
+not seconds anymore. Please see page 23 for details on using taptempo inputs.
+
+Output
+
+Type
+
+Description
+
+outputgate (og)
+
+Outputs a gate with controllable length for every gate, trigger or edge event.
+
+outputtrigger (ot)
+
+Outputs a 10 ms trigger for every gate, trigger or edge event.
+
+DROID manual for blue-6
+
+236
+
+Table of contents at page 2
+
+Output
+outputedge (oe)
+
+DROID manual for blue-6
+
+Type
+
+Description
+Toggle between 0 and 1 at every gate, trigger or edge event.
+
+237
+
+Table of contents at page 2
+
+16.33
+
+ifequal – Check if two values are equal
+
+This circuit is a simpliﬁed version of
+compare (see page 165). It uses less memory and CPU and just checks if two values
+are equal.
+
+[ifequal]
+input1 = _TRACK
+input2 = 2
+ifequal = _TRACK2_GATES
+else = 0
+output = O1
+
+The following example shows the usage: The values of
+input1 and input2 are compared. If they are equal (i.e.
+if _TRACK = 2), the value speciﬁed by ifequal is output
+to output, otherwise the value of else.
+
+Input
+
+• A comparison of a value read from an analog input
+will probably never work since there is always a tiny
+
+Default
+
+Description
+
+input1 (i1)
+
+0.0
+
+A value.
+
+input2 (i2)
+
+1.0
+
+Another value
+
+ifequal (q)
+
+1.0
+
+Value to be output if input1 is exactly equal to input2.
+
+else (e)
+
+0.0
+
+Value to output otherwise.
+
+Output
+output (o)
+
+DROID manual for blue-6
+
+Type
+
+Notes:
+
+Type
+
+amount of jitter and noise.
+• Comparison of ﬂoating point values like 0.3 might
+fail, as well, because these number can introduce
+internal rounding errors.
+• If you run into these issues, use compare (see page
+165) instead. That circuit deals with unprecision
+by introducing a allowed range for the values to be
+equal.
+• The main purpose of this circuit is to save a bit a
+RAM and CPU in cases where you don’t use the full
+feature set of compare.
+
+Description
+Here comes the result.
+
+238
+
+Table of contents at page 2
+
+

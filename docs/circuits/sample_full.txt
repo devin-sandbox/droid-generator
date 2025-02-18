@@ -1,0 +1,299 @@
+a negative speed for running the tape backwards. In that
+case a press to the play button starts the playback at the
+tape end.
+The following example maps the speed to a pot that’s
+scaled to a range from -5 to 5 (ﬁve times speed backwards
+to ﬁve times speed forwards). The center position sets
+the speed to 0 and stops the tape.
+[recorder]
+playbackspeed = P1.1 * 10 - 5
+...
+
+Scrubbing
+Scrubbing is a special playback mode that’s enabled by
+scrub = 1. During scrubbing no linear playback is done.
+Instead, you select a position on the tape with the input
+CV scrubposition. Example:
+[button]
+button = B1.5
+led = L1.5
+[recorder]
+scrub = L1.5
+scrubposition = P1.1
+...
+
+While the button B1.5 is enabled, the recorder outputs
+the CV that’s at the position that P1.1 selects. The left
+position of the pot (or the value 0) selects the start of the
+recording, the right position (1) the end.
+While scrub is 1, the current state (play, record, stop) of
+the recorder is ignored. It is in scrub mode. The playled
+output is 1, the other LED outputs are 0.
+DROID manual for blue-6
+
+Trimming the start and end
+The two inputs trimstart and trimend range from 0 to
+1 and limit of the portion of the recording that is used for
+playback or scrubbing. For example trimstart = 0.1
+and trimend = 0.8 disables the ﬁrst 10% and the last
+20% of the recording.
+If you map the trimming positions to two pots you can
+manually select a portion. Just make sure that you start
+with the timstart pot fully left and trimright fully
+right:
+[recorder]
+trimstart = P1.1
+trimend = P1.2
+...
+
+Unlike cvin and cvout the gate tracks on the tape just
+distinguish between 0 and 1.
+In addition you can record one discrete integer number
+from 0 to 255:
+[recorder]
+numberin = I1
+numberout = O1
+...
+
+Unlike with the CV, no linear interpolation is done for
+these integer numbers. Every time the input number
+changes a new sample is created.
+Applications for recording a number could be chord progressions or melodies that are represented by note numbers rather than pitch CVs.
+
+This limitation is not permanent. The recording itself is
+not modiﬁed by using trimming.
+
+Recording gates and numbers
+Along the CV, the recorder also records the state of up to
+eight input gates. You could record the output of a multitrack drum sequencer or even a manually tapped button
+pattern with that:
+[recorder]
+gatein1 = I1
+gatein2 = I2
+gatein3 = I3
+gatein4 = I4
+gateout1 = O1
+gateout2 = O2
+gateout3 = O3
+gateout4 = O4
+...
+
+Technical background and limitations
+The two circuits recorder (see page 341) and delay (see
+page 179) are based on the same implementation of a virtual tape. This virtual tape has three tracks with three
+recording and playback heads:
+1. One head for recording a continous CV in the range
+−1 …+1 (which is −10 V …10 V)
+2. One head for recording eight gate tracks in parallel
+(CVs where just 0 and 1 is recorded)
+3. One head for recording a discrete integer number
+in the range 0 …255
+All these are recorded in parallel, so for example it’s easy
+to record a CV/gate signal with just one cvrecorder. The
+discrete number is useful for recording the outputs of
+buttongroup (see page 146) circuits or the switches on
+the S10 similar things.
+
+342
+
+Table of contents at page 2
+
+Note: The dynamich range of CV signal on the tape is just
+-1 …+1 (or −10 V …+10V). Any “too hot” signal is clipped
+to that range. The internal resolution of the CV is 16 bit
+(precisly: one Volt is divided in 3200 steps). If you need a
+larger range, you need to divide the input signal and multiply the output signal by some factor, but loose a bit precision that way.
+
+Note: That way you would loose the gate length, since
+the end of the gate does not trigger a new sample. Use
+the gatetool (see page 235) with the inputgate and
+outputedge to get one trigger at each edge and feed that
+into sample.
+
+no circuit will do its job. And if your SD card is missing,
+things lag a bit more due to timeouts.
+One important difference to presets is that these ﬁles
+can be share among circuits and even among different
+patches. A recording of the recorer circuit can be loaded
+with every recorder or delay circuit.
+
+Saving the tape to disk
+The track with the eight gates records just 0 and 1. Any
+other value will be squeezed into that format: values below 0.1 (1 V) are considered 0, all other values 1.
+In order to use the RAM of the
+as efﬁcient as possible (and allow for many multiple instances of these circuits), the tape uses just 256 samples. Each time the
+state of one of the gates or the value of the number
+changes, a new sample is created. A change in the input
+CV is handled more intelligently as the CV values of the
+samples or interpolated linearily. The maximum error between the interpolated value and the actual stored CV is
+limited to 0.0001 (which is 1 mV).
+If the input CV is more chaotic, however, the number of
+samples per time is limited to an average of one sample every 20 ms, while short periods with up to 10 samples without this limitations are allowed. This ensures
+that the minimum recordable tape length is 256 × 20 ms,
+which is 5.12 seconds. Usually CVs are not so chaotic but
+either stepped or moving smoothly, so the recordings can
+be much longer.
+If you have the special case of a stepped input CV – such
+as the output from a sequencer or from a CV/gate keyboard – you can switch to an alternative mode. Patch the
+gate output of the sequencer or keyboard into the sample
+input of the circuit. This enables the “triggered mode”.
+Here a new sample is just and only created at each positive gate edge of the sample input. So the recordings can
+be as long as 256 notes.
+
+DROID manual for blue-6
+
+The recorder does not support presets because of memory limitations. But you can save the current contents of
+the tape to your SD card. This is done by the two trigger
+inputs save and load, which are usually mapped to some
+buttons. Here is a simple example.
+[recorder]
+save = B1.5
+load = B1.6
+...
+
+If you hit button B1.5, the ﬁle tape0001.bin is created
+on your SD card. Button B1.6 loads that ﬁle into the circuit.
+You can use any ﬁle number from 1 to 9999 by using the
+parameter filenumber. You might want to map that to a
+rotary switch of an S10:
+[recorder]
+save = B1.5
+load = B1.6
+filenumber = S2.1
+...
+
+Note: Loading and saving is done in real time from/to
+your SD card. The ﬁles are very small, but the operation
+can take a small number of milliseconds. During that time
+
+343
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+playbutton (pb)
+
+A trigger here starts or restarts the playback.
+
+recordbutton (rb)
+
+A trigger here starts or stops the recording.
+
+stopbutton (sb)
+
+A trigger here stops and ongoing playback or recording.
+
+loop (lo)
+
+off
+
+Set this to 1 to enable loop mode. In loop mode the playback is restarted immediately when it’s ﬁnished.
+
+pause (p)
+
+off
+
+While this is 1, playback or recording is halted (the tape stops moving for the while).
+
+mode (m)
+
+Using this input is an alternative to using the three button inputs. If you patch mode, the three buttons (and LED
+outputs) are ignored. Instead you set the mode with this input:
+
+1 2 3
+
+0
+
+Idle / stopped
+
+1
+
+Playback
+
+2
+
+Recording
+
+Since you set the mode from “outside”, the recorder cannot switch it by itself. So if the mode is set to 1 (playback) and
+the playback is ﬁnished, it stays in playback mode and continues outputting the last sample.
+playbackspeed (ps)
+
+1.0
+
+Sets the speed of the tape during playback. 1 is normal speed, 0.5 half speed, 2 double speed, and so on. Negative
+speeds are allowed an move the tape backwards. The speed 0 stops the tape.
+
+scrub (sc)
+
+off
+
+If 1 enables scrubbing. Now the outputs reﬂect the tape position that is set with scrubposition.
+
+scrubposition (sp)
+
+0
+
+1
+
+0.0
+
+Position of the tape to play when scrubbing is enabled.
+
+trimstart (ts)
+
+0
+
+1
+
+0.0
+
+Omits a fraction of the recording at the beginning during playback and scrubbing. 0.1 omits the ﬁrst 10%.
+
+trimend (te)
+
+0
+
+1
+
+1.0
+
+Omits a fraction of the recording at the end during playback and scrubbing. 0.8 omits the last 20% (not 80%!).
+
+0.0
+
+Continous input CV
+
+cvin (ci)
+numberin (ni)
+
+1 2 3
+
+Discrete input number in the range 0 ... 255
+
+gatein1 ... gatein8 (gi)
+
+Input gates
+
+clock (c)
+
+If you use this clock input, all time inputs are measured in clock ticks instead of seconds.
+
+sample (sm)
+
+If you patch this input, “triggered” mode is enabled. In this mode, the virtual tape just records a new CV on each trigger
+at sample. So it just records stepped CVs, no slopes and no CV changes between the triggers.
+
+DROID manual for blue-6
+
+344
+
+Table of contents at page 2
+
+

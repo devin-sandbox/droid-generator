@@ -1,0 +1,65 @@
+# DROID Circuit Input/Output Keys
+
+## algoquencer - Algorithmic sequencer
+
+### Inputs
+- clock - Clock input for sequencer timing
+  - Type: trigger
+  - Default: none
+  - Description: Advances the sequence on each trigger
+
+- reset - Reset the sequence to the start
+  - Type: trigger
+  - Default: none
+  - Description: Resets sequence position to beginning
+
+- length - Number of steps in sequence
+  - Type: integer
+  - Default: 16
+  - Description: Sets sequence length from 1 to 64 steps
+
+- cv - Base CV value for sequence
+  - Type: float
+  - Default: 0.0
+  - Description: Base CV value that gets modified by the algorithm
+
+- probability - Probability of generating a gate
+  - Type: float
+  - Default: 1.0
+  - Description: Probability (0.0-1.0) that a step will generate a gate
+
+- range - CV range for generated values
+  - Type: float
+  - Default: 1.0
+  - Description: Range of CV variation from base value
+
+- seed - Random seed for algorithm
+  - Type: integer
+  - Default: 0
+  - Description: Sets the random seed for reproducible patterns
+
+- scale - Scale selection for quantization
+  - Type: integer
+  - Default: 0
+  - Description: Selects musical scale for CV quantization
+
+### Outputs
+- cv - CV output of the sequence
+  - Type: float
+  - Description: Generated CV pattern output
+
+- gate - Gate/trigger output
+  - Type: trigger
+  - Description: Gate signal for current step
+
+- position - Current step position
+  - Type: integer
+  - Description: Outputs current step number (0-based)
+
+- probability - Current step probability
+  - Type: float
+  - Description: Outputs probability value for current step
+
+- changed - Pattern change indicator
+  - Type: trigger
+  - Description: Outputs trigger when pattern changes

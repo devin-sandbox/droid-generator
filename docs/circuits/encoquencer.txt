@@ -1,0 +1,88 @@
+# DROID Circuit Input/Output Keys
+
+## encoquencer - Performance sequencer using E4 encoders
+
+### Inputs
+- clock (c) - Clock input
+  - Type: trigger
+  - Description: Clock input for sequencer timing
+
+- fadermode (fm) - Parameter mode
+  - Type: int
+  - Range: 0-7
+  - Description: Selects which parameter the encoders control (0=pitch/CV, 1=randomize CV, 2=gate probability, 3=repeats, 4=gate pattern, 5=ratchets, 6=gate, 7=skip)
+
+- buttonmode (bm) - Button mode
+  - Type: int
+  - Range: 0-3
+  - Description: Selects button function (0=gates, 1=start/end, 2=gate pattern, 3=skip)
+
+- page (p) - Page selection
+  - Type: int
+  - Description: Selects which group of steps to edit when sequence length exceeds available encoders
+
+- numsteps (n) - Sequence length
+  - Type: int
+  - Description: Total number of steps in the sequence
+
+- cvbase (cb) - CV base value
+  - Type: float
+  - Description: Base voltage for CV output range
+
+- cvrange (cr) - CV range
+  - Type: float
+  - Description: Voltage range above base for CV output
+
+- root (r) - Scale root
+  - Type: int
+  - Description: Root note for scale quantization
+
+- degree (d) - Scale type
+  - Type: int
+  - Description: Selects scale type for quantization
+
+- quantize (q) - Quantization enable
+  - Type: binary
+  - Description: Enables/disables pitch quantization to scale
+
+- startstep (ss) - Sequence start
+  - Type: int
+  - Description: First step to play in sequence
+
+- endstep (es) - Sequence end
+  - Type: int
+  - Description: Last step to play in sequence
+
+- reset (rs) - Reset trigger
+  - Type: trigger
+  - Description: Resets sequence to start step
+
+- ledpreview (lp) - LED preview
+  - Type: binary
+  - Default: 0
+  - Description: Shows all possible values in dimmed colors on LED rings
+
+- zorder (z) - Encoder layout
+  - Type: binary
+  - Description: Swaps step distribution between vertical/horizontal first
+
+### Outputs
+- cv (cv) - CV output
+  - Type: float
+  - Description: CV/pitch output for current step
+
+- gate (g) - Gate output
+  - Type: binary
+  - Description: Gate output for current step
+
+Note: Replica of motoquencer circuit using E4 encoders instead of M4 faders. Uses encoder push buttons for gates and LED rings for visualization. LED rings show comprehensive parameter feedback through color coding:
+- Middle LEDs: Button mode (greenish blue=gates, green/red=start/end)
+- Outer LEDs: Step parameters
+  - Pitch/CV: Scale notes with chord function colors
+  - Randomize CV: Light green gauge
+  - Gate probabilities: Blue/green/magenta positions
+  - Repeats: Purple (odd) and white (even)
+  - Gate pattern: Cyan/magenta/orange/yellow corners
+  - Ratchets: Purple (odd) and white (even)
+  - Gate mode: Light blue for enabled
+  - Skip mode: Violet for skipped

@@ -1,0 +1,197 @@
+Output
+
+Type
+
+Description
+
+output (o)
+
+Here comes your quantized output voltage
+
+changed (c)
+
+Whenever the quantization changes to a new output value a trigger with the duration 10 ms is output here. No trigger
+is output in bypass mode.
+
+DROID manual for blue-6
+
+338
+
+Table of contents at page 2
+
+16.56
+
+queue – Clocked CV shift register
+
+This circuit implements a shift register (a
+queue) with 64 cells. Each cell contains one
+CV value. At each clock impulse the CVs
+each move one cell forwards. The last CV
+is dropped. And the current input value is
+copied to the ﬁrst cell.
+
+[queue]
+input = I1
+clock = I2
+output4 = O4
+
+Please note:
+
+There are eight outputs, which you can place at any of the
+64 cells you like. If you do not specify any placement, the
+outputs are placed at the ﬁrst eight cells – und thus the
+information in the remaining 56 cells is not being used.
+The following example reads CVs from the input I1. O4 always shows the CV value that was seen at the input four
+cycles previously:
+
+Input
+
+Type
+
+input (i)
+
+[queue]
+input = I1
+clock = I2
+outputpos1 = 3
+outputpos2 = 24
+outputpos3 = 64
+
+• Since the DROID is very precise in processing CV
+voltages you can use the queue in order to delay
+melodies from sequencers etc.
+• As always also the inputs outputpos1 ...
+outputpos8 may be CV controlled and change
+in time.
+
+Description
+
+0.0
+
+This CV will be pushed into the ﬁrst cell of the shift register whenever a clock occurs.
+Each clock signal at this jack will move the CV content from every cell of the shift register to the next cell. The CV in
+the last cell will be dropped.
+
+outputpos1 ... outputpos8
+(op)
+
+1 2 3
+
+Output
+
+Type
+
+DROID manual for blue-6
+
+The next example places three outputs at the positions 3,
+24 and 64:
+
+Default
+
+clock (c)
+
+output1 ... output8 (o)
+
+output1 = O1
+output2 = O2
+output3 = O3
+
++
+
+Speciﬁes the position of each of the eight outputs – i.e. which cell of the shift register it should output. Allowed are
+values from 1 up to 64. These jacks defaults to 1, 2, ... 8, so if you do not wire them the eight outputs reﬂect the ﬁrst
+eight positions of the shift register.
+
+Description
+Eight outputs for eight different positions of the register. If you do not wire outputpos1 ... outputpos8, these outputs
+show the content of the 1st , 2nd , ... 8th cell.
+
+339
+
+Table of contents at page 2
+
+16.57
+
+random – Random number generator
+
+A random number generator with clocked
+and unclocked mode, that can either create
+voltages at discrete steps and completely
+free values.
+
+the maximum possible speed (about 6000 times per second).
+Simple example for clocked random numbers between
+0.0 and 1.0 (1.0 translates into 10 V at the output):
+
+This circuit creates random numbers between two tunable levels minimum and maximum. In
+clocked mode each clock creates and holds a new random
+value. In unclocked mode the random values change at
+
+Input
+
+Type
+
+Default
+
+[random]
+clock
+output
+
+= I1
+= O1
+
+Example for creating random output voltages between
+1 V and 3 V:
+[random]
+clock
+= I1
+output = O1
+minimum = 1V
+maximum = 3V
+
+Description
+Optional triggger: if this input is used then the output holds the current random number until the next clock impulse
+(sample & hold)
+
+clock (c)
+
+minimum (m)
+
+0.0
+
+Minimum possible random number
+
+maximum (x)
+
+1.0
+
+Maximum possible random number
+
+0
+
+Number of different voltage levels. If this is set to 0 (default), any voltage can appear, there is no limit. If this is 1,
+then there is no random any more since there is only one allowed step (which is the average between minimum and
+maximum. At 2 the only two possible output values are minimum and maximum. At 3 the possible levels are minimum,
+minimum+maximum and maximum and so on...
+2
+
+steps (s)
+
+1 2 3
+
+Output
+
+Type
+
+output (o)
+
+DROID manual for blue-6
+
+Description
+Output of the random number / voltage
+
+340
+
+Table of contents at page 2
+
+

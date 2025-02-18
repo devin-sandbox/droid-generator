@@ -1,0 +1,68 @@
+# DROID Circuit Input/Output Keys
+
+## slew - CV Slew Limiter
+
+### Inputs
+- input - Signal input
+  - Type: float
+  - Description: CV signal to apply slew limiting to
+
+- slew - Slew rate
+  - Type: float
+  - Default: 1.0
+  - Description: Controls slew rate (0.0 disables, higher values = slower)
+  - Note: In linear mode, value is seconds needed for 1V change
+
+- slewup - Rising slew multiplier
+  - Type: float
+  - Default: 1.0
+  - Description: Multiplies slew rate for rising voltages
+
+- slewdown - Falling slew multiplier
+  - Type: float
+  - Default: 1.0
+  - Description: Multiplies slew rate for falling voltages
+
+- gate - Enable control
+  - Type: gate
+  - Description: When patched, slew limiting only active while high
+
+### Outputs
+- exponential - Exponential slew
+  - Type: float
+  - Description: Classical capacitor-like exponential curve
+  - Note: Fast initial change, slower near target
+
+- linear - Linear slew
+  - Type: float
+  - Description: Constant rate voltage change
+  - Note: Fixed maximum rate of change
+
+- scurve - S-curve slew
+  - Type: float
+  - Description: Accelerating/decelerating curve
+  - Note: Similar to trombone player movement
+
+Note: Advanced slew limiter with features:
+- Three distinct algorithms
+- Independent up/down rates
+- Gate-controlled activation
+- Musical timing control
+- Voltage-controlled rates
+- Multiple output types
+
+Example applications:
+- Pitch glide effects
+- Envelope smoothing
+- CV transition control
+- Musical articulation
+- Parameter morphing
+- Motion simulation
+
+Limitations:
+- No tempo sync
+- No curve shape control
+- Fixed algorithm types
+- No feedback path
+- No modulation inputs
+- No state memory

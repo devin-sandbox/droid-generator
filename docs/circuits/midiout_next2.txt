@@ -1,0 +1,262 @@
+Input
+
+Default
+
+Description
+
+1
+6V
+
+Sets the value to the desired maximum that pitchbend should output, and likewise it’s negative counterpart at its
+2
+V, which corresponds to one whole
+minimum value. At the middle position it always outputs 0. This defaults to 12
+tone. Note: setting this to a negative value is allowed and will invert pitch bend.
+
+bendpitch (bp)
+
+1
+
+When set to 1 (which is the default), the pitch bend will directly be applied to all output pitches. Alternatively you can
+set it to 0 and use the output pitchbend, for using it elsewhere.
+
+roundrobin (rr)
+
+0
+
+Normally when looking for a free output for playing the next note, this circuit will start from output1 in its search. This
+way, if there are not more notes than outputs at any time, the notes played ﬁrst will always be played at the lowest
+numbered outputs. This leads to a deterministic behaviour when it comes to playing things like chords. The same
+voice will always be used for the ﬁrst note in the stream of MIDI events.
+
+pitchbendrange (pbr)
+
+Type
+1V
+Oct
+
+When you switch roundrobin to 1, this changes. Now the outputs are scanned in a round-robin fashion, like in a
+rotating switch. That way every output has the same chance to get a new note. Here it can even make sense to deﬁne
+multiple voices even if the track is monophonic. When you use envelopes with longer release times, you can transform
+such a melody into chords with simultaneous notes.
+Note: When all outputs are currently used by a note, roundrobin has no inﬂuence. Here voiceallocation selects
+which of the notes will be dropped.
+voiceallocation (va)
+
+DROID manual for blue-6
+
+1 2 3
+
+0
+
+When the MIDI stream, at any given time, needs to play more notes than you have voices assigned, normally the
+“oldest” notes would be cancelled. This behaviour can be conﬁgured here by setting voiceallocation to one of the
+following values:
+0
+
+The oldest note will be cancelled (default)
+
+1
+
+The new note will not be played and simply be omitted
+
+2
+
+The lowest note will be cancelled
+
+3
+
+The highest note will be cancelled
+
+264
+
+Table of contents at page 2
+
+Input
+
+Type
+
+notegap (ngp)
+
+Default
+
+Description
+
+0.0
+
+When your MIDI devices plays a note so “long” that it lasts exactly until the next note begins – or if due to a lack of
+used pitch outputs one currently played note has to be replaced with a new one, the gate output will have no time to
+go low for a sufﬁcient time between the two notes. In effect it won’t trigger any envelope for the new note but will
+play “legato”.
+If you don’t like this, you can use notegap. This input speciﬁes a number of milliseconds that the gate will be forced
+down before the new note begins. This has the drawback of introducing some latency, of course! So I suggest that you
+start with notegap = 1 and then check out if your envelope is fast enough to trigger. If not, increase the value.
+If you are using
+’s own contour circuit or trigger something else internally in your patch, you can use notegap
+= 0.1. That is sufﬁcient and introduces barely any latency. A value of 0.0 keeps the default of the legato mode.
+Note: the notegap parameter does not affect the trigger outputs.
+
+ccnumber1 ... ccnumber4
+(cn)
+
+1 2 3
+
+0
+
+You can listen to up to four CCs (control changes). For example if you are interested in the current value of CC#17, set
+ccnumber1 = 17 and use the output cc1 for getting the value of CC 17.
+
+lowestnote (ln)
+
+1 2 3
+
+0
+
+With this input you can restrict the notes being played by setting a lower bound. In MIDI the notes range from 0 (C-2)
+to 127 (G9). By setting lowestnote to 24 (C0), all notes below this note are simply ignored. This allows for example for
+a keyboard split by using a second circuit with a highestnote of 23. Note gates are not being affected by this bound.
+
+highestnote (hn)
+
+1 2 3
+
+127
+
+Sets an upper limit to the note being played, similar to lowestnote. The “Notegates” are not being affected by this
+bound.
+
+note1 ... note16 (n)
+
+1 2 3
+
++
+
+Output
+
+Type
+
+Selects up to 16 individual notes for which you can get a dedicated gate signal. Per default these values are set to
+0 for note1 (meaning C-2), 1 for note2 (meaning C♯-2) and so on. For each of these notes you get a corresponding
+gate output (see notegate1, notegate2, etc.). These gates are high as long as the selected notes are being hold.
+One application is to use just one midifileplayer or midiin circuit for sequencing up to 16 drum voices. Another
+application is to use a MIDI keyboard or controller as a button expander – just like a P2B8 or B32.
+
+Description
+
+clock (c)
+
+If the MIDI sender sends a MIDI clock, you get a 16th note clock output here. This is the same as the clock16 jack and
+just a convenient abbreviation.
+
+clock8 (c8)
+
+Gets an 8th clock here (like clock divided by 2)
+
+clock8t (c8t)
+
+Gets a 8th triplets clock here. This is faster than clock8 but slower than clock.
+
+clock16 (c16)
+
+The same as clock: a clock running at 16th notes.
+
+DROID manual for blue-6
+
+265
+
+Table of contents at page 2
+
+Output
+
+Type
+
+Description
+
+clock4 (c4)
+
+A clock at the speed of quarter notes.
+
+midiclock (mc)
+
+Here you get the original MIDI clock. This is 6 times faster than clock and 24 times faster than clock4. This is because
+the MIDI clock is speciﬁed to run at 24 PPQ, i.e. 24 pulses per quarter note.
+
+start (st)
+
+This jack sends a trigger when a MIDI START message arrives.
+
+continue (co)
+
+This jack sends a trigger when a MIDI CONTINUE message arrives.
+
+stop (sp)
+
+This jack sends a trigger when a MIDI STOP message arrives.
+
+running (ru)
+
+This jack remembers the current running state according to previous START and STOP messages.
+
+active (a)
+
+If the sending device supports active sensing, this output is high as long as a device is connected. Otherwise its high
+if at least one MIDI message has been received.
+1V
+Oct
+
+pitch1 ... pitch8 (p)
+
+velocity1 ... velocity8
+(v)
+pressure1 ... pressure8
+(pr)
+
+0
+
+1
+
+0
+
+1
+
+Pitch outputs. Since MIDI tracks can be polyphonic – i.e. play several notes at the same time – you can assign up to
+eight outputs here. The notes will be distributed to the deﬁned outputs according to the settings roundrobin and
+voiceallocation.
+For each voice there is an optional velocity output, which translates the MIDI velocity into values from 0 to 1.
+MIDI provides two different messages for sending ”after-touch” information, i.e. information about how strong a
+key is pressed down after the initial hit. Some keyboards just have one pressure sensor in total and send the current
+maximum pressure information of all keys in one message (“channel pressure”). Others have one pressure sensor per
+key and send “polyphonic key pressure” messages. This circuit maps both to a pressure output per note that is being
+played. So if your keyboard (or sequencer or DAW or whatever) sends polyphonic key pressure events and you use
+multiple pitchX outputs, wire the individual pressureX outputs to wherever you like. Otherwise you can simply use
+pressure1 for all notes (which can be abbreviated with pressure), since it is the same for all note outputs anyway.
+pressure outputs a value from 0 to 1.
+
+gate1 ... gate8 (g)
+
+Gate outputs for the up to eight simultaneous note outputs.
+
+trigger1 ... trigger8 (t)
+
+Trigger outputs for the up to eight simultaneous note outputs. The difference to the gate outputs is, that these just
+send a short trigger of 5 ms at the start of the note. This can be interesting in situations where the notes have no gaps
+in between so that gate will never go low.
+
+cc1 ... cc4 ()
+
+DROID manual for blue-6
+
+0
+
+1
+
+Outputs the current value of the four CC number that are deﬁned with the inputs ccnumber1 ... ccnumber4. CCs have
+a range from 0 to 127, but this is converted in the range 0.0 .. 1.0 here, in order to make it easier to use that as a CV.
+If you need the raw number, multiply the output with 127. Note: as long as no CC message with the selected number
+happened, this output will be set to 0.
+
+266
+
+Table of contents at page 2
+
+

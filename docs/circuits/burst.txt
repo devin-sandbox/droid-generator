@@ -1,0 +1,46 @@
+# DROID Circuit Input/Output Keys
+
+## burst - Generate burst of pulses
+
+### Inputs
+- rate (ra) - Frequency control
+  - Type: float
+  - Default: 0.0
+  - Description: Controls burst rate using V/oct scaling. 0V = 1Hz, 1V = 2Hz, 2V = 4Hz, -1V = 0.5Hz, etc.
+
+- taptempo (tt) - Clock reference
+  - Type: trigger
+  - Default: none
+  - Description: Reference clock input for synchronizing bursts, can be modified by rate
+
+- hz - Direct frequency setting
+  - Type: float
+  - Default: 1.0
+  - Description: Set frequency in Hz directly, works with rate but exclusive to taptempo
+
+- trigger (t) - Burst trigger
+  - Type: trigger
+  - Default: none
+  - Description: Trigger input to start burst sequence
+
+- reset (r) - Reset trigger
+  - Type: trigger
+  - Default: none
+  - Description: Immediately stops any ongoing burst
+
+- count (c) - Burst count
+  - Type: integer
+  - Default: 1
+  - Description: Number of triggers to send in one burst
+
+- skip (s) - Initial delay
+  - Type: integer
+  - Default: 0
+  - Description: Number of time slots to wait before starting the burst
+
+### Outputs
+- output (o) - Trigger output
+  - Type: trigger
+  - Description: Outputs the generated burst triggers
+
+Note: When a new trigger arrives while a burst is ongoing, the current burst is immediately restarted. The circuit ensures no triggers are lost even at very high frequencies.

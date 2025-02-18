@@ -1,0 +1,30 @@
+# DROID Circuit Input/Output Keys
+
+## detune - Detune multiple voices in a disharmonic way
+
+### Inputs
+- input1 ... input8 (i) - Voice inputs
+  - Type: float
+  - Description: Input pitch CVs for up to 8 voices that will be detuned
+
+- detune (d) - Detune amount
+  - Type: float
+  - Default: 0.0
+  - Description: Controls the amount of detuning applied to the voices. Each voice is detuned differently to create disharmonic relationships.
+
+- tuningmode (tm) - Tuning mode
+  - Type: binary
+  - Default: 0
+  - Description: While this is 1, the circuit will output the value set by tuningpitch instead of the actual pitch. This is meant to be a help for tuning your VCOs.
+
+- tuningpitch (tp) - Tuning reference
+  - Type: float
+  - Default: 0V
+  - Description: This pitch CV will be output while the tuning mode is active.
+
+### Outputs
+- output1 ... output8 (o) - Detuned outputs
+  - Type: float
+  - Description: Detuned versions of the input pitches. Each output is detuned differently to create disharmonic relationships.
+
+Note: Detunes up to 8 voices in different ways to create disharmonic relationships. Compatible with Sinfonion's detune algorithm. Can be controlled by LFOs or envelopes for dynamic detuning effects.

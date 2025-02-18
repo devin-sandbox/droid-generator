@@ -1,0 +1,322 @@
+16.39
+
+midiin – MIDI to CV converter
+
+This circuit converts incoming MIDI data
+into CV, gate and trigger signals. It needs
+the X7 expander in order to work (see page
+77 for general information about the X7).
+
+It’s really as simple as that! Connect your MIDI keyboard or sequencer with the X7 MIDI input, wire O1 to the
+1V/Oct input of a synth voice and O2 to its gate input and
+enjoy your music!
+
+There are various useful applications of
+this circuit, some of which are:
+
+You can also precisely specify which ports to receive data
+from. All details are explained below.
+
+• Attaching an external keyboard to your modular.
+• Using an external hardware sequencer for playing
+melodies and beats in your modular.
+• Use an external MIDI controller to inﬂuence your
+patch.
+• Use your phone or tablet as a MIDI controller to inﬂuence your patch (via USB).
+• Connect two DROIDs (both with X7) and exchange
+real time data.
+The X7 MIDI implementation is very comprehensive and
+gives you convenient access to most of the MIDI features.
+Please refer to the table of inputs and outputs for details.
+Here are just some very basic examples:
+
+[midiin]
+pitch = O1
+gate = O2
+
+DROID manual for blue-6
+
+When you use a MIDI sequencer for triggering drums, often each drum voice (bass drum, snare drum, etc.) is
+triggered by a certain note, for example C-2 for the bass
+drum, C♯-2 for the snare drum and so on. In this case it
+is more convenient to use the notegate outputs. Check
+the following example:
+
+Polyphonic patches
+Do you have more than one synth voice to control? Then
+you can play several notes at the same time by using up
+to eight pitch and gate outputs. Here is an example with
+three voices, which uses a G8 expander for the gates:
+
+[midiin]
+note1 = 24
+note2 = 25
+notegate1 = O1
+notegate2 = O2
+
+Now whenever note 24 is played by the sequencer,
+notegate1 will trigger. The note numbers range from 0
+to 127, with 0 being the lowest note and 127 the highest. The MIDI standard speciﬁes that note 0 is usually C-2
+(two octaves below C0). So note 24 would be C0 and note
+25 C♯0.
+
+[midiin]
+pitch1 = O1
+pitch2 = O2
+pitch3 = O3
+gate1 = G1
+gate2 = G2
+gate3 = G3
+
+Basic operation
+The basic operation is quite simple. Per default midiin
+listens on all available ports, both TRS and USB. The ﬁrst
+port to receive MIDI data is used. The following example controls one synth voice by converting MIDI note on /
+note off messages into CV / gate signals:
+
+Sequencing drums and triggers
+
+Here the parameters roundrobin and voiceallocation
+are interesting. roundrobin inﬂuences which of the
+three outputs should be used for the next note, in situations where more than one is free. voiceallocation, in
+contrast, controls what should happen if the MIDI stream
+wants to play more simultaneous notes than you have
+setup in midiin. The default is to cancel the oldest currently playing note, but you can change that behaviour in
+various ways.
+
+Another application of note gates is to use keys on a MIDI
+keyboard or touch pads of a MIDI controller as buttons in
+your
+patch! In fact the button circuit can be wired
+to such note gates. It’s just that you don’t have a corresponding LED. But you can use the
+’s own LEDs for
+that.
+The following example uses the note 24 in order to toggle
+a (virtual) button and use the ﬁrst input LED of the master as LED for the button:
+[midiin]
+note1 = 24
+notegate1 = _NOTE24
+
+260
+
+Table of contents at page 2
+
+[button]
+button = _NOTE24
+led = R1
+output = _SOMETHING # ...
+
+Please note: midiout has similar note1 ... note8 inputs.
+But there the pitches are speciﬁed in 1V/Oct. So don’t mix
+them up!
+
+All midiin circuits will get their own copy of the MIDI data
+stream and can do their own things with it. You might
+want to use channel = ... in order to just get only the
+events of a speciﬁc MIDI channel.
+
+[midiin]
+clock = _CLOCK
+start = _RESET
+[sequencer]
+clock = _CLOCK
+reset = _RESET
+...
+
+Pedals
+
+Getting CCs
+Start, Stop and Clock
+MIDI sequencers usually send a steady MIDI clock at 24
+PPQ, which means 24 pulses per quarter note, which in
+turn means 6 pulses per 16th note, which is the typical
+clock speed for modular systems. But also 48 PPQ and
+96 PPQ are possible.
+You get easy access to the clock by various clock outputs
+running at different speeds. The jack labelled just clock
+outputs the 16th note clock. The following example just
+sends that clock to the O1 output:
+[midiin]
+clock = O1
+
+Hereby it is assumed that the MIDI clock is running at
+24 PPQ. If its running faster, simply use one of the other
+clock outputs, which divides down the clock. Or use
+clocktool (see page 162) for dividing yourself.
+Also the START and STOP messages of MIDI sequencers
+are accessible, either as two separate triggers, or as a running state. For example you can use the start output as
+a reset signal for some
+circuit:
+
+DROID manual for blue-6
+
+MIDI does not only transport note events but also controllers. Most of these are continuous values, much like
+CVs. midiin gives you access to the current value of a
+couple of standard controllers like volume and modwheel
+with dedicated outputs. And in addition up to four custom CCs can be output. All such controllers are converted
+into values from 0 to 1 (or 0 V to 10 V if you output them
+directly):
+[midiin]
+volume = O1
+modwheel = O2
+ccnumber1 = 10 # get update from CC#10
+cc1 = O3 # send current CC value to O3
+
+Using multiple midiins
+You are not restricted to one midiin circuit but can use up
+to 32 of these in your patch. There are different reasons
+why multiple ones can be useful, e.g.:
+• You want to control different voices from different
+MIDI channels
+• You want to fetch more than four CCs.
+
+261
+
+The MIDI standard deﬁnes ﬁve different types of food
+pedals. The state of these – up or down – is transmitted
+by means of ﬁve different control changes (CCs). midiin
+automatically interpretes them corresponding to their intended meaning as follows:
+• Damper pedal (CC 64): While down, notes still
+linger on, even if they end. Internally, the “note
+off” event of all notes will be delayed until the pedal
+is up. This pedal is sometimes also called “sustain
+pedal”, since it makes notes sustain.
+• Portamento pedal (CC 65): Sets the portamento
+output to 1 while down. You can use that output
+for enabling a slew limiter with the circuit slew (see
+page 355).
+• Sostenuto pedal (CC 66): Sostenuto is the smarter
+version of sustain. Such a pedal is found as the
+middle of three pedals on grand pianos. When it
+goes down, all notes that are currently played are
+sustained as long as the pedal is held. But new
+notes, that start during that period, at not sustained. That’s the difference. The midiin circuit
+automatically makes CC 66 behave in exactly that
+way. That, of course, just makes sense in a polyphonic patch, where you have enough voice that
+can play the sustained notes.
+• Soft pedal (CC 67): Sets the soft output to 1 while
+held.
+• Legato pedal (CC 68): While down, ties consequtive notes together by keeping gate at 1 between notes.
+
+Table of contents at page 2
+
+Port selection
+The midiin circuit can receive up to two MIDI streams in
+parallel – one from a USB jack and one from a TRS jack.
+Merging together multiple streams from two USB jacks
+or two TRS jacks is currently not possible.
+The two inputs usb and trs deﬁne from which physical
+ports (jacks) MIDI data should be processed. TRS stands
+for “tip ring sleeve”. By this we mean the 3.5 mm MIDI
+input jack on the X7 or the MASTER18.
+For each of the jack types “USB” and “TRS” you can choose
+one of three options:
+• process data from a speciﬁc port
+• auto detection: process data from the port that has
+received MIDI input ﬁrst
+• don’t process data
+For processing data from a speciﬁc port, specify trs =
+or usb = with the number of the port. The numbers depend on your hardware conﬁguration.
+MASTER + X7:
+usb = 1
+
+USB port on the X7
+
+trs = 1
+
+TRS port on the X7
+
+MASTER18:
+usb = 1
+
+USB port on the MASTER18
+
+trs = 1
+
+TRS port MIDI1 on the MASTER18
+
+trs = 2
+
+TRS port MIDI2 on the MASTER18
+
+MASTER18 + X7:
+
+[midiin]
+usb = 1
+
+usb = 1
+
+USB port on the MASTER18
+
+usb = 2
+
+USB port on the X7
+
+trs = 1
+
+TRS port MIDI1 on the MASTER18
+
+trs = 2
+
+TRS port MIDI2 on the MASTER18
+
+trs = 3
+
+TRS port on the X7
+
+Auto detection is selected by using the port number 10. In
+this case
+watches all ports (of the selected type)
+for incoming MIDI data. As soon as it sees data on one
+port it locks in to this port and ignores all other ports for
+the while. After no MIDI data is seen on the locked port
+for a couple of seconds, auto detection happens again, so
+you can e.g. unplug a device from port 1 and plug it into
+port 2 and after a couple of seconds things work again.
+By setting trs = 0 or usb = 0, this type of port is deactivated.
+If you just specify one of trs and usb, the other one will be
+deactivated – unless you set the port to 0, which sets the
+other port to auto detection. Sounds complicated? It’s
+done that way to meet most peoples expectations! Let’s
+view a couple of examples.
+Guess you have a MASTER and an X7. The default is to do
+auto detection on both ports. For this you don’t need to
+specify neither trs nor usb
+
+Process just data from the TRS port:
+[midiin]
+trs = 1
+
+Deactivating USB automatically sets TRS to auto detection, if trs is omitted. So the following example does the
+same, since the X7 has just one TRS port:
+[midiin]
+usb = 0 # disable USB, enable TRS
+
+Now let’s assume that you have a MASTER18 plus X7.
+The following example just processes data from the X7’s
+TRS port:
+[midiin]
+trs = 3
+
+And here is how to process data from the USB port on
+the MASTER18 plus data from that TRS port that receives
+MIDI data ﬁrst:
+[midiin]
+usb = 1
+trs = 10 # auto detection
+
+[midiin]
+pitch = O1
+gate = O2
+...
+
+The next example just processes data from the USB port
+of the X7:
+
+DROID manual for blue-6
+
+262
+
+Table of contents at page 2
+
+

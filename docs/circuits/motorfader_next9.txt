@@ -1,0 +1,270 @@
+Input
+
+Type
+
+Default
+
+Description
+
+harmonicshift (has)
+
+1 2 3
+
+0
+
+This input can reduce harmonic complexity by disabling some of the scale or non-scale notes. It is an idea ﬁrst found
+in the Sinfonion and also provided by the circuit sinfonionlink (see page 353).
+harmonicshift is staged after the select... inputs and further ﬁlters out (disables) notes based on their relation to
+the current scale. This means that ﬁrst the 12 select... inputs select a subset of the 12 possible notes. After that
+harmonicshift can reduce this set further (it will never add notes).
+
+If harmonicshift is not zero, depending on its value some or more of the scale notes are disabled, even if they would
+be allowed by select.... Or in other words: the harmonic material is reduced.
+You also can use negative values. These create rather strange sounds by removing the simple chord functions instead
+of the complex ones ﬁrst.
+Here are the possible values:
+
+DROID manual for blue-6
+
+0
+
+off – all selected notes are allowed
+
+1
+
+disable all ﬁll notes (non-scale notes)
+
+2
+
+disable ﬁlls and 11th
+
+3
+
+disable ﬁlls, 11th and 13th
+
+4
+
+disable ﬁlls, 11th , 13th and 9th
+
+5
+
+disable ﬁlls, 11th , 13th , 9th and 7th
+
+6
+
+disable ﬁlls, 11th , 13th , 9th , 7th and 3rd
+
+7
+
+disable ﬁlls, 11th , 13th , 9th , 7th , 3rd and 5th
+
+-1
+
+disable the root note
+
+-2
+
+disable the root note and the 5th
+
+-3
+
+disable root, 3rd , 5th
+
+-4
+
+disable root, 3rd , 5th , 7th
+
+-5
+
+disable root, 3rd , 5th , 7th , 9th
+
+-6
+
+disable root, 3rd , 5th , 7th , 9th and 13th
+
+-7
+
+disable all scale notes (ﬁll notes untouched)
+
+308
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+noteshift (nos)
+
+1 2 3
+
+0
+
+Shifts the resulting output note(s) by this number of scale notes up or down (if negative). So the output note still is
+part of the scale but may be a note that is none of the selected ones. The maximum shift range is limited to -24 … +24.
+
+selectnoteshift (sns)
+
+1 2 3
+
+0
+
+Shifts the output note by this number of selected scale notes up or down (if negative). If you use noteshift at the
+same time, first selectnoteshift is applied, then noteshift. The maximum shift range is limited to -24 … +24.
+
+off
+
+While this is 1, the circuit will output the value set by tuningpitch instead of the actual pitch. This is ment to be a
+help for tuning your VCOs.
+
+tuningmode (tm)
+
+tuningpitch (tp)
+
+1V
+Oct
+
+0V
+
+This pitch CV will be output while the tuning mode is active.
+
+transpose (tr)
+
+1V
+Oct
+
+0V
+
+This value is being added to the output pitch when not in tuning mode. It can be used for musical transposition or
+adding a vibrato.
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+preset (pr)
+
+1 2 3
+
++
+
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+This is the preset number to save or to load. Note: the ﬁrst preset has the number 0, not 1! For the whole story on
+presets please refer to page 21. This circuit has 4 presets, so this number ranges from 0 to 3.
+
+loadpreset (lp)
+
+A trigger here loads a preset. As a speciality you can use the trigger for selecting a preset at the same time.
+
+savepreset (sp)
+
+A trigger here saves a preset.
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+Output
+cv ()
+
+DROID manual for blue-6
+
+0
+
+Type
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+Description
+The CV output (or pitch output, if you use quantize).
+
+309
+
+Table of contents at page 2
+
+Output
+
+Type
+
+Description
+
+gate (g)
+
+The gate output.
+
+startofsequence (ssq)
+
+Outputs a trigger whenever the sequencer starts playing from the beginning. This can be used for synchronizing with
+other sequencers. An external reset will also cause this output to trigger.
+
+startofpart (spa)
+
+Outputs a trigger whenever a form part starts again. This is only interesting when you use form.
+
+startstepout (sso)
+
+1 2 3
+
+Outputs the current start step. This is useful in case it has been interactively set with the buttons and you need that
+information for another circuit.
+
+endstepout (eso)
+
+1 2 3
+
+Outputs the current end step. This is useful in case it has been interactively set with the buttons and you need that
+information for another circuit.
+
+currentstep (cst)
+
+1 2 3
+
+Outputs the number of the step that is currently being played (starting from 0).
+
+currentpage (cpg)
+
+1 2 3
+
+Outputs the number of the fader page that is currently played, i.e. the value you would have to feed into page in order
+to see the currently being played step.
+
+accumulator (acc)
+
+1 2 3
+
+The current value of the pitch accumulator (an integer number in the range 0 … 16.
+
+DROID manual for blue-6
+
+310
+
+Table of contents at page 2
+
+

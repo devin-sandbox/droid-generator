@@ -1,0 +1,229 @@
+Output
+
+Type
+
+Description
+
+root (ro)
+
+1 2 3
+
+The current root note as an integer number. C = 0, C♯ = 1, D = 2 and so on.
+
+degree (dg)
+
+1 2 3
+
+The current scale (the Sinfonion uses the word degree for this). This is an integer number. If ﬁnd a list of all available
+scales on page 107.
+
+1V
+Oct
+
+The current global transposition of the Sinfonion. This is in 1V/Oct, so you can add it to your pitch whereever you
+output one.
+
+transpose (tr)
+
+The current value of the chaotic detune. You can feed this into the detune input of the circuit detune (see page 182).
+
+chaoticdetune (ch)
+harmonicshift (has)
+
+1 2 3
+
+Harmonic shift is a feature of the Sinfonion that allows to reduce harmonic complexity via CV (or the builtin pots POT1
+or POT2). The idea is that the more you rise the CV, the less complex scale notes are allowed.
+This output gives you access to the current setting of harmonic shift of the Sinfonion. It is an integer number between
+-7 and 7. You can directly feed it into the harmonicshift input of circuits like minifonion (see page 279), chord (see
+page 154), arpeggio (see page 127) or motoquencer (see page 286). Harmonic shift is explained in detail in the manual
+chapter of minifonion.
+
+linkstate (ls)
+
+Outputs 1 if the link to the Sinfonion is up and active, otherwise 0.
+
+clock (c)
+
+Gives you a copy of the Sinfonion’s clock input
+
+reset (r)
+
+Outputs a trigger whenever in Song mode the Sinfonion forwards to the ﬁrst bar of the song.
+
+step (s)
+
+Outputs a trigger for every step of a song.
+
+beat (b)
+
+Outputs a trigger for every beat (subdivision of a step).
+
+DROID manual for blue-6
+
+354
+
+Table of contents at page 2
+
+slew – Slew limiter
+
+This is the “classical” slew limit shape, which originates
+from the (negative) exponential loading current of a capacitor. It is also the shape of a low pass ﬁlter that is
+used for slew limiting. The slope is proportional to the
+distance between the current and the target voltage. Or
+in other words the voltage changes fast at the beginning
+and slower at the end:
+
+4
+
+The S-curve – when applied to pitches – sounds different
+than an exponential curve since it more reﬂects the way
+e.g. a trombone player accelerates and deaccelerates his
+arm in order to move to another pitch. In our algorithm
+we assume that in the ﬁrst half of the time the arm accelerates at a constant rate (which is controlled by the slew
+parameter) and at the second half of the time it deaccelerates (again at that rate, just negative), until it exactly
+reaches the target pitch.
+
+0
+
+time
+Exponential
+
+original pitch
+
+Linear shape
+The linear algorithm simply limits the voltage change per
+time to a certain change rate, e.g. to 10 V per second.
+If the input voltage changes faster (for example suddenly
+jumps up), the output voltage follows that with that maximum rate. At a pot position of 0.5 the maximum slew is
+120 V per second.
+
+6
+
+There is one audible difference to a real trombone player,
+however. The real musician would start to move his arm
+before the new note begins, in order to be at the target
+position right in time. But here the movement is initiated
+by the pitch change it self so it is delayed by the slew limiting.
+
+6
+4
+2
+
+V olts
+
+Exponential shape
+
+S-Curve shape
+
+2
+
+Here is a simple example for a slew limiting on I1 −→ O1
+which is controlled with the pot P1.1:
+[slew]
+input
+= I1
+slew
+= P1.1
+exponential = O1
+
+6
+
+V olts
+
+This is a CV controllable slew limiter for
+CVs. Special about it is that it implements
+three alternative algorithms. The traditional exponential algorithm (as is commonly implemented in analog circuits), a
+linear algorithm and a special S-shaped curve.
+
+V olts
+
+16.63
+
+4
+0
+
+time
+
+2
+S-curve
+
+0
+
+time
+Linear
+
+DROID manual for blue-6
+
+original pitch
+
+original pitch
+
+355
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+Wire the CV that you wish to slew limit here.
+
+input (i)
+slew (sw)
+
+1.0
+
+This controls the slew rate. A value of 0.0 disables slew limiting. The output immediately follows the input without
+any delay. A value of for example 2.0 in linear mode means that 2.0 seconds are needed for a change of 1 V (which is
+a value of 0.1 or one octave if used as pitch). In the other two modes the slew time is tuned to sound similar. Negative
+values of this parameter are treated as 0.0.
+
+slewup (u)
+
+1.0
+
+This allows a special handling when the voltage moves upwards. The slew limiting for upwards is slew multiplied
+with slewup. Since slew defaults to 1.0 you can just use slewup and slewdown if you want to control both directions
+separately.
+
+slewdown (d)
+
+1.0
+
+Sets the slew rate for downwards movement.
+
+gate (g)
+
++
+
+Output
+
+Type
+
+If this jack is patched, the slew limiting is only active while this gate is high. Otherwise it’s like setting the slew parameter to zero.
+
+Description
+
+exponential (e)
+
+Output for the resulting CV with the exponential (classical) slew algorithm applied
+
+linear (l)
+
+Output for linear slew limiting
+
+scurve (c)
+
+Output with the slew limitation according to the S-curve algorithm.
+
+DROID manual for blue-6
+
+356
+
+Table of contents at page 2
+
+

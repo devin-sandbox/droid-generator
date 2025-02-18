@@ -1,0 +1,60 @@
+# DROID Circuit Input/Output Keys
+
+## droid - General DROID controls
+
+### Inputs
+- ledbrightness (l) - LED brightness control
+  - Type: float
+  - Default: 1.0
+  - Description: Controls brightness of all 24 LEDs on master and G8. CV-controllable. Zero turns LEDs completely dark.
+
+- maxslope1 ... maxslope8 (s) - Output smoothing threshold
+  - Type: float
+  - Default: 0.25
+  - Description: Sets threshold for voltage changes between samples. 0.0 turns off smoothing completely.
+
+- lpfilter1 ... lpfilter8 (lf) - Low pass filter
+  - Type: float
+  - Default: 0.25
+  - Description: Configures digital low pass filter on output to smooth digital noise. 1.0 leads to very strong filtering.
+
+- m4faderspeed (m4f) - Motor fader speed
+  - Type: float
+  - Range: 0.0 to 1.0
+  - Description: Sets force/speed of motor faders. Higher speeds need more power and may wear faders faster.
+
+- statusdump (sd) - Status dump trigger
+  - Type: trigger
+  - Description: Creates a status dump file on SD card, like double-clicking master's button.
+
+- m4notchpower (m4n) - Notch feedback power
+  - Type: float
+  - Range: 0.0 to 1.0
+  - Description: Sets force feedback power of M4 motor fader virtual notches.
+
+- calibrate (c) - Calibration trigger
+  - Type: trigger
+  - Description: Enters calibration procedure immediately (MASTER only).
+
+- startcontrollerupgrade (u) - Controller upgrade trigger
+  - Type: trigger
+  - Description: Starts firmware upgrade for controllers like M4 and E4.
+
+- startx7upgrade (x7) - X7 upgrade trigger
+  - Type: trigger
+  - Description: Starts X7 firmware upgrade procedure.
+
+- clear (cl) - Clear state trigger
+  - Type: trigger
+  - Description: Resets current state of all supporting circuits to start state, preserving presets.
+
+- clearall (ca) - Factory reset trigger
+  - Type: trigger
+  - Description: Global factory reset for all circuits, including presets.
+
+- uislowdown (us) - UI optimization
+  - Type: binary
+  - Default: 1
+  - Description: Controls UI circuit execution speed optimization. Set to 0 to disable optimization if timing-critical.
+
+Note: Only one instance of this circuit should be created as it affects system-wide settings. Controls LED brightness, output smoothing, motor fader behavior, and various system functions.

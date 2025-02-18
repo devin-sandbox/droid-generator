@@ -1,0 +1,332 @@
+pattern, form, repeats, autoreset and skips without loosing the sync to the rest of your music.
+If The Metric Saver™ is turned on (which is the default),
+the motoquencer automatically keeps track of the original incoming clock count. As soon as – after a polymetric journey – you come back to “normal”, it jumps to the
+step that would have been the current one without those
+alterations.
+An example: You set autoreset to 7 in order to create
+polymetric tension. Later you set it back to 0. Now the
+sequence immediately jumps to the step where it would
+have been without autoreset (this requires that none of
+the other step changing features are in use). You snap
+back to your original groove and are in sync again with
+the rest of your modular “band”.
+Note: The Metric Saver™ is only activated when really
+all modiﬁcations to the normal step order are turned off.
+That also includes steps where “repeats” or “skip” is used,
+since they also introduce time shifts.
+
+[motoquencer]
+... usual stuff goes here ...
+luckychance = P1.1
+luckyamount = P1.2
+luckycvs = B1.1 # press to reroll CVs
+
+All lucky operations honor the luckychance input. This
+sets the relative number of steps that is affected by the
+randomization. Setting it to 1 will affect all steps. At 0,
+no step is affected. At 0.5 exactly half of the steps is affected, randomly chosen from all steps between start and
+end.
+A trigger to luckycvs sets a new random CV value for
+each affected step. And with the pot luckyamount you
+control the maximum CV that’s possible here.
+You can use this mechanism also to reset things. A trigger
+at luckycvs whith luckyamount = 0 and luckychance
+= 1 will bring all steps back to the CV set by cvbase.
+Please have a look at the table of inputs for all the other
+lucky... triggers and ... feel lucky!
+
+I Feel Lucky
+Pitch accumulator
+
+settings are now dedicated to the accumulator while the
+lower three settings still do pitch randomization:
+7
+
+accumulator: shift up twice each turn
+
+6
+
+accumulator: shift up each turn
+
+5
+
+accumulator: shift down each turn
+
+4
+
+accumulator: shift down twice each turn
+
+3
+
+strong pitch randomization
+
+2
+
+medium pitch randomization
+
+1
+
+slight pitch randomization
+
+0
+
+randomization + accumulator off
+
+Let’s assume you set a step to 6 (shift up each turn). Now
+the note of this step is increased by one note every repetition of the sequence. Every time it restarts from step 1,
+the internal accumulator is increased by one and the note
+is moved up one one within the selected scale notes.
+If accumulatorrange = 4, the accumulator is reset after
+the sequence has played four times and all notes are restored to their original values. The same does an extern
+reset signal.
+
+The Motoquencer has a powerful system of one time randomization, which is called I Feel Lucky™ . While setting random CVs or gate propabilities is quite common
+amongst sequencers, here we talk of something different. By sending a trigger to a certain input, some of your
+steps are randomly modiﬁed – and stay that way. If your
+faders currently show these steps, you will immediately
+see them moving around. And they stay there, so that
+you can manually modify the random decision if you like.
+Those triggers are most times sent by buttons, but also
+slowly running LFOs or using the startofsequence as a
+trigger are ﬁne.
+
+The pitch accumulator – or just short accumulator – is a
+way to alter the notes of certain steps in a predictable way
+as the sequence goes on. It works like this:
+
+With the four fader positions 4, 5, 6 and 7 of a step, you
+can have the note moved up once or twice or on the contrary moved downwards once or twice per repetition.
+
+First you turn it on by setting accumulatorrange to a
+non-zero number. Let’s assume you set it to 4.
+
+If you enable a form like AAAB, the accumulator is increased at the end of the complete form. So even if the
+A part repeated three times, the accumulator-sensitive
+steps change their note note for each repetition of A but
+just at the and of the whole sequence.
+
+Let’s make a simpliﬁed example:
+
+If you do this, the fader in the fader mode ”pitch randomization” changes its meaning slightly. The upper four
+
+DROID manual for blue-6
+
+[motoquencer]
+accumulatorrange = 4
+...
+
+290
+
+Table of contents at page 2
+
+Multiple tracks
+Each motoquencer circuit has just one CV and one gate
+output. In many cases it is desirable to have several CVs
+and maybe also additional gate outputs as part of a sequence. Also you probably want more sequencers using
+the same faders, of course.
+This is done by adding more instances of motoquencer to
+your patch. The easiest way is to use the select input
+of each of these, in order to make sure that at every time
+exactly one motoquencer is selected and gets access to
+the motor faders. You really shouldn’t try selecting more
+than one at the same time, or your faders will get crazy!
+Here is an example with the two buttons B1.7 and B1.8
+selecting one of two sequencers:
+[p2b8]
+[m4]
+[buttongroup]
+button1 = B1.7
+button2 = B1.8
+led1 = L1.7
+led2 = L1.8
+[lfo]
+hz = 20 * P1.1
+square = _CLOCK
+[motoquencer]
+clock = _CLOCK
+select = L1.7
+cv = O1
+gate = O5
+[motoquencer]
+clock = _CLOCK
+select = L1.8
+cv = O2
+
+DROID manual for blue-6
+
+gate = O6
+
+This simple patch is a fully functional two-track four-step
+sequencer. And as long as you don’t run out of RAM, you
+can add as many tracks as you like.
+One thing you have to have in mind: These sequencers
+can easily go out of sync. Just play around with the start
+or end step or skip or repeats. While that can be interesting, sometimes it is not desirable. Maybe you just want
+every step to have additional CV or gate values.
+This can be done by linking two or more instances of
+motoquencer togethery. To do that, add the following
+line to the ﬁrst instance:
+linktonext = 1
+
+At the next motoquencer in the patch, don’t wire clock
+or reset or anything else that deals with stepping or direction or faders. Just connect the outputs. The linked
+sequencer is remote controlled.
+Some inputs still apply for the linked sequencer. One example is cvbase and cvrange. Any parameter that has
+an inﬂuance on which step is played when, however, is
+ignored. That task is done by the main sequencer.
+Here is a complete example that adds one additional CV
+and one gate to a sequencer. Note: The fader modes 10
+and 16 give you access to the modes 0 and 6 of the linked
+sequencer. Simply add 10 for each sequencer in the chain.
+[p2b8]
+[m4]
+
+button3 = B1.3
+button4 = B1.4
+button5 = B1.5
+button6 = B1.6
+button7 = B1.7
+button8 = B1.8
+led1 = L1.1
+led2 = L1.2
+led3 = L1.3
+led4 = L1.4
+led5 = L1.5
+led6 = L1.6
+led7 = L1.7
+led8 = L1.8
+output = _FADERMODE
+value7 = 10 # CV of sequencer 2
+value8 = 16 # gate of sequencer 2
+[lfo]
+hz = 20 * P1.1
+square = _CLOCK
+[motoquencer]
+clock = _CLOCK
+fadermode = _FADERMODE
+linktonext = 1
+cv = O1
+gate = O5
+[motoquencer]
+cv = O2
+gate = O6
+
+If you need more than two CVs, you can create even
+longer chains, for example:
+[motoquencer]
+clock = _CLOCK
+fadermode = _FADERMODE
+linktonext = 1
+cv = O1
+
+[buttongroup]
+button1 = B1.1
+button2 = B1.2
+
+291
+
+Table of contents at page 2
+
+gate = O5
+[motoquencer]
+linktonext = 1
+cv = O2
+gate = O6
+[motoquencer]
+cv = O3
+gate = O7
+
+Simply add a linktonext at every instance except the
+last. And add 10 to fadermode for every sequencer. For
+example fadermode = 25 selects fader mode 5 on the
+third sequencer in the chain.
+Here are some details, what linking exactly means for the
+linked sequencer:
+• The linked sequencer does not react to clock,
+reset, startstep, endstep, form, direction,
+pingpong, pattern, autoreset, shiftsteps or
+any other potential means of inﬂuencing the play
+order of the steps. Instead the current step number
+of the linked sequencer will always be the same as
+the step number of the main sequencer.
+• If you use shiftsteps, luckyshuffle or
+luckyreverse on the main sequencer, the exact
+same rearrangement of steps will happen at the
+linked sequencers.
+• If the main sequencer plays repeats, so does the
+linked one. The “repeats” setting of the linked sequencer’s steps are ignored.
+• If the main sequencer skips a step, so does the
+linked one. The “skip” property of steps in the
+linked sequencer are ignored, as well.
+• Ratches still work independently, since they don’t
+change the step sequence.
+• Also the gate pattern of the linked sequencer will
+be applied.
+DROID manual for blue-6
+
+• In the linked sequencer, holdcv has one additional
+value: 2. If you set it to 2, the CV output of the
+linked sequencer is synchronized to the gate of
+the linked sequencer, not to that of the main sequencer.
+• Don’t use select, fadermode and buttonmode on
+the linked sequencer. They are ignored. Instead, for accessing the parameters of the steps
+of the linked sequencer, add 10 to fadermode or
+buttonmode. So while fadermode = 1 sets the
+fader to the CV randomization of the main sequencer, so does fadermode = 11 for the linked
+sequencer.
+The following parameters are still valid for the linked sequencer:
+• cvbase, cvrange and quantize
+• gatelength
+• holdcv (with the extra value 2)
+• luckychance, luckyamount and all of the other
+lucky...
+paramters, with the exception of
+luckyskips, luckyrepeats, luckyshuffle and
+luckyreverse.
+
+Recording with a keyboard
+You can use a keyboard to record sequences into your motoquencer. More precisely, you can attach a CV / gate input for that purpose. That might very well come from a
+keyboard attached to the X7, via the circuit midiin (see
+page 260). But any other source is possible, as well.
+The ﬁrst step is attaching your recording source to
+keyboardcv and keyboardgate. Here is an example:
+[midiin]
+cv = _CV
+
+292
+
+gate = _GATE
+[motoquencer]
+keyboardcv = _CV
+keyboardgate = _GATE
+...
+
+After doing this, you should already be able to play with
+your keyboard directly to the voice that’s attached to
+the motoquencer. While a key is pressed (keyboardgate
+is high), the keyboardcv has precedence over the sequence. But you can change that with the setting
+keyboardmode.
+To record your keyboard into a sequence, you need to
+connect recordmode, maybe to a button (see page 141).
+While recording is active and the keyboard gate is high,
+the current sequencer step will be replaced with your keybaord note. Otherwise the steps are untouched. That
+way you play more and more notes into the sequence.
+In order to get rid of existing notes, either clear the sequence before recording (using the clear trigger), or
+make use of the input recordsilence. Setting that to 1
+will silence all steps when no key is pressed.
+You also can route recordsilence to one key on your
+keyboard using the notegate outputs of midiin. That
+way you can actively “erase” notes by pressing that key.
+While recording key presses the motoquencer tries to be
+tolerant with respect to your timing. So keys pressed
+slightly before or after the current clock tick are just ﬁne.
+Note: The sequencer can just record into its grid of
+steps and quantized notes. So it’s not a free style MIDI
+recorder. You cannot record notes that are faster than
+your input clock. If you have enabled quantiziation, you
+can just play notes from the current scale. So it needs
+some time to get familiar with this way of recording. Nev-
+
+Table of contents at page 2
+
+

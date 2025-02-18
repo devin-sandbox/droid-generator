@@ -1,0 +1,285 @@
+gate = O5
+[motoquencer]
+linktonext = 1
+cv = O2
+gate = O6
+[motoquencer]
+cv = O3
+gate = O7
+
+Simply add a linktonext at every instance except the
+last. And add 10 to fadermode for every sequencer. For
+example fadermode = 25 selects fader mode 5 on the
+third sequencer in the chain.
+Here are some details, what linking exactly means for the
+linked sequencer:
+• The linked sequencer does not react to clock,
+reset, startstep, endstep, form, direction,
+pingpong, pattern, autoreset, shiftsteps or
+any other potential means of inﬂuencing the play
+order of the steps. Instead the current step number
+of the linked sequencer will always be the same as
+the step number of the main sequencer.
+• If you use shiftsteps, luckyshuffle or
+luckyreverse on the main sequencer, the exact
+same rearrangement of steps will happen at the
+linked sequencers.
+• If the main sequencer plays repeats, so does the
+linked one. The “repeats” setting of the linked sequencer’s steps are ignored.
+• If the main sequencer skips a step, so does the
+linked one. The “skip” property of steps in the
+linked sequencer are ignored, as well.
+• Ratches still work independently, since they don’t
+change the step sequence.
+• Also the gate pattern of the linked sequencer will
+be applied.
+DROID manual for blue-6
+
+• In the linked sequencer, holdcv has one additional
+value: 2. If you set it to 2, the CV output of the
+linked sequencer is synchronized to the gate of
+the linked sequencer, not to that of the main sequencer.
+• Don’t use select, fadermode and buttonmode on
+the linked sequencer. They are ignored. Instead, for accessing the parameters of the steps
+of the linked sequencer, add 10 to fadermode or
+buttonmode. So while fadermode = 1 sets the
+fader to the CV randomization of the main sequencer, so does fadermode = 11 for the linked
+sequencer.
+The following parameters are still valid for the linked sequencer:
+• cvbase, cvrange and quantize
+• gatelength
+• holdcv (with the extra value 2)
+• luckychance, luckyamount and all of the other
+lucky...
+paramters, with the exception of
+luckyskips, luckyrepeats, luckyshuffle and
+luckyreverse.
+
+Recording with a keyboard
+You can use a keyboard to record sequences into your motoquencer. More precisely, you can attach a CV / gate input for that purpose. That might very well come from a
+keyboard attached to the X7, via the circuit midiin (see
+page 260). But any other source is possible, as well.
+The ﬁrst step is attaching your recording source to
+keyboardcv and keyboardgate. Here is an example:
+[midiin]
+cv = _CV
+
+292
+
+gate = _GATE
+[motoquencer]
+keyboardcv = _CV
+keyboardgate = _GATE
+...
+
+After doing this, you should already be able to play with
+your keyboard directly to the voice that’s attached to
+the motoquencer. While a key is pressed (keyboardgate
+is high), the keyboardcv has precedence over the sequence. But you can change that with the setting
+keyboardmode.
+To record your keyboard into a sequence, you need to
+connect recordmode, maybe to a button (see page 141).
+While recording is active and the keyboard gate is high,
+the current sequencer step will be replaced with your keybaord note. Otherwise the steps are untouched. That
+way you play more and more notes into the sequence.
+In order to get rid of existing notes, either clear the sequence before recording (using the clear trigger), or
+make use of the input recordsilence. Setting that to 1
+will silence all steps when no key is pressed.
+You also can route recordsilence to one key on your
+keyboard using the notegate outputs of midiin. That
+way you can actively “erase” notes by pressing that key.
+While recording key presses the motoquencer tries to be
+tolerant with respect to your timing. So keys pressed
+slightly before or after the current clock tick are just ﬁne.
+Note: The sequencer can just record into its grid of
+steps and quantized notes. So it’s not a free style MIDI
+recorder. You cannot record notes that are faster than
+your input clock. If you have enabled quantiziation, you
+can just play notes from the current scale. So it needs
+some time to get familiar with this way of recording. Nev-
+
+Table of contents at page 2
+
+ertheless it’s a great tool for rapid composition. Especially because it’s easy to modify your melodies with the
+faders after you have recorded them.
+
+Recording & linked sequencers
+When you have combined several motoquencers with
+linktonext = 1, recording also works in the linked sequencers. Here are some hints:
+• recordmode can be (and must be) set individually
+on each of the motoquencers. If you want to record
+into a linked sequencer, make sure that you set
+recordmode there.
+• Using the same value for recordmode for all sequencers means that they always record simultanously.
+• Also keyboardcv and keyboardgate are settings
+that each sequencer instance has on its own. That
+means that you can record different CVs with different gates on each sequencer at the same time.
+• Using the same gate signal for the keyboardgate of
+all sequencers can make sense. E.g. if you want to
+record paraphonic chords or pitches together with
+modulation CVs.
+
+Copy & paste
+The copy & paste feature allows you to copy a part of your
+sequence from one page to another or from one preset to
+another. To do this, map the inputs copy and paste to
+two buttons (you don’t need toggle buttons here, so no
+button circuit is needed).
+
+By changing pages or presets between copy and paste,
+you can copy parts of your sequence elsewhere.
+There are also two alternative triggers for pasting.
+pastefaders just pastes the faders of the currently selected mode. pastebuttons is likewise for the buttons.
+With that you can for example just copy the gate propabilites from one page to another while leaving the rest of
+the parameters as they are.
+If you have linked sequencers, those will automatically be
+handled as well. Don’t connect the copy and paste triggers there.
+
+LED colors
+Depending on the buttonmode, the LEDs below the faders
+have different colors. Here is an overview over all possible colors:
+color
+
+meaning
+
+buttonmode
+
+white
+
+currently played step
+
+always
+
+blue
+
+enabled gate
+
+0
+
+green
+
+start step
+
+1
+
+red
+
+end step
+
+1
+
+cyan
+
+gate on the ﬁrst repetition
+
+2
+
+pink
+
+gate on each repetition
+
+2
+
+orange
+
+hold gate over duration
+
+2
+
+yellow
+
+tie the gate to the next step
+
+2
+
+violet
+
+skip
+
+3
+
+A trigger to copy copies the current page of the current
+sequence into an internal clipboard. And paste copies
+the clipboard to the current page of the current sequence.
+
+DROID manual for blue-6
+
+293
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+firstfader (f)
+
+1 2 3
+
+1
+
+First M4 fader of the sequencer (starting with 1). If you omit this, it starts at the ﬁrst fader of your ﬁrst M4.
+
+numfaders (n)
+
+1 2 3
+
+Number of faders to use for your sequencer. The typical numbers are 4, 8, 16 and 32. 32 is the maximum (eight M4
+units). If you omit this, all of your M4 faders will be used.
+
+numsteps (ns)
+
+1 2 3
+
+Number of steps your sequence consists of (at maximum). The number of steps can be greater than the number of
+faders. In that case use page for paging your faders so that you can edit all of the steps. Having the number of steps
+less than the faders, makes no sense – it’s just a waste of faders. The maximum number of steps is 32.
+If you don’t set this parameter, the number of steps will be set to the number of faders.
+Note: changing this setting dynamically can provoke various surprising behaviours. For example the number of pages
+(see parameter page) might be reduced. Or the end marker is forcibly moved around. If you want to change the length
+of the sequence via CV, better use endstep or autoreset.
+Another note: Setting numsteps will not restrict the number of faders. If you set numsteps = 4 but have eight faders
+available, the circuit will use all these, even if faders 5, 6, 7 and 8 will be useless. You need to set numfaders = 4 in
+this situation.
+
+page (p)
+
+1 2 3
+
+0
+
+Use this parameter, if you have less faders than steps. The ﬁrst page is 0, not 1. For example if you have 4 faders but
+16 steps, you can select between the four “pages” of four faders each, by settings bar to 0, 1, 2 or 3. The output of a
+buttongroup (see page 146) with one button per page is a good match for this parameter.
+
+clock (c)
+
+Patch an input clock here. If you want to use ratcheting, that clock needs to be stable and regular, because the sequencer needs to interpolate the clock and create evenly distributed new beats within two clock ticks. If you don’t use
+ratching, you can use any rhythm you like here – may it be shufﬂed, euklidean, the output from another sequencer or
+whatever you like. Each clock tick will advance the sequence to the next step (or to the next repition of the current
+step).
+
+taptempo (tt)
+
+If your clock is not steady but might be stopped and restarted, you should patch a steady clock here. This avoids
+problems with the computation of the gate length right after starting the clock. The tap tempo computation needs a
+series of at least two clock pulses so the gate length of the ﬁrst step is wrong after the clock has stopped for a while.
+
+reset (r)
+
+A trigger here resets the sequencer to its start step. The next clock tick (or a tick that is roughly at the same time as
+the reset) will play step 1. Note: If there is a reset without a clock tick at the same time, the sequencer will go to “step
+0”, which is a special state where it waits for the clock to advance to the ﬁrst step. Without that fancy logic, a reset
+plus clock would skip step 1 and start with step 2.
+
+DROID manual for blue-6
+
+294
+
+Table of contents at page 2
+
+

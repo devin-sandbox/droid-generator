@@ -1,0 +1,288 @@
+Input
+
+Type
+
+Default
+
+selectat (sa)
+
+1 2 3
+
++
+
+preset (pr)
+
+1 2 3
+
++
+
+Description
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+This is the preset number to save or to load. Note: the ﬁrst preset has the number 0, not 1! For the whole story on
+presets please refer to page 21. This circuit has 16 presets, so this number ranges from 0 to 15.
+
+loadpreset (lp)
+
+A trigger here loads a preset. As a speciality you can use the trigger for selecting a preset at the same time.
+
+savepreset (sp)
+
+A trigger here saves a preset.
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+Output
+
+0
+
+Type
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+Description
+The four outputs
+
+output1 ... output4 (o)
+led11 ... led14 (l1)
+
+0
+
+1
+
+The LEDs in the buttons button11 …button14
+
+led21 ... led24 (l2)
+
+0
+
+1
+
+The LEDs in the buttons button21 …button24
+
+led31 ... led34 (l3)
+
+0
+
+1
+
+The LEDs in the buttons button31 …button34
+
+led41 ... led44 (l4)
+
+0
+
+1
+
+The LEDs in the buttons button41 …button44
+
+DROID manual for blue-6
+
+252
+
+Table of contents at page 2
+
+16.38
+
+midifileplayer – MIDI ﬁle player
+
+This circuit can read MIDI ﬁles from your
+Micro SD card and “play” them by creating respective CVs for gate, pitch, velocity,
+pitch bend and other outputs, which you
+can then route to synth voices in your modular – or do other crazy stuff with that information.
+
+• You can output the original MIDI clock from the ﬁle.
+• You can adjust the tempo continuously.
+• You can use external clocking (ignoring the tempo
+of the ﬁle).
+
+Getting started
+MIDI ﬁles are organized in tracks. Each circuit of this type
+can play just one track at a time. If you want to play more
+tracks, use more midifileplayer circuits in parallel.
+Just as MIDI streams, MIDI ﬁles contain channel information for each note and each controller event. These channels are currently completely ignored. If you think you
+can convince me that this is bad and that you have a useful interpretation of the channels within the scope of the
+MIDI ﬁle player, please let me know.
+Some limitations of the current implementation are:
+• Just one track can be played at a time.
+• The maximum length of a track is 6000 bytes.
+Longer tracks cannot be loaded. Sorry. But this
+is quite long and is enough for approximately 1500
+note events. Note: The size of the total ﬁle can be
+as large as you like.
+• The channel information is ignored.
+• Some meta events such as program change, all
+notes off, etc. are not yet recognized. Many of
+them just make sense in MIDI streams, not in ﬁles,
+anyway.
+Features of the current implementation:
+• Up to eight voices in parallel with ﬂexible voice allocation algorithms
+• Support for velocity, pitch bend, mod wheel, and
+global volume
+
+DROID manual for blue-6
+
+Here is the simplest possible example: Copy your MIDI
+ﬁle to the SD card and name it midi1.mid. And here is
+the patch that plays the ﬁrst track with a single voice:
+
+You can then select one of these ﬁles with the file parameter, so e.g. file = 17 would play midi17.mid. If
+you omit that, midi1.mid will be played. If no such ﬁle is
+present on the card, nothing will be played.
+A MIDI ﬁle can contain several tracks. The track parameter speciﬁes the number of the track in the ﬁle you
+want to play. Hereby only the non-empty tracks will be
+counted. This is important since many MIDI ﬁles have
+tracks that just contain meta information and no note
+events.
+If you omit the track number, the ﬁrst non-empty track
+will be played. If your track number is out of range, the
+last track in the ﬁle will be selected.
+
+[midifileplayer]
+pitch = O1
+gate = O2
+
+Now patch O1 to the 1V/Oct of a synth voice and O2 to its
+gate. This voice should then play the notes from the ﬁrst
+track of the ﬁle.
+The playback starts immediately when the DROID starts.
+Per default the track is looped. You can restart the playback with the reset input. And the other way round:
+you get a trigger at endoftrack when the playback of the
+track has ﬁnished.
+
+Selecting ﬁle and track
+You can have more than one MIDI ﬁle on your SD card.
+The MIDI ﬁles on the card must be named midi1.mid,
+midi2.mid, and so on. Gaps are allowed. You can have
+up to 9999 MIDI ﬁles that way. The last one would have
+the name midi9999.mid. Don’t use leading zeroes! The
+ﬁle midi0001.mid cannot be played!
+
+253
+
+The parameters file and track are – of course – CV controllable. So you can switch between ﬁles and tracks by
+means of buttons, switches, external CV, you name it.
+loads the seWhenever the ﬁle or track changes,
+lected track from the SD card into its memory. This is
+also the case when the
+starts. Also a track change
+restarts playback.
+Note: loading a track from the SD card might take a couwon’t run
+ple of milliseconds. During that time
+as usual. All inputs will be ignored and all outputs freeze.
+So switching at a high rate might lead to unexpected results. If you need to have a playback started in perfect
+timing, use the reset input as an exact trigger. If you do
+not want to use a trigger but rather a play/stop gate, you
+can use the speed input for that. Setting the speed to 0
+stops playback and 1 starts it immediately.
+
+Table of contents at page 2
+
+Polyphonic tracks
+MIDI streams and ﬁles consist of note on and note off
+events. So there is no length parameter in a note. It just
+contains the note number (in semitones) and a velocity.
+If the track contains situations where a new note starts
+while another one is still on, the track is polyphonic, as
+you need more than one synth voice to play correctly.
+The MIDI ﬁle player allows you to deﬁne up to eight voices
+for playing notes. Each voice consists of a pitchX and
+a gateX output (and an optional velocityX output).
+By patching these outputs the player knows how many
+voices are available.
+If the number of simultaneous notes exceeds the number
+of attached voices, some notes have to be cut off or completely omitted. You can ﬂexibly change the behaviour
+in such a situation. See the description of the parameter
+dropnotes for details.
+Here is an example for playing with up to three voices:
+[midifileplayer]
+file = 2
+track = 1
+pitch1 = O1
+pitch2 = O2
+pitch3 = O3
+gate1 = G1
+gate2 = G2
+gate3 = G3
+
+Speed and Clocking
+A MIDI ﬁle contains absolute timing information of when
+to exactly play which note. For that purpose every note
+event in the ﬁle has a relative time stamp, measured in
+DROID manual for blue-6
+
+ticks. The player honors this information and plays the
+tracks exactly in their original speed... unless... you
+change it of course.
+To do so you have two options. The ﬁrst one is the speed
+parameter. At 1.0 you get the original playing speed. 0.5
+will play at half the speed and 2.0 at the double speed.
+This can be mapped to a pot, of course (here I chose a
+range from 0 to 2):
+[midifileplayer]
+pitch = O1
+gate = O2
+speed = P1.1 * 2
+
+Other controls and parameters
+MIDI ﬁles may contain information about pitch bend, a
+global volume (CC 7), the mod wheel (CC 1) and velocity
+(per note). These are all available as CV outputs. See the
+table of outputs for details. Most other CCs are currently
+not available since they are very rarely used in MIDI ﬁles.
+Future versions of the MIDI ﬁle player might give access
+to these.
+
+Error handling
+
+Turning the pot totally CCW will completely freeze the
+playback.
+If you need the internal clock of the MIDI player in order to
+synchronize with the rest of your patch, you can get two
+clocks running at different resolutions at the two outputs
+clockout and midiclock. See their descriptions below
+for details.
+The second option is clocking the player externally. In
+that case the tempo information from the MIDI ﬁle is ignored. External clocking allows you to synchronize the
+MIDI playback with the rest of your patch, which may
+contain additional sequencers and stuff. Patch your external clock into the clock input. Each clock will then play
+a 16th note’s time equivalent of content:
+
+When working with ﬁles, errors can happen. The MIDI ﬁle
+might be missing, corrupted, whatever. In order to make
+life easier for you, the MIDI ﬁle player can show you an
+error status at the output error. Write the error to an R
+register that is free, that will make one of the LEDs lit up
+and show an error color.
+The following patch shows the errors at the LED of input
+1:
+[midifileplayer]
+pitch = O1
+gate = O2
+error = R1
+
+Please see the table of outputs below for the various errors and their color codes.
+
+[midifileplayer]
+pitch = O1
+gate = O2
+clock = G1
+
+Note: this does not mean that the notes are quantized to
+16th notes. You still have the complete resolution.
+254
+
+Table of contents at page 2
+
+

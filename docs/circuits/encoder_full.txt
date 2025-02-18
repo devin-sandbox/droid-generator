@@ -1,0 +1,278 @@
+Input
+
+Default
+
+Description
+
+outputscale (os)
+
+1.0
+
+The output is multiplied by this value. This is just for convenience and may save a copy (see page 172) circuit in some
+situations.
+
+outputoffset (oo)
+
+0.0
+
+After scaling the virtual value with outputscale, this value is being added before sending the result to the output.
+
+1
+
+Selects the possible range of the virtual value.
+
+mode (m)
+
+Type
+
+1 2 3
+
+0
+
+Off: the encoder is unsed, its LEDs are off
+
+1
+
+Normal mode: ﬁxed range between 0.0 and 1.0
+
+2
+
+Bipolar mode: ﬁxed range between -1.0 and 1.0
+
+3
+
+Positive inﬁnity: open range between 0.0 and ∞
+
+4
+
+Negative inﬁnity: open range between −∞ and 0.0
+
+5
+
+Bipolar inﬁnity: open range between −∞ and ∞
+
+6
+
+Circular inﬁnity: range is 0.0 … 1.0, but repeats over in both directions
+
+This setting is ignored if discrete is in use.
+Note: The mode 0 is for situations where encoders are overlayed with select and an encoder is unused. Setting mode
+= 0 can be used to disable this encoder and blank its LEDs.
+smooth (sm)
+
+0.5
+
+Unlike a potentiometer, an encoder does not output continous values but steps. If you directly wire the output of an
+encoder to a CV input of an audio module, the steps might become audible.
+Therefore the ﬁnal values of the encoder are smoothed out by a simulation of a low pass ﬁlter. That’s essentially the
+same as in the slew circuit. The smoothing is enabled per default but you can change it with this parameter.
+A value of 0.0 turns off smoothing and you get access to the tiny steps of the encoder. 1.0 selects a maximum smoothing, which has also the effect that fast turns of the encoder are slowed down a bit. The default value of 0.5 does just
+a mild slew limiting.
+If you use discrete, the smoothing is not applied.
+
+discrete (d)
+
+1 2 3
+
+0
+
+Set this to an integer number of 2 or higher to enable discrete mode. In this mode the encoder works like a rotary switch
+for selecting one of the numbers 0, 1, 2 and so on. The number you set for discrete selects the number of positions
+in this “switch”. For example discrete = 4 produces the values 0, 1, 2 or 3.
+In this mode the inputs notch, mode and smooth are ignored.
+
+DROID manual for blue-6
+
+186
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
++
+
+snapto (sn)
+
+Description
+Use this parameter to deﬁne a position where the encoder value automatically returns to if it is not turned. This behaves
+a bit like a pitch bend wheel. You can get crazy CV modulations if you use a dynamic CV for snapto, such as the output
+of an LFO. The encoder’s value will try to follow the LFO but you can still turn the encoder and work “against” the LFO.
+This mechanism also works if the encoder is not selected.
+
+snapforce (sf)
+
+0.5
+
+Speciﬁes the speed or “force” with that the encoder moves back to the snapto position if that is used. A force of 0.0
+deactivates snapto.
+
+sensivity (se)
+
+1.0
+
+The sensivity determines how far you need to turn the knob to get which amout of value change. Per default one turn
+of 360 degrees changes to the value from 0.0 to 1.0. A sensitivity of 2, doubles the speed of change, 0.5 slows it
+down to the half.
+If you use mode to enable inﬁnity, there is no total range. In this case one turn changes the value by sensivity.
+If you use discrete, one turn of the knob changes the virtual switch by eight positions, if sensitivity is at 1.0, and
+accordingly faster or slower if you change that.
+
+autozoom (a)
+
+0
+
+1
+
+0.0
+
+The “auto zoom” feature allows you to ﬁne adjust values when turning the knob slowly and coarse adjust when you
+turn it fast. If autozoom is at the maximum value of 1.0, turning the knob just slowly changes the value by super tiny
+amounts, while turning it fast operates way faster than usual. Use any value between 0.0 and 1.0 for autozoom to
+select the level of this slowing down for slow movements.
+autozoom has no effect if discrete is used.
+
+color (co)
+
+DROID manual for blue-6
+
++
+
+Color of the pointer in the LED ring. Here are some example color values:
+0.2
+
+cyan
+
+0.4
+
+green
+
+0.6
+
+yellow
+
+0.73
+
+orange
+
+0.8
+
+red
+
+1.0
+
+magenta
+
+1.1
+
+violet
+
+1.2
+
+blue
+
+187
+
+Table of contents at page 2
+
+Input
+
+Type
+
+negativecolor (nc)
+
+Default
+
+Description
+
++
+
+If you use this parameter, it deﬁnes the color of the LEDs in case the current logical value is negative.
+
+ledfill (lf)
+
+1 2 3
+
+1
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+preset (pr)
+
+1 2 3
+
++
+
+Selects whether the LED ring displays the current value with just a single colored dot (ledfill = 0) or by additionally
+illuminating all LEDs between 0 and the current value in half brightness (ledfill = 1).
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+This is the preset number to save or to load. Note: the ﬁrst preset has the number 0, not 1! For the whole story on
+presets please refer to page 21. This circuit has 8 presets, so this number ranges from 0 to 7.
+
+loadpreset (lp)
+
+A trigger here loads a preset. As a speciality you can use the trigger for selecting a preset at the same time.
+
+savepreset (sp)
+
+A trigger here saves a preset.
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+Output
+
+0
+
+Type
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+Description
+
+output1 ... output8 (o)
+
+Output the current value if the virtual encoder value (don’t use this if you are using sharewithnext).
+
+button1 ... button8 (b)
+
+This outputs provides you with the current states of the push buttons in the encoders, but only if the circuit is selected.
+While you could do this with an extra button (see page 141) circuits, using this output is more convenient in some
+situations.
+
+DROID manual for blue-6
+
+188
+
+Table of contents at page 2
+
+

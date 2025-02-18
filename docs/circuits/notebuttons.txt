@@ -1,0 +1,87 @@
+# DROID Circuit Input/Output Keys
+
+## notebuttons - Note Selection Buttons
+
+### Inputs
+- button1...button12 - Note buttons
+  - Type: gate
+  - Description: 12 buttons for note selection (C through B)
+
+- clock - Timing input
+  - Type: trigger
+  - Description: Optional clock for timing-quantized note changes
+
+- startnote - Default note
+  - Type: integer
+  - Range: 0-11
+  - Description: Initial note selection on startup/reset
+
+- select - Function selection
+  - Type: gate
+  - Description: Enables buttons when gate is high
+
+- selectat - Selection value
+  - Type: integer
+  - Description: Value at which select input activates buttons
+
+- preset - Preset selection
+  - Type: integer
+  - Range: 0-15
+  - Description: Selects active preset (16 presets available)
+
+- loadpreset - Load preset trigger
+  - Type: trigger
+  - Description: Loads selected preset
+
+- savepreset - Save preset trigger
+  - Type: trigger
+  - Description: Saves current state to selected preset
+
+- clear - Reset trigger
+  - Type: trigger
+  - Description: Resets to default state
+
+- clearall - Full reset trigger
+  - Type: trigger
+  - Description: Resets state and all presets
+
+- dontsave - Save control
+  - Type: binary
+  - Default: 0
+  - Description: Prevents state saving to SD card
+
+### Outputs
+- led1...led12 - LED outputs
+  - Type: gate
+  - Description: LED indicators for each note button
+
+- output - Note number
+  - Type: integer
+  - Range: 0-11
+  - Description: Selected note as number (0=C, 11=B)
+
+- semitone - Note voltage
+  - Type: 1V/Oct
+  - Description: Selected note as CV (divided by 120 for 1V/Oct standard)
+
+Note: Note selection interface with features:
+- 12 buttons for chromatic note selection
+- Clock-synchronized note changes
+- LED feedback for selected note
+- 16 preset memory slots
+- Both numeric and CV outputs
+
+Example applications:
+- Musical note selection
+- Scale degree selection
+- Pitch CV generation
+- MIDI note selection
+- Sequencer pitch control
+- Quantizer root selection
+
+Limitations:
+- Fixed 12 buttons (chromatic only)
+- No simultaneous note selection
+- No direct octave control
+- Requires external clock for timing
+- Maximum 16 presets

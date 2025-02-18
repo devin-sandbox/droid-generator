@@ -1,0 +1,122 @@
+# DROID Circuit Input/Output Keys
+
+## midiout - CV to MIDI converter
+
+### Inputs
+- pitch (p) - Note pitch
+  - Type: float
+  - Description: 1V/octave pitch input for monophonic operation
+
+- gate (g) - Note gate
+  - Type: gate
+  - Description: Gate input triggers note on/off for monophonic operation
+
+- pitch1...pitch8 - Polyphonic pitches
+  - Type: float
+  - Description: 1V/octave pitch inputs for up to 8 voices
+
+- gate1...gate8 - Polyphonic gates
+  - Type: gate
+  - Description: Gate inputs for up to 8 voices
+
+- velocity - Note velocity
+  - Type: float
+  - Range: 0-1
+  - Default: 1.0
+  - Description: Velocity value for monophonic notes
+
+- velocity1...velocity8 - Polyphonic velocities
+  - Type: float
+  - Range: 0-1
+  - Default: 1.0
+  - Description: Velocity values for polyphonic voices
+
+- note1...note8 - Note numbers
+  - Type: integer
+  - Range: 0-127
+  - Description: MIDI note numbers for note gate triggers (0=C-2)
+
+- notegate1...notegate8 - Note triggers
+  - Type: trigger
+  - Description: Triggers to play specific notes defined by note1...note8
+
+- usb - USB port selection
+  - Type: integer
+  - Description: Select USB port (0=disabled, 1/2=specific port, 10=all ports)
+
+- trs - TRS port selection
+  - Type: integer
+  - Description: Select TRS port (0=disabled, 1/2/3=specific port, 10=all ports)
+
+- clock - Clock input
+  - Type: trigger
+  - Description: 16th note clock input for MIDI clock generation
+
+- midiclock - MIDI clock input
+  - Type: trigger
+  - Description: Direct MIDI clock input (24 PPQ)
+
+- start - Start trigger
+  - Type: trigger
+  - Description: Triggers MIDI start message
+
+- stop - Stop trigger
+  - Type: trigger
+  - Description: Triggers MIDI stop message
+
+- running - Transport state
+  - Type: gate
+  - Description: High=running, low=stopped
+
+- ccnumber1...ccnumber4 - CC numbers
+  - Type: integer
+  - Range: 0-127
+  - Description: MIDI CC numbers to control
+
+- cc1...cc4 - CC values
+  - Type: float
+  - Range: 0-1
+  - Description: Values for selected MIDI CCs
+
+- volume - Channel volume
+  - Type: float
+  - Range: 0-1
+  - Description: MIDI channel volume (CC#7)
+
+- modwheel - Modulation wheel
+  - Type: float
+  - Range: 0-1
+  - Description: MIDI modulation wheel (CC#1)
+
+- pitchstabilization - Pitch stability
+  - Type: binary
+  - Default: 1
+  - Description: Enable/disable pitch stabilization algorithm
+
+- triggerdelay - Gate delay
+  - Type: float
+  - Default: 0
+  - Description: Fixed delay in ms between gate and note-on
+
+Note: CV to MIDI converter with extensive features:
+- Up to 8-voice polyphonic output
+- Note gate triggering
+- Comprehensive CC control
+- Clock generation
+- Transport control
+- Pitch stabilization
+
+Example applications:
+- CV keyboard to MIDI
+- Modular sequencer to MIDI
+- CV to MIDI conversion
+- Multi-voice MIDI control
+- Drum trigger generation
+- CC parameter control
+
+Limitations:
+- Requires X7 expander
+- TRS MIDI has lower bandwidth than USB
+- Fixed 24 PPQ MIDI clock
+- Maximum 8 voices per instance
+- Only 4 CC parameters monitored

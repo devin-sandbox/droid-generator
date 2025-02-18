@@ -1,0 +1,157 @@
+# DROID Circuit Input/Output Keys
+
+## midifileplayer - MIDI file player
+
+### Inputs
+- file (f) - File selection
+  - Type: integer
+  - Default: 1
+  - Description: Selects MIDI file to play (e.g., 7 selects midi7.mid)
+
+- track (tc) - Track selection
+  - Type: integer
+  - Default: 1
+  - Description: Track number to play, empty tracks ignored. Values < 1 treated as 1
+
+- clock (c) - External clock
+  - Type: trigger
+  - Description: External clock input for sync, each trigger = one 16th note
+
+- reset (r) - Reset playback
+  - Type: trigger
+  - Description: Resets playback position to start
+
+- loop (lo) - Loop mode
+  - Type: binary
+  - Default: 1
+  - Description: When 1, track loops at end. When 0, playback stops
+
+- end (e) - End position
+  - Type: float
+  - Description: Sets playback end point in quarters from start
+
+- speed (sp) - Playback speed
+  - Type: float
+  - Default: 1.0
+  - Description: Relative speed multiplier (ignored when using external clock)
+
+- channel (ch) - MIDI channel
+  - Type: integer
+  - Description: Only process events from specified MIDI channel (1-16)
+
+- tuningmode (tm) - Tuning mode
+  - Type: binary
+  - Default: off
+  - Description: When on, outputs fixed pitch/gates for tuning voices
+
+- tuningpitch (tp) - Tuning pitch
+  - Type: float
+  - Default: 2V
+  - Description: Pitch CV output during tuning mode
+
+- transpose (tr) - Transposition
+  - Type: float
+  - Default: 0V
+  - Description: Transpose all pitches by this value
+
+- holdvelocity (hv) - Hold velocity
+  - Type: binary
+  - Default: 0
+  - Description: When 1, velocity maintained after note-off
+
+- pitchbendrange (pbr) - Pitch bend range
+  - Type: float
+  - Default: 1/6V
+  - Description: Maximum pitch bend range in volts
+
+- bendpitch (bp) - Bend pitch
+  - Type: binary
+  - Default: 1
+  - Description: Apply pitch bend to output pitches
+
+- roundrobin (rr) - Round-robin allocation
+  - Type: binary
+  - Default: 0
+  - Description: Rotate through outputs for new notes
+
+- voiceallocation (va) - Voice allocation
+  - Type: integer
+  - Default: 0
+  - Description: How to handle voice shortage:
+    0=drop oldest
+    1=skip new
+    2=drop lowest
+    3=drop highest
+
+- notegap (ngp) - Note gap
+  - Type: float
+  - Default: 0.0
+  - Description: Forced gap between notes in milliseconds
+
+- ccnumber1...ccnumber4 (cn) - CC numbers
+  - Type: integer
+  - Default: 0
+  - Description: MIDI CC numbers to monitor (1-127)
+
+### Outputs
+- pitch1...pitch8 - Voice pitches
+  - Type: float
+  - Description: 1V/octave pitch outputs for up to 8 voices
+
+- gate1...gate8 - Voice gates
+  - Type: gate
+  - Description: Gate outputs for up to 8 voices
+
+- velocity1...velocity8 - Voice velocities
+  - Type: float
+  - Description: Velocity outputs for up to 8 voices
+
+- pitchbend - Pitch bend
+  - Type: float
+  - Description: Current pitch bend value
+
+- modwheel - Mod wheel
+  - Type: float
+  - Description: CC1 (mod wheel) value
+
+- volume - Volume
+  - Type: float
+  - Description: CC7 (volume) value
+
+- clockout - Clock output
+  - Type: trigger
+  - Description: Internal clock output
+
+- midiclock - MIDI clock
+  - Type: trigger
+  - Description: MIDI-resolution clock output
+
+- error - Error status
+  - Type: float
+  - Description: Error code for diagnostics
+
+- cc1...cc4 - CC values
+  - Type: float
+  - Description: Values of monitored MIDI CCs
+
+Note: Sophisticated MIDI file player with extensive features:
+- Up to 8-voice polyphonic playback
+- Multiple voice allocation strategies
+- External clock sync
+- Pitch bend and CC support
+- Preset management
+- Error reporting
+
+Limitations:
+- One track per circuit
+- 6000 byte maximum track length (~1500 notes)
+- MIDI channel info ignored
+- Limited CC monitoring (4 max)
+- Some meta events not supported
+
+Example applications:
+- MIDI file playback
+- Multi-voice sequencing
+- External clock sync
+- CC parameter control
+- Velocity-sensitive voices

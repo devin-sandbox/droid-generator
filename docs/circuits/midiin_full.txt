@@ -1,0 +1,278 @@
+Input
+
+Type
+
+roundrobin (rr)
+
+Default
+
+Description
+
+0
+
+Normally when looking for a free output for playing the next note, this circuit will start from output1 in its search. This
+way, if there are not more notes than outputs at any time, the notes played ﬁrst will always be played at the lowest
+numbered outputs. This leads to a deterministic behaviour when it comes to playing things like chords. The same
+voice will always be used for the ﬁrst note in the stream of MIDI events.
+When you switch roundrobin to 1, this changes. Now the outputs are scanned in a round-robin fashion, like in a
+rotating switch. That way every output has the same chance to get a new note. Here it can even make sense to deﬁne
+multiple voices even if the track is monophonic. When you use envelopes with longer release times, you can transform
+such a melody into chords with simultaneous notes.
+Note: When all outputs are currently used by a note, roundrobin has no inﬂuence. Here voiceallocation selects
+which of the notes will be dropped.
+
+voiceallocation (va)
+
+1 2 3
+
+notegap (ngp)
+
+0
+
+0.0
+
+When the MIDI stream, at any given time, needs to play more notes than you have voices assigned, normally the
+“oldest” notes would be cancelled. This behaviour can be conﬁgured here by setting voiceallocation to one of the
+following values:
+0
+
+The oldest note will be cancelled (default)
+
+1
+
+The new note will not be played and simply be omitted
+
+2
+
+The lowest note will be cancelled
+
+3
+
+The highest note will be cancelled
+
+When your MIDI devices plays a note so “long” that it lasts exactly until the next note begins – or if due to a lack of
+used pitch outputs one currently played note has to be replaced with a new one, the gate output will have no time to
+go low for a sufﬁcient time between the two notes. In effect it won’t trigger any envelope for the new note but will
+play “legato”.
+If you don’t like this, you can use notegap. This input speciﬁes a number of milliseconds that the gate will be forced
+down before the new note begins. This has the drawback of introducing some latency, of course! So I suggest that you
+start with notegap = 1 and then check out if your envelope is fast enough to trigger. If not, increase the value.
+If you are using
+’s own contour circuit or trigger something else internally in your patch, you can use notegap
+= 0.1. That is sufﬁcient and introduces barely any latency. A value of 0.0 keeps the default of the legato mode.
+Note: the notegap parameter does not affect the trigger outputs.
+
+ccnumber1 ... ccnumber4
+(cn)
+
+DROID manual for blue-6
+
+1 2 3
+
+0
+
+You can listen to up to four CCs (control changes). For example if you are interested in the current value of CC#17, set
+ccnumber1 = 17 and use the output cc1 for getting the value of CC 17.
+256
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+lowestnote (ln)
+
+1 2 3
+
+0
+
+With this input you can restrict the notes being played by setting a lower bound. In MIDI the notes range from 0 (C-2)
+to 127 (G9). By setting lowestnote to 24 (C0), all notes below this note are simply ignored. This allows for example for
+a keyboard split by using a second circuit with a highestnote of 23. Note gates are not being affected by this bound.
+
+highestnote (hn)
+
+1 2 3
+
+127
+
+Sets an upper limit to the note being played, similar to lowestnote. The “Notegates” are not being affected by this
+bound.
+
+note1 ... note16 (n)
+
+1 2 3
+
++
+
+Output
+
+Type
+
+Selects up to 16 individual notes for which you can get a dedicated gate signal. Per default these values are set to
+0 for note1 (meaning C-2), 1 for note2 (meaning C♯-2) and so on. For each of these notes you get a corresponding
+gate output (see notegate1, notegate2, etc.). These gates are high as long as the selected notes are being hold.
+One application is to use just one midifileplayer or midiin circuit for sequencing up to 16 drum voices. Another
+application is to use a MIDI keyboard or controller as a button expander – just like a P2B8 or B32.
+
+Description
+
+clockout (co)
+
+Outputs a steady clock of 1 tick per 16th note.
+
+midiclock (mc)
+
+Outputs a steady MIDI clock, i.e. 24 ticks per quarter note of the tune. This is 6 times faster than clock.
+
+endoftrack (et)
+
+Outputs a trigger when the end of the track is reached.
+
+error (er)
+
+This output will be set to a value other than zero in case of an error while loading and parsing the MIDI ﬁle. This is
+intended for wiring it to one of the R registers. Here different errors will be displayed as different colors. Here is the
+list of all possible values of error:
+
+1V
+Oct
+
+pitch1 ... pitch8 (p)
+
+velocity1 ... velocity8
+(v)
+
+DROID manual for blue-6
+
+0
+
+1
+
+0
+
+black – Everything is ﬁne.
+
+-1
+
+white – The SD card or MIDI ﬁle is missing.
+
+1
+
+magenta – The ﬁle is corrupted, garbled or no MIDI ﬁle.
+
+0.75
+
+orange – The ﬁle does not contain any non-empty track.
+
+0.25
+
+cyan – the track is too long (max 6000 bytes are allowed).
+
+Pitch outputs. Since MIDI tracks can be polyphonic – i.e. play several notes at the same time – you can assign up to
+eight outputs here. The notes will be distributed to the deﬁned outputs according to the settings roundrobin and
+voiceallocation.
+For each voice there is an optional velocity output, which translates the MIDI velocity into values from 0 to 1.
+
+257
+
+Table of contents at page 2
+
+Output
+pressure1 ... pressure8
+(pr)
+
+Type
+0
+
+1
+
+Description
+MIDI provides two different messages for sending ”after-touch” information, i.e. information about how strong a
+key is pressed down after the initial hit. Some keyboards just have one pressure sensor in total and send the current
+maximum pressure information of all keys in one message (“channel pressure”). Others have one pressure sensor per
+key and send “polyphonic key pressure” messages. This circuit maps both to a pressure output per note that is being
+played. So if your keyboard (or sequencer or DAW or whatever) sends polyphonic key pressure events and you use
+multiple pitchX outputs, wire the individual pressureX outputs to wherever you like. Otherwise you can simply use
+pressure1 for all notes (which can be abbreviated with pressure), since it is the same for all note outputs anyway.
+pressure outputs a value from 0 to 1.
+
+gate1 ... gate8 (g)
+
+Gate outputs for the up to eight simultaneous note outputs.
+
+trigger1 ... trigger8 (t)
+
+Trigger outputs for the up to eight simultaneous note outputs. The difference to the gate outputs is, that these just
+send a short trigger of 5 ms at the start of the note. This can be interesting in situations where the notes have no gaps
+in between so that gate will never go low.
+
+cc1 ... cc4 ()
+
+0
+
+1
+
+Outputs the current value of the four CC number that are deﬁned with the inputs ccnumber1 ... ccnumber4. CCs have
+a range from 0 to 127, but this is converted in the range 0.0 .. 1.0 here, in order to make it easier to use that as a CV.
+If you need the raw number, multiply the output with 127. Note: as long as no CC message with the selected number
+happened, this output will be set to 0.
+
+cctrigger1 ... cctrigger4
+(ct)
+
+These outputs send a trigger whenever a CC event matching the corresponding ccnumber is processed. Some devices
+uses triggers in such a way – as events rather then indicating the change of a continous value. So if you set ccnumber2
+= 17, the output cctrigger2 sends a trigger whenever CC#17 is received.
+
+notegate1 ... notegate16
+(ng)
+
+Outputs a high gate whenever the corresponding note (which is selected by note1 through note16) is currently being
+played.
+
+pitchbend (pb)
+
+Outputs the current pitch bend value as a bipolar voltage. The range can be set with pitchbendrange.
+
+programchange (pc)
+
+Sends a trigger whenever a MIDI program change message arrives. Just before sending the trigger sets program to the
+new program number (something from 0 to 127). Note: This trigger is also being output when the program change
+messages sends the same program number as previously, i.e. if there is no actual change.
+
+program (pm)
+
+1 2 3
+
+The number of the last program change. This starts at 0.
+
+bank (ba)
+
+1 2 3
+
+Outputs the number of the currently selected bank – from 0 to 16384. MIDI deﬁnes the MSB of the bank to be changed
+with CC#0 and the LSB with CC#32. That means if you just use CC#0, you will only be able to select the banks 0, 128,
+256, and so on. As long as no bank select CC has been received, bank will output 0.
+
+modwheel (w)
+
+0
+
+DROID manual for blue-6
+
+1
+
+Output the current state of the mod wheel level – within the range from 0.0 to 1.0. The mod wheel is changed by MIDI
+control change 1.
+
+258
+
+Table of contents at page 2
+
+

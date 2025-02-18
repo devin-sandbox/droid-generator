@@ -1,0 +1,65 @@
+# DROID Circuit Input/Output Keys
+
+## gatetool - Operate on triggers and gates, modify gatelength
+
+### Inputs
+- inputgate (ig) - Gate input
+  - Type: gate
+  - Description: Input gate signal where the length/duration of high state is relevant
+
+- inputtrigger (it) - Trigger input
+  - Type: trigger
+  - Description: Input trigger signal where only the start of the trigger is relevant
+
+- inputedge (ie) - Edge input
+  - Type: edge
+  - Description: Input for detecting low/high or high/low transitions
+
+- gatelength (gl) - Gate duration
+  - Type: float
+  - Description: Sets output gate length in seconds, or in clock tick fractions if taptempo is used
+
+- gatestretch (s) - Length multiplier
+  - Type: float
+  - Default: 0.0
+  - Description: Extends input gate length by percentage. Ignored if gatelength is used.
+
+- mingatelength (m) - Minimum duration
+  - Type: float
+  - Default: 0.01
+  - Description: Minimum output gate length in seconds or clock ticks
+
+- maxgatelength (x) - Maximum duration
+  - Type: float
+  - Description: Maximum output gate length in seconds or clock ticks
+
+- taptempo (tt) - Clock reference
+  - Type: trigger
+  - Description: Reference clock for timing. Makes gatelength/min/max relative to clock ticks.
+
+### Outputs
+- outputgate (og) - Gate output
+  - Type: gate
+  - Description: Gate output with controllable length for each input event
+
+- outputtrigger (ot) - Trigger output
+  - Type: trigger
+  - Description: 10ms trigger output for each input event
+
+- outputedge (oe) - Edge output
+  - Type: binary
+  - Description: Toggles between 0/1 for each input event
+
+Note: Utility circuit for processing and converting between different types of timing signals. Key features:
+- Three input types: gate, trigger, edge
+- Corresponding outputs for each type
+- Configurable gate length modification
+- Clock-synchronized timing option
+- Gate length bounds control
+
+Example applications:
+- Converting between gate/trigger/edge signals
+- Clock division (using edge output)
+- Gate length modification
+- Filter pinging with zero-length impulses
+- Clock-synchronized gate generation

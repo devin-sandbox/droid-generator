@@ -1,0 +1,25 @@
+# DROID Circuit Input/Output Keys
+
+## dac - DA Converter with 12 bits
+
+### Inputs
+- bit1 ... bit12 (b) - Binary input bits
+  - Type: binary
+  - Description: The 12 bit input bits. bit1 is the MSB (most significant bit). The LSB (least significant bit) is the highest input that you actually patch.
+
+- minimum (m) - Lower bound
+  - Type: float
+  - Default: 0.0
+  - Description: This sets the lower bound of the output range, i.e. the value that the bit sequence 000000000000 will produce.
+
+- maximum (x) - Upper bound
+  - Type: float
+  - Default: 1.0
+  - Description: This sets the upper bound of the output value, i.e. the value that the bit sequence 111111111111 will produce.
+
+### Outputs
+- output (o) - Analog output
+  - Type: float
+  - Description: Output signal. Converts binary input bits to an analog value between minimum and maximum.
+
+Note: 12-bit digital-to-analog converter. Maps binary inputs to analog output in configurable range. More bits = higher resolution (e.g., 8 bits = 256 values). bit1 is MSB with most influence, higher bits have less influence.

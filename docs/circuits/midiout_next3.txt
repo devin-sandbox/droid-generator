@@ -1,0 +1,293 @@
+Output
+
+Type
+
+Description
+
+clock4 (c4)
+
+A clock at the speed of quarter notes.
+
+midiclock (mc)
+
+Here you get the original MIDI clock. This is 6 times faster than clock and 24 times faster than clock4. This is because
+the MIDI clock is speciﬁed to run at 24 PPQ, i.e. 24 pulses per quarter note.
+
+start (st)
+
+This jack sends a trigger when a MIDI START message arrives.
+
+continue (co)
+
+This jack sends a trigger when a MIDI CONTINUE message arrives.
+
+stop (sp)
+
+This jack sends a trigger when a MIDI STOP message arrives.
+
+running (ru)
+
+This jack remembers the current running state according to previous START and STOP messages.
+
+active (a)
+
+If the sending device supports active sensing, this output is high as long as a device is connected. Otherwise its high
+if at least one MIDI message has been received.
+1V
+Oct
+
+pitch1 ... pitch8 (p)
+
+velocity1 ... velocity8
+(v)
+pressure1 ... pressure8
+(pr)
+
+0
+
+1
+
+0
+
+1
+
+Pitch outputs. Since MIDI tracks can be polyphonic – i.e. play several notes at the same time – you can assign up to
+eight outputs here. The notes will be distributed to the deﬁned outputs according to the settings roundrobin and
+voiceallocation.
+For each voice there is an optional velocity output, which translates the MIDI velocity into values from 0 to 1.
+MIDI provides two different messages for sending ”after-touch” information, i.e. information about how strong a
+key is pressed down after the initial hit. Some keyboards just have one pressure sensor in total and send the current
+maximum pressure information of all keys in one message (“channel pressure”). Others have one pressure sensor per
+key and send “polyphonic key pressure” messages. This circuit maps both to a pressure output per note that is being
+played. So if your keyboard (or sequencer or DAW or whatever) sends polyphonic key pressure events and you use
+multiple pitchX outputs, wire the individual pressureX outputs to wherever you like. Otherwise you can simply use
+pressure1 for all notes (which can be abbreviated with pressure), since it is the same for all note outputs anyway.
+pressure outputs a value from 0 to 1.
+
+gate1 ... gate8 (g)
+
+Gate outputs for the up to eight simultaneous note outputs.
+
+trigger1 ... trigger8 (t)
+
+Trigger outputs for the up to eight simultaneous note outputs. The difference to the gate outputs is, that these just
+send a short trigger of 5 ms at the start of the note. This can be interesting in situations where the notes have no gaps
+in between so that gate will never go low.
+
+cc1 ... cc4 ()
+
+DROID manual for blue-6
+
+0
+
+1
+
+Outputs the current value of the four CC number that are deﬁned with the inputs ccnumber1 ... ccnumber4. CCs have
+a range from 0 to 127, but this is converted in the range 0.0 .. 1.0 here, in order to make it easier to use that as a CV.
+If you need the raw number, multiply the output with 127. Note: as long as no CC message with the selected number
+happened, this output will be set to 0.
+
+266
+
+Table of contents at page 2
+
+Output
+
+Type
+
+Description
+
+cctrigger1 ... cctrigger4
+(ct)
+
+These outputs send a trigger whenever a CC event matching the corresponding ccnumber is processed. Some devices
+uses triggers in such a way – as events rather then indicating the change of a continous value. So if you set ccnumber2
+= 17, the output cctrigger2 sends a trigger whenever CC#17 is received.
+
+notegate1 ... notegate16
+(ng)
+
+Outputs a high gate whenever the corresponding note (which is selected by note1 through note16) is currently being
+played.
+
+pitchbend (pb)
+
+Outputs the current pitch bend value as a bipolar voltage. The range can be set with pitchbendrange.
+
+programchange (pc)
+
+Sends a trigger whenever a MIDI program change message arrives. Just before sending the trigger sets program to the
+new program number (something from 0 to 127). Note: This trigger is also being output when the program change
+messages sends the same program number as previously, i.e. if there is no actual change.
+
+program (pm)
+
+1 2 3
+
+The number of the last program change. This starts at 0.
+
+bank (ba)
+
+1 2 3
+
+Outputs the number of the currently selected bank – from 0 to 16384. MIDI deﬁnes the MSB of the bank to be changed
+with CC#0 and the LSB with CC#32. That means if you just use CC#0, you will only be able to select the banks 0, 128,
+256, and so on. As long as no bank select CC has been received, bank will output 0.
+
+modwheel (w)
+
+0
+
+1
+
+volume (vo)
+
+0
+
+1
+
+Output the current state of the mod wheel level – within the range from 0.0 to 1.0. The mod wheel is changed by MIDI
+control change 1.
+Outputs the current global volume as set by MIDI control change 7.
+
+portamento (po)
+
+This output gives you access to the current state of the “portamento pedal” (MIDI CC 65). You can use it to enable an
+external slew circuit for creating portamento effects.
+
+soft (so)
+
+This output gives you access to the current state of the “soft pedal” (MIDI CC 67). It is 1 while the pedal is hold and 0
+otherwise.
+
+DROID manual for blue-6
+
+267
+
+Table of contents at page 2
+
+16.40
+
+midiout – CV to MIDI converter
+
+This circuit allows you to “play” notes via
+MIDI on an external hardware or software
+synth. You also can send all sorts of other
+MIDI events. You need the X7 expander for
+that to work (see page 77).
+The MIDI implementation of midiout is very comprehensive. Please look at the table of input jacks for all features. Here I just want to show some basic examples to
+get you started quickly. Fun fact: This is the only circuit that does not have any outputs, because all output
+is done via MIDI!
+
+Basic operation
+Easy things should be easy and complex things should be
+possible. So we start with the easy things. Here is a patch
+that converts a CV / gate input from I1 / I2 into a stream
+of MIDI notes and sends them out via the 3.5 mm TRS jack
+on MIDI channel 1:
+[midiout]
+pitch = I1
+gate = I2
+
+Every time the gate input at I2 goes from off to on, the
+current pitch (1V/Oct) is read from I1. Then one MIDI
+“note on” event is being created. The “velocity” of that
+note is set to the default value of 1.0, which is the maximum (every MIDI note event has a velocity, which is
+meant to reﬂect the speed at which the key of the keyboard has been pressed).
+
+is just read just at the note starts, we don’t need a sample
+and hold here:
+usb = 1
+
+Uses USB only
+
+[random]
+minimum = 0.5 # minimum allowed velocity
+maximum = 1.0 # maximum allowed velocity
+output = _VELOCITY
+
+usb = 0
+
+Uses TRS only (default)
+
+[midiout]
+pitch = I1
+gate = I2
+velocity = _VELOCITY
+
+Note: the range of the velocity goes from 0.0 to 1.0 – just
+as all other parameters in midiout do. Internally MIDI
+uses the integer numbers 0 to 127.
+
+Output selection
+You can send your MIDI stream either via the 3.5 mm TRS
+jack of the X7 (TRS stands for “tip ring sleeve” – the structure of the stereo 3.5 mm plug) or via the USB-C port. This
+is controlled by the parameters usb and trs.
+Per default the stream is sent via TRS. As soon as you use
+either usb or trs you set this explicitely. Here is a complete table of all possible usages of these inputs (empty
+cells mean that the parameter is not used):
+
+trs = 1
+
+Uses TRS only (default)
+
+trs = 0
+
+Uses USB only
+
+usb = 0
+
+trs = 1
+
+Uses TRS only (default)
+
+usb = 1
+
+trs = 0
+
+Uses USB only
+
+usb = 1
+
+trs = 1
+
+Uses both TRS and USB
+
+usb = 0
+
+trs = 0
+
+Mute! does not send MIDI.
+
+Note: MIDI via USB has a much higher data rate then via
+TRS. If you use both USB and TRS at the same time, USB
+will run at the same (lower) data rate as TRS. This might
+lead to fewer updates for CCs and similar. The reason is
+that the midiout circuit does not make a separate book
+keeping for USB and TRS but creates just one common
+MIDI data stream. If that’s an issue for you, duplicate
+your midiout circuit and create one instance for TRS and
+one for USB. Then they create two separate MIDI streams
+that are optimized for the speciﬁc maximum data rates
+of their output ports.
+If you have a MASTER18 – especially if combined with the
+X7 – you can have more than one port of a type. When selecting the target ports you can use numbers greater than
+1 in this case.
+The upper table still applies in the following way: If you
+don’t specify the port explicitely, the ﬁrst port is used.
+For example if you specify usb = 0 and not trs, the port
+MIDI1 on the MASTER18 is used.
+
+You can specify any velocity you like with the jack
+velocity. Let’s randomize that. Since the velocity jack
+
+DROID manual for blue-6
+
+Uses TRS only (default)
+
+Here is how the MIDI ports are numbered in the various
+268
+
+Table of contents at page 2
+
+

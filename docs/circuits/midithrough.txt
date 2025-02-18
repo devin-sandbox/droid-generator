@@ -1,0 +1,68 @@
+# DROID Circuit Input/Output Keys
+
+## midithrough - MIDI Event Forwarding
+
+### Inputs
+- fromtrs (ft) - TRS input port
+  - Type: integer
+  - Description: Select TRS port for input
+  - Values:
+    - 0: Disabled
+    - 1-3: Specific port (depends on hardware)
+    - 10: Auto-detect first active port
+
+- fromusb (fu) - USB input port
+  - Type: integer
+  - Description: Select USB port for input
+  - Values:
+    - 0: Disabled
+    - 1-2: Specific port (depends on hardware)
+    - 10: Auto-detect first active port
+
+- totrs (tt) - TRS output port
+  - Type: integer
+  - Description: Select TRS port for output
+  - Values:
+    - 0: Disabled
+    - 1-3: Specific port (depends on hardware)
+    - 10: Broadcast to all TRS ports
+
+- tousb (tu) - USB output port
+  - Type: integer
+  - Description: Select USB port for output
+  - Values:
+    - 0: Disabled
+    - 1-2: Specific port (depends on hardware)
+    - 10: Broadcast to all USB ports
+
+Note: MIDI event forwarding utility with features:
+- Flexible port routing
+- Auto-detection of input ports
+- Broadcasting to multiple outputs
+- Merging with other MIDI circuits
+
+Port configurations:
+MASTER + X7:
+- USB: Port 1 = X7
+- TRS: Port 1 = X7
+
+MASTER18:
+- USB: Port 1 = MASTER18
+- TRS: Port 1 = MIDI1, Port 2 = MIDI2
+
+MASTER18 + X7:
+- USB: Port 1 = MASTER18, Port 2 = X7
+- TRS: Port 1 = MIDI1, Port 2 = MIDI2, Port 3 = X7
+
+Example applications:
+- MIDI port routing
+- Auto-port detection
+- Multi-port broadcasting
+- MIDI stream merging
+- Port expansion
+
+Limitations:
+- Requires X7 expander
+- No Sysex message forwarding
+- TRS limited to 3125 bytes/second
+- Port numbers depend on hardware

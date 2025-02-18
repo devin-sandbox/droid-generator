@@ -1,0 +1,208 @@
+Input
+
+Default
+
+Description
+
+selectfill1 (sf1)
+
+off
+
+Selects the alternative 9th (i.e. the 9th that is not in the scale.
+
+selectfill2 (sf2)
+
+off
+
+Selects the alternative 3rd (i.e. the 3rd that is not in the scale).
+
+selectfill3 (sf3)
+
+off
+
+Selects the alternative 4th or 5th . In most cases this is the diminished 5th .
+
+selectfill4 (sf4)
+
+off
+
+Selects the alternative 13th (i.e. the 13th that is not in the scale).
+
+selectfill5 (sf5)
+
+off
+
+Selects the alternative 7th (i.e. the 7th that is not in the scale).
+
+DROID manual for blue-6
+
+Type
+
+282
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+harmonicshift (has)
+
+1 2 3
+
+0
+
+This input can reduce harmonic complexity by disabling some of the scale or non-scale notes. It is an idea ﬁrst found
+in the Sinfonion and also provided by the circuit sinfonionlink (see page 353).
+harmonicshift is staged after the select... inputs and further ﬁlters out (disables) notes based on their relation to
+the current scale. This means that ﬁrst the 12 select... inputs select a subset of the 12 possible notes. After that
+harmonicshift can reduce this set further (it will never add notes).
+
+If harmonicshift is not zero, depending on its value some or more of the scale notes are disabled, even if they would
+be allowed by select.... Or in other words: the harmonic material is reduced.
+You also can use negative values. These create rather strange sounds by removing the simple chord functions instead
+of the complex ones ﬁrst.
+Here are the possible values:
+
+DROID manual for blue-6
+
+0
+
+off – all selected notes are allowed
+
+1
+
+disable all ﬁll notes (non-scale notes)
+
+2
+
+disable ﬁlls and 11th
+
+3
+
+disable ﬁlls, 11th and 13th
+
+4
+
+disable ﬁlls, 11th , 13th and 9th
+
+5
+
+disable ﬁlls, 11th , 13th , 9th and 7th
+
+6
+
+disable ﬁlls, 11th , 13th , 9th , 7th and 3rd
+
+7
+
+disable ﬁlls, 11th , 13th , 9th , 7th , 3rd and 5th
+
+-1
+
+disable the root note
+
+-2
+
+disable the root note and the 5th
+
+-3
+
+disable root, 3rd , 5th
+
+-4
+
+disable root, 3rd , 5th , 7th
+
+-5
+
+disable root, 3rd , 5th , 7th , 9th
+
+-6
+
+disable root, 3rd , 5th , 7th , 9th and 13th
+
+-7
+
+disable all scale notes (ﬁll notes untouched)
+
+283
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+noteshift (nos)
+
+1 2 3
+
+0
+
+Shifts the resulting output note(s) by this number of scale notes up or down (if negative). So the output note still is
+part of the scale but may be a note that is none of the selected ones. The maximum shift range is limited to -24 … +24.
+
+selectnoteshift (sns)
+
+1 2 3
+
+0
+
+Shifts the output note by this number of selected scale notes up or down (if negative). If you use noteshift at the
+same time, first selectnoteshift is applied, then noteshift. The maximum shift range is limited to -24 … +24.
+
+off
+
+While this is 1, the circuit will output the value set by tuningpitch instead of the actual pitch. This is ment to be a
+help for tuning your VCOs.
+
+tuningmode (tm)
+
+tuningpitch (tp)
+
+1V
+Oct
+
+0V
+
+This pitch CV will be output while the tuning mode is active.
+
+transpose (tr)
+
+1V
+Oct
+
+0V
+
+This value is being added to the output pitch when not in tuning mode. It can be used for musical transposition or
+adding a vibrato.
+
+Output
+output (o)
+notechange (n)
+
+DROID manual for blue-6
+
+Type
+1V
+Oct
+
+Description
+Here comes your quantized output voltage
+Whenever the quantization changes to a new note a trigger with the duration 10 ms is output here. No trigger is output
+in bypass mode.
+
+284
+
+Table of contents at page 2
+
+

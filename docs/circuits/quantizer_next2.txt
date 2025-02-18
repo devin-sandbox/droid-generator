@@ -1,0 +1,201 @@
+Input
+
+Type
+
+Default
+
++
+
+ledgauge (g)
+
+Description
+The “LED gauge” uses the 16 LEDs of the MASTER in order to indicate the current value of the pot (not available on the
+MASTER18). This is especially useful for “virtual” pots – i.e. those pots that you get when you use select in order to
+layer several different functions onto one pot. In that situation the position of the physical pot can be different than
+that of the virtual one, so the gauge shows you the effective virtual value.
+Furthermore, by illuminating the inner four LEDs, the gauge shows when the pot hits exactly 0.5. This can only happen
+if you use the notch parameter. Otherwise its practically impossible to hit exactly.
+If you have a MASTER18, the gauge is displayed in the upper 16 LEDs of your ﬁrst B32, if you have one.
+The LED gauge is automatically activated if you use select. If you don’t like the LED gauge, you can turn it off with
+ledgauge = off. Otherwise ledgauge set’s the color of the indicator in the same way as the R-registers do and at the
+same time enables the gauge even if you don’t use select.
+Here are some color examples that you can use for the value of ledgauge:
+0.2
+
+cyan
+
+0.4
+
+green
+
+0.6
+
+yellow
+
+0.73
+
+orange
+
+0.8
+
+red
+
+1.0
+
+magenta
+
+1.1
+
+violet
+
+1.2
+
+blue
+
+The colors repeat over in a kind of wheel at 1.2, so e.g. 1.4 creates the same color as 0.2.
+startvalue (sv)
+
+0
+
+1
+
+0.5
+
+This parameter deﬁnes the value your pot will get when there is a trigger to clear. This is the value before outputscale
+is applied.
+If you use discrete, the parameter does not expect a fraction but a discrete number in the range of the discrete values
+(0, 1, 2, etc.
+
+DROID manual for blue-6
+
+334
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+preset (pr)
+
+1 2 3
+
++
+
+Description
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+This is the preset number to save or to load. Note: the ﬁrst preset has the number 0, not 1! For the whole story on
+presets please refer to page 21. This circuit has 16 presets, so this number ranges from 0 to 15.
+
+loadpreset (lp)
+
+A trigger here loads a preset. As a speciality you can use the trigger for selecting a preset at the same time.
+
+savepreset (sp)
+
+A trigger here saves a preset.
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+0
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+Output
+
+Type
+
+Description
+
+output (o)
+
+0
+
+Your pot output comes here.
+
+1
+
+bipolar (b)
+
+Optional output with a range from -1.0 to 1.0, where the center notch is at 0.0 (or from -outputscale to +outputscale
+if that is used).
+
+absbipolar (ab)
+
+A variation of bipolar that always outputs a positive value, i.e. the pot will go 1 ... 0.5 ... 0 ... 0.5 ... 1 (if outputscale
+is not used).
+
+lefthalf (l)
+
+This output allows you to split the pot into two hemispheres. Here you get outputscale ... 0.0 while the pot is in the
+left half. In the middle and right of it you always get 0.
+
+righthalf (r)
+
+This is the same but for the right half. It outputs 0 while the pot is in the left half and 0.0 ... outputscale from the
+middle to the fully right position.
+
+lefthalfinv (li)
+
+This outputs 1.0 - lefthalf, i.e. the value range 0.0 ... 1.0 ... 1.0 when the pot moves left → mid → right (and the
+scaled by outputscale).
+
+DROID manual for blue-6
+
+335
+
+Table of contents at page 2
+
+Output
+
+Type
+
+Description
+
+righthalfinv (ri)
+
+This outputs 1.0 - righthalf, i.e. the value range 1.0 ... 1.0 ... 0.0 when the pot moves left → mid → right (and the
+scaled by outputscale).
+
+onchange (c)
+
+This output emits a trigger whenever the pot is turned in either direction.
+
+DROID manual for blue-6
+
+336
+
+Table of contents at page 2
+
+
