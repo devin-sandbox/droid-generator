@@ -3,18 +3,38 @@ import type { BaseCircuitConfig } from './types/base';
 import type { LFOConfig } from './types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { EncoderConfig } from './types/circuits/io/encoder';
+import type { ButtonConfig } from './types/circuits/io/button';
 
 type Circuit = 
   | (LFOConfig & { section: 'lfo' })
   | (MotorFaderConfig & { section: 'motorfader' })
-  | (EncoderConfig & { section: 'encoder' });
+  | (EncoderConfig & { section: 'encoder' })
+  | (ButtonConfig & { section: 'button' });
 
 export class Patch {
   private circuits: Circuit[] = [];
   private ini: IniMap;
 
+  addComment(text: string): void {
+    this.ini.comments.setAtLine(this.ini.size + 1, text);
+  }
+
+  addSectionHeader(title: string): void {
+    this.addComment("-------------------------------------------------");
+    this.addComment(title);
+    this.addComment("-------------------------------------------------");
+    this.addComment("");
+  }
+
   constructor() {
-    this.ini = new IniMap();
+    this.ini = new IniMap({
+      pretty: true,
+      assignment: " = ",
+      lineBreak: "\n",
+      commentChar: "#"
+    });
+    this.ini.comments.setAtLine(1, "# LABELS: master=18");
+    
     // Add base configuration
     this.ini.setSection('p2b8');
     this.ini.setSection('e4');
@@ -31,7 +51,7 @@ export class Patch {
     
     for (const [key, value] of entries) {
       if (value !== undefined) {
-        this.ini.set(section.id ?? section.sec, key, value);
+        this.ini.set(section.id ?? section.sec, `    ${key}`, value);
       }
     }
   }
@@ -39,15 +59,18 @@ export class Patch {
   toString(): string {
     // Reset INI
     this.ini.clear();
+    this.ini.comments.setAtLine(1, "# LABELS: master=18");
     
     // Add base configuration
     this.ini.setSection('p2b8');
     this.ini.setSection('e4');
     this.ini.setSection('m4');
+    this.ini.comments.setAtLine(this.ini.size + 1, "");
     
     // Serialize all circuits
     for (const circuit of this.circuits) {
       this.serializeCircuit(circuit);
+      this.ini.comments.setAtLine(this.ini.size + 1, "");
     }
     
     return this.ini.toString();

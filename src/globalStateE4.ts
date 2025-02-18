@@ -17,56 +17,50 @@ function generatePatch(numLfos: number): string {
   const patch = new Patch();
   numLfos = validateNumLfos(numLfos);
 
-  // Configure encoder for LFO selection
+  patch.addComment("");
+  patch.addComment("# -------------------------------------------------");
+  patch.addComment("# test2");
+  patch.addComment("# -------------------------------------------------");
+  patch.addComment("");
+
+  // Add LFO
   patch.addCircuit({
-    section: 'encoder',
-    encoder: 'E2.1',
-    discrete: `${numLfos}`,
-    output: LFO_SELECT,
-    button: '1',  // Enable button functionality
-    mode: '1',    // Normal mode
-    color: '0.6',  // Red for LFO selection
-    negativecolor: '0.2',  // Cyan when not selected
-    ledfill: '1'  // Bar mode for LED display
+    section: 'lfo',
+    sawtooth: 'O1',
+    level: 'P3.2',
+    hz: 'P3.1 * 100'
   });
+  patch.addComment("");
 
-  // Configure LFOs and their faders
-  Array.from({ length: numLfos }, (_, i) => {
-    // Add LFO
-    patch.addCircuit({
-      section: 'lfo',
-      output: `O${i + 1}`,
-      waveform: `_WAVEFORM_${i + 1}`,
-      level: `_LEVEL_${i + 1}`,
-      hz: `_HZ_${i + 1} * 100`
-    });
-
-    // Add faders
-    patch.addCircuit({
-      section: 'motorfader',
-      fader: '1',
-      select: LFO_SELECT,
-      selectat: `${i}`,
-      output: `_LEVEL_${i + 1}`
-    });
-
-    patch.addCircuit({
-      section: 'motorfader',
-      fader: '2',
-      select: LFO_SELECT,
-      selectat: `${i}`,
-      output: `_HZ_${i + 1}`
-    });
-
-    patch.addCircuit({
-      section: 'motorfader',
-      fader: '3',
-      select: LFO_SELECT,
-      selectat: `${i}`,
-      output: `_WAVEFORM_${i + 1}`,
-      notches: '7'
-    });
+  // Add buttons
+  patch.addCircuit({
+    section: 'button',
+    shortpress: '_SAVE',
+    button: 'B1.2'
   });
+  patch.addComment("");
+
+  patch.addCircuit({
+    section: 'button',
+    shortpress: '_LOAD',
+    button: 'B1.1'
+  });
+  patch.addComment("");
+
+  // Add motorfader
+  patch.addCircuit({
+    section: 'motorfader',
+    savepreset: '_SAVE',
+    fader: '1',
+    loadpreset: '_LOAD'
+  });
+  patch.addComment("");
+
+  patch.addComment("");
+  patch.addComment("# -------------------------------------------------");
+  patch.addComment("# test3");
+  patch.addComment("# -------------------------------------------------");
+  patch.addComment("");
 
   return patch.toString();
 }
