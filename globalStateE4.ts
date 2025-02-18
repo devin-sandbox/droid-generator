@@ -1,12 +1,5 @@
-import { IniMap } from "./ini";
-
-interface LfoConfig {
-  index: number;
-  output: string;
-  level: string;
-  hz: string;
-  waveform: string;  // For selecting between waveforms (0-6)
-}
+import { Patch } from './patch';
+import type { LfoCircuit, MotorfaderCircuit, EncoderCircuit, MixerCircuit } from './types';
 
 const MAX_ALLOWED_LFOS = 7;  // Using O1-O7 for LFOs
 const LFO_SELECT = "_LFO_SELECT";
@@ -22,9 +15,9 @@ function validateNumLfos(num: number): number {
   return num;
 }
 
-function createLfoState(index: number): LfoConfig {
+function createLfoState(index: number): LfoCircuit {
   return {
-    index,
+    section: 'lfo',
     output: `O${index + 1}`,
     level: `_LEVEL_${index + 1}`,
     hz: `_HZ_${index + 1}`,
@@ -32,101 +25,80 @@ function createLfoState(index: number): LfoConfig {
   };
 }
 
-function configureLfo(ini: IniMap, config: LfoConfig): void {
-  const lfo = ini.setSection("lfo");
-  ini.set(lfo.id ?? lfo.sec, "output", config.output);
-  ini.set(lfo.id ?? lfo.sec, "waveform", config.waveform);
-  ini.set(lfo.id ?? lfo.sec, "level", config.level);
-  ini.set(lfo.id ?? lfo.sec, "hz", `${config.hz} * 100`);
-}
-
-function configureMixers(ini: IniMap, config: LfoConfig): void {
-  const mixer = ini.setSection("mixer");
-  ini.set(mixer.id ?? mixer.sec, "output", "O8");  // Fixed mixer output
-  ini.set(mixer.id ?? mixer.sec, `input${config.index + 1}`, `${config.output} * _FADER_${config.index + 1}_OUT`);
-}
-
-function configureFaders(ini: IniMap, config: LfoConfig, lfoSelect: string): void {
-  // level fader
-  const levelFader = ini.setSection("motorfader");
-  ini.set(levelFader.id ?? levelFader.sec, "fader", "1");
-  ini.set(levelFader.id ?? levelFader.sec, "select", lfoSelect);
-  ini.set(levelFader.id ?? levelFader.sec, "selectat", `${config.index}`);
-  ini.set(levelFader.id ?? levelFader.sec, "output", config.level);
-
-  // hz fader
-  const hzFader = ini.setSection("motorfader");
-  ini.set(hzFader.id ?? hzFader.sec, "fader", "2");
-  ini.set(hzFader.id ?? hzFader.sec, "select", lfoSelect);
-  ini.set(hzFader.id ?? hzFader.sec, "selectat", `${config.index}`);
-  ini.set(hzFader.id ?? hzFader.sec, "output", config.hz);
-
-  // waveform fader
-  const waveformFader = ini.setSection("motorfader");
-  ini.set(waveformFader.id ?? waveformFader.sec, "fader", "3");
-  ini.set(waveformFader.id ?? waveformFader.sec, "select", lfoSelect);
-  ini.set(waveformFader.id ?? waveformFader.sec, "selectat", `${config.index}`);
-  ini.set(waveformFader.id ?? waveformFader.sec, "output", config.waveform);
-  ini.set(waveformFader.id ?? waveformFader.sec, "notches", "7");  // 0-6 for waveform selection
-}
-
-function configureMixerFaders(ini: IniMap, config: LfoConfig, layerSelect: string): void {
-  const weightFader = ini.setSection("motorfader");
-  ini.set(weightFader.id ?? weightFader.sec, "fader", `${config.index + 4}`);  // Use faders 4-7 for mixer weights
-  ini.set(weightFader.id ?? weightFader.sec, "select", layerSelect);
-  ini.set(weightFader.id ?? weightFader.sec, "selectat", `${LAYER_MIXER}`);
-  ini.set(weightFader.id ?? weightFader.sec, "output", `_FADER_${config.index + 1}_OUT`);
-}
-
 function generatePatch(numLfos: number): string {
-  const ini = new IniMap();
+  const patch = new Patch();
   numLfos = validateNumLfos(numLfos);
 
-  ini.setComment("# LABELS: master=18");
-
-  ini.setSection("p2b8");
-  ini.setSection("e4");
-  ini.setSection("m4");
-
   // Configure encoder for layer selection and pagination
-  const enc = ini.setSection("encoder");
-  ini.set(enc.id ?? enc.sec, "encoder", "E2.1");
-  ini.set(enc.id ?? enc.sec, "button", "1");  // Enable button functionality
-  ini.set(enc.id ?? enc.sec, "buttonmode", "toggle");  // Toggle between layers
-  ini.set(enc.id ?? enc.sec, "output", LFO_SELECT);  // Controls LFO selection
-  ini.set(enc.id ?? enc.sec, "buttonoutput", LAYER_SELECT);  // Button press controls layer selection
-  ini.set(enc.id ?? enc.sec, "color", "0.6");  // Red for LFO layer
-  ini.set(enc.id ?? enc.sec, "negativecolor", "0.2");  // Cyan for mixer layer
+  const encoder: EncoderCircuit = {
+    section: 'encoder',
+    encoder: 'E2.1',
+    button: '1',
+    buttonmode: 'toggle',
+    output: LFO_SELECT,
+    buttonoutput: LAYER_SELECT,
+    color: '0.6',
+    negativecolor: '0.2',
+    discrete: `${numLfos}`,
+  };
+  patch.addCircuit(encoder);
 
-
-
-  // Configure pagination for LFO layer (4 items per page)
-  const totalPages = Math.ceil(numLfos / ITEMS_PER_PAGE);
-  const currentPage = Math.floor(parseInt(LFO_SELECT) / ITEMS_PER_PAGE);  // Use LFO selection for page
-  const startIdx = currentPage * ITEMS_PER_PAGE;
-  const endIdx = Math.min(startIdx + ITEMS_PER_PAGE, numLfos);
-  const itemsOnPage = endIdx - startIdx;
-
-  // Update encoder discrete range for pagination
-  ini.set(enc.id ?? enc.sec, "discrete", `${numLfos}`);  // Total number of selectable LFOs
-
-  // Configure all LFOs
+  // Configure all LFOs and their faders
   Array.from({ length: numLfos }, (_, i) => {
-    const config = createLfoState(i);
-    configureLfo(ini, config);
-    configureFaders(ini, config, LFO_SELECT);
+    const lfo = createLfoState(i);
+    patch.addCircuit(lfo);
+
+    // Add faders
+    const faders: MotorfaderCircuit[] = [
+      {
+        section: 'motorfader',
+        fader: '1',
+        select: LFO_SELECT,
+        selectat: `${i}`,
+        output: lfo.level,
+      },
+      {
+        section: 'motorfader',
+        fader: '2',
+        select: LFO_SELECT,
+        selectat: `${i}`,
+        output: lfo.hz,
+      },
+      {
+        section: 'motorfader',
+        fader: '3',
+        select: LFO_SELECT,
+        selectat: `${i}`,
+        output: lfo.waveform,
+        notches: '7',
+      },
+    ];
+    faders.forEach(f => patch.addCircuit(f));
   });
 
   // Configure mixer with all available LFOs
+  const mixer: MixerCircuit = {
+    section: 'mixer',
+    output: 'O8',
+  };
   Array.from({ length: Math.min(numLfos, ITEMS_PER_PAGE) }, (_, i) => {
-    const config = createLfoState(i);
-    configureMixers(ini, config);
-    configureMixerFaders(ini, config, LAYER_SELECT);
-  });
+    mixer[`input${i + 1}`] = `O${i + 1} * _FADER_${i + 1}_OUT`;
 
-  return ini.toString();
+    // Add mixer fader
+    const mixerFader: MotorfaderCircuit = {
+      section: 'motorfader',
+      fader: `${i + 4}`,
+      select: LAYER_SELECT,
+      selectat: `${LAYER_MIXER}`,
+      output: `_FADER_${i + 1}_OUT`,
+    };
+    patch.addCircuit(mixerFader);
+  });
+  patch.addCircuit(mixer);
+
+  return patch.toString();
 }
 
 // Get number of LFOs from command line or use default
-const numLfos = process.argv[2] ? parseInt(process.argv[2], 10) : MAX_ALLOWED_LFOS;
+const numLfos = Bun.argv[2] ? parseInt(Bun.argv[2], 10) : MAX_ALLOWED_LFOS;
 console.log(generatePatch(numLfos));
