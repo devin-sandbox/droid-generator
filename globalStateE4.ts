@@ -40,11 +40,10 @@ function configureLfo(ini: IniMap, config: LfoConfig): void {
   ini.set(lfo.id ?? lfo.sec, "hz", `${config.hz} * 100`);
 }
 
-function configureMixers(ini: IniMap, config: LfoConfig, modSource: string): void {
-  const freqMixer = ini.setSection("mixer");
-  ini.set(freqMixer.id ?? freqMixer.sec, "input1", modSource);
-  ini.set(freqMixer.id ?? freqMixer.sec, "input2", config.hz);
-  ini.set(freqMixer.id ?? freqMixer.sec, "output", "O8");  // Hardcoded mixer output
+function configureMixers(ini: IniMap, config: LfoConfig): void {
+  const mixer = ini.setSection("mixer");
+  ini.set(mixer.id ?? mixer.sec, "output", "O8");  // Fixed mixer output
+  ini.set(mixer.id ?? mixer.sec, `input${config.index + 1}`, `${config.output} * _FADER_${config.index + 1}_OUT`);
 }
 
 function configureFaders(ini: IniMap, config: LfoConfig, lfoSelect: string): void {
@@ -69,6 +68,14 @@ function configureFaders(ini: IniMap, config: LfoConfig, lfoSelect: string): voi
   ini.set(waveformFader.id ?? waveformFader.sec, "selectat", `${config.index}`);
   ini.set(waveformFader.id ?? waveformFader.sec, "output", config.waveform);
   ini.set(waveformFader.id ?? waveformFader.sec, "notches", "7");  // 0-6 for waveform selection
+}
+
+function configureMixerFaders(ini: IniMap, config: LfoConfig, layerSelect: string): void {
+  const weightFader = ini.setSection("motorfader");
+  ini.set(weightFader.id ?? weightFader.sec, "fader", `${config.index + 4}`);  // Use faders 4-7 for mixer weights
+  ini.set(weightFader.id ?? weightFader.sec, "select", layerSelect);
+  ini.set(weightFader.id ?? weightFader.sec, "selectat", `${LAYER_MIXER}`);
+  ini.set(weightFader.id ?? weightFader.sec, "output", `_FADER_${config.index + 1}_OUT`);
 }
 
 function generatePatch(numLfos: number): string {
@@ -125,11 +132,10 @@ function generatePatch(numLfos: number): string {
   });
 
   // Configure mixer with all available LFOs
-  const mixer = ini.setSection("mixer");
-  ini.set(mixer.id ?? mixer.sec, "output", "O8");  // Fixed mixer output
   Array.from({ length: Math.min(numLfos, ITEMS_PER_PAGE) }, (_, i) => {
     const config = createLfoState(i);
-    ini.set(mixer.id ?? mixer.sec, `input${i + 1}`, `${config.output} * _FADER_OUT`);  // Attenuated LFO output
+    configureMixers(ini, config);
+    configureMixerFaders(ini, config, LAYER_SELECT);
   });
 
   return ini.toString();
