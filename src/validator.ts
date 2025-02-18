@@ -94,7 +94,9 @@ const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
     'position',
     'speed',
     'notches',
-    'touch'
+    'touch',
+    'savepreset',
+    'loadpreset'
   ],
   encoder: [
     'section',
