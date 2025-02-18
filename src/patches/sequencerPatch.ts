@@ -45,7 +45,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     numsteps: '4',    // 4-step sequence
     cv: 'O1',        // CV output on O1
     gate: 'G1',      // Gate output on G1
-    button: 'E2.1'   // Connect to encoder button
+    button: 'E2.1',   // Connect to encoder button
     
     // Basic parameter control
     fadermode: '0',  // 0 = pitch/CV mode
