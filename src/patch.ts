@@ -4,7 +4,9 @@ import type { LFOConfig } from './types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { EncoderConfig } from './types/circuits/io/encoder';
 import type { ButtonConfig } from './types/circuits/io/button';
+import type { MotoquencerConfig } from './types/circuits/sequencing/motoquencer';
 import { DeviceType } from './types/devices';
+import { CircuitValidator } from './validator';
 
 export type Circuit = 
   | (LFOConfig & { section: 'lfo' })
@@ -34,6 +36,7 @@ export class Patch {
   }
 
   addCircuit(circuit: Circuit): void {
+    CircuitValidator.validate(circuit);
     this.circuits.push(circuit);
   }
 
