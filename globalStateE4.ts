@@ -5,13 +5,13 @@ import type { EncoderConfig } from './types/circuits/io/encoder';
 
 interface LfoState extends Partial<LFOConfig> {
   index: number;
-  output: string;  // For O1-O8 format
+  output: string;  // For O1-O7 format
   level: string;   // For _LEVEL_X format
   hz: string;      // For _HZ_X format
   waveform: string;  // For _WAVEFORM_X format (0-6)
 }
 
-const MAX_ALLOWED_LFOS = 8;
+const MAX_ALLOWED_LFOS = 7;  // Using O1-O7 for LFOs
 const LFO_SELECT = "_LFO_SELECT";
 
 function validateNumLfos(num: number): number {
