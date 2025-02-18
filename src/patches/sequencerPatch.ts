@@ -34,16 +34,19 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     gate: 'G1',      // Gate output on G1
     button: 'E2.1',  // Connect to encoder button
     
-    // Add parameter control modes
+    // Basic parameter control
     fadermode: '0',  // 0 = pitch/CV mode
     buttonmode: '0', // 0 = gates mode
     
-    // Add CV control
+    // CV and quantization
     cvbase: '-1',    // Full negative range
     cvrange: '2',    // Range of 2V for full octave
+    quantize: '1',   // 1 = semitones
     
-    // Add quantization
-    quantize: '1'    // 1 = semitones
+    // Advanced features
+    repeats: '1',    // Default to 1 repeat per step
+    ratchets: '1',   // Default to 1 ratchet per step
+    luckychance: '0' // Default to no random probability
   };
   patch.addCircuit(motoquencer);
   
