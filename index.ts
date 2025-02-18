@@ -1,5 +1,4 @@
 import { IniMap } from "./ini";
-import type { BunFile } from "bun";
 
 const ini = new IniMap();
 
