@@ -1,6 +1,4 @@
 import type { Circuit } from './patch';
-import type { MotoquencerConfig } from './types/circuits/sequencing/motoquencer';
-import type { LFOConfig } from './types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { EncoderConfig } from './types/circuits/io/encoder';
 import type { ButtonConfig } from './types/circuits/io/button';
@@ -54,65 +52,6 @@ const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
     'button',
     'led',
     'states'
-  ]
-} as const;
-    'numsteps',
-    'page',
-    'taptempo',
-    'reset',
-    'run',
-    'composemode',
-    'mute',
-    'cvbase',
-    'cvrange',
-    'invert',
-    'quantize',
-    'cvnotches',
-    'fadermode',
-    'buttonmode',
-    'linktonext',
-    'copy',
-    'paste',
-    'pastefaders',
-    'pastebuttons',
-    'keyboardcv',
-    'keyboardgate',
-    'recordmode',
-    'recordsilence',
-    'cv',
-    'gate',
-    'endoftrack',
-    'step',
-    'root',
-    'degree',
-    'pattern',
-    'form',
-    'luckychance',
-    'luckyamount'
-  ],
-  lfo: [
-    'section',
-    'rate',
-    'taptempo',
-    'hz',
-    'level',
-    'offset',
-    'bipolar',
-    'randomize',
-    'phase',
-    'pulsewidth',
-    'skew',
-    'sync',
-    'syncphase',
-    'waveform',
-    'output',
-    'square',
-    'sawtooth',
-    'triangle',
-    'ramp',
-    'paraboloid',
-    'sine',
-    'cosine'
   ]
 } as const;
 
