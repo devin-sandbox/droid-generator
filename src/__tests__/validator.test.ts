@@ -29,10 +29,10 @@ describe("CircuitValidator", () => {
         numsteps: "4",
         cv: "O1",
         gate: "G1",
-        pattern: "0",
-        form: "0",
-        luckychance: "0",
-        luckyamount: "0"
+        fadermode: "0",
+        buttonmode: "0",
+        cvbase: "0",
+        cvrange: "1"
       };
       expect(() => CircuitValidator.validate(circuit)).not.toThrow();
     });
@@ -122,7 +122,13 @@ describe("CircuitValidator", () => {
 
     test("throws on missing required parameters", () => {
       const circuit: Circuit = {
-        section: "motoquencer"
+        section: "motoquencer",
+        clock: "_INTERNAL_CLOCK",
+        firstfader: "1",
+        numfaders: "4",
+        numsteps: "4",
+        cv: "O1",
+        gate: "G1"
       };
       expect(() => CircuitValidator.validate(circuit)).not.toThrow(); // Validator only checks keys, not values
     });
