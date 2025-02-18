@@ -11,9 +11,50 @@ type AllowedKeys = Record<CircuitSection, readonly string[]>;
 const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
   lfo: [
     'section',
-    'clock',
-    'firstfader',
-    'numfaders',
+    'rate',
+    'taptempo',
+    'hz',
+    'level',
+    'offset',
+    'bipolar',
+    'randomize',
+    'phase',
+    'pulsewidth',
+    'skew',
+    'sync',
+    'syncphase',
+    'waveform',
+    'output',
+    'square',
+    'sawtooth',
+    'triangle',
+    'ramp',
+    'paraboloid',
+    'sine',
+    'cosine'
+  ],
+  motorfader: [
+    'section',
+    'fader',
+    'position',
+    'speed',
+    'notches',
+    'touch'
+  ],
+  encoder: [
+    'section',
+    'encoder',
+    'button',
+    'led',
+    'increment',
+    'decrement'
+  ],
+  button: [
+    'section',
+    'button',
+    'led',
+    'states'
+  ]
     'numsteps',
     'page',
     'taptempo',
