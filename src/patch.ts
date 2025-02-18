@@ -54,9 +54,9 @@ export class Patch {
   toString(): string {
     // Reset INI
     this.ini.clear();
-    
-    // Add LABELS comment and base configuration
     this.ini.comments.setAtLine(1, "# LABELS: master=18");
+    
+    // Add base configuration
     this.ini.setSection('p2b8');
     this.ini.setSection('e4');
     this.ini.setSection('m4');
