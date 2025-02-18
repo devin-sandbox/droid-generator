@@ -51,13 +51,11 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     
     // CV and quantization
     cvbase: '-1',    // Full negative range
-    cvrange: '2',    // Range of 2V for full octave
+    cvrange: '1',    // Full range (0 to 1)
     quantize: '1',   // 1 = semitones
     
-    // Advanced features
-    repeats: '1',    // Default to 1 repeat per step
-    ratchets: '1',   // Default to 1 ratchet per step
-    luckychance: '0' // Default to no random probability
+    // Randomization
+    luckychance: '0' // No random probability
   };
   patch.addCircuit(motoquencer);
   
