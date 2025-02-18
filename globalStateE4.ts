@@ -1,4 +1,3 @@
-/// <reference types="bun-types" />
 import { IniMap } from "./ini";
 import type { LFOConfig } from './types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
