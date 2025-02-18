@@ -93,20 +93,12 @@ function generatePatch(numLfos: number): string {
   ini.set(enc.id ?? enc.sec, "encoder", "E2.1");
   ini.set(enc.id ?? enc.sec, "button", "1");  // Enable button functionality
   ini.set(enc.id ?? enc.sec, "buttonmode", "toggle");  // Toggle between layers
-  ini.set(enc.id ?? enc.sec, "led", LAYER_SELECT);
   ini.set(enc.id ?? enc.sec, "output", LFO_SELECT);  // Controls LFO selection
   ini.set(enc.id ?? enc.sec, "buttonoutput", LAYER_SELECT);  // Button press controls layer selection
+  ini.set(enc.id ?? enc.sec, "color", "0.6");  // Red for LFO layer
+  ini.set(enc.id ?? enc.sec, "negativecolor", "0.2");  // Cyan for mixer layer
 
-  // Configure layer colors for visual feedback
-  const lfoColor = ini.setSection("color");
-  ini.set(lfoColor.id ?? lfoColor.sec, "input", LAYER_SELECT);  // Use layer selection as input
-  ini.set(lfoColor.id ?? lfoColor.sec, "led", "0.6");          // LFO layer = red (0.6)
-  ini.set(lfoColor.id ?? lfoColor.sec, "value", `${LAYER_LFO}`);
 
-  const mixerColor = ini.setSection("color");
-  ini.set(mixerColor.id ?? mixerColor.sec, "input", LAYER_SELECT);  // Use layer selection as input
-  ini.set(mixerColor.id ?? mixerColor.sec, "led", "0.2");          // Mixer layer = cyan (0.2)
-  ini.set(mixerColor.id ?? mixerColor.sec, "value", `${LAYER_MIXER}`);
 
   // Configure pagination for LFO layer (4 items per page)
   const totalPages = Math.ceil(numLfos / ITEMS_PER_PAGE);
