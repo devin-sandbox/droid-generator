@@ -49,6 +49,11 @@ describe("SequencerPatch", () => {
     });
     const ini = patch.toString();
     
+    // Verify device configuration
+    expect(ini).toContain("[p2b8]");
+    expect(ini).toContain("[e4]");
+    expect(ini).toContain("[m4]");
+    
     // Options should not affect the patch since they're not implemented
     expect(ini).toContain("numsteps=4");
     expect(ini).toContain("firstfader=1");
