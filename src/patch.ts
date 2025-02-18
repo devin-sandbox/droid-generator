@@ -34,12 +34,6 @@ export class Patch {
       commentChar: "#",
       deduplicate: false
     });
-    this.ini.comments.setAtLine(1, "# LABELS: master=18");
-    
-    // Add base configuration
-    this.ini.setSection('p2b8');
-    this.ini.setSection('e4');
-    this.ini.setSection('m4');
   }
 
   addCircuit(circuit: Circuit): void {
@@ -52,7 +46,7 @@ export class Patch {
     
     for (const [key, value] of entries) {
       if (value !== undefined) {
-        this.ini.set(section.id ?? section.sec, `    ${key}`, value);
+        this.ini.set(section.id ?? section.sec, `    ${key} = `, value);
       }
     }
   }
@@ -61,14 +55,12 @@ export class Patch {
     // Reset INI
     this.ini.clear();
     
-    // Add LABELS comment
+    // Add LABELS comment and base configuration
     this.ini.comments.setAtLine(1, "# LABELS: master=18");
-    
-    // Add base configuration
     this.ini.setSection('p2b8');
     this.ini.setSection('e4');
     this.ini.setSection('m4');
-    this.ini.comments.setAtLine(this.ini.size + 1, "");
+    this.ini.comments.setAtLine(4, "");
     
     // Add section headers
     this.addComment("# -------------------------------------------------");
