@@ -1,7 +1,7 @@
-import { Patch } from './patch';
-import type { LFOConfig } from './types/circuits/modulation/lfo';
-import type { MotorFaderConfig } from './types/circuits/io/motorfader';
-import type { EncoderConfig } from './types/circuits/io/encoder';
+import { Patch } from '../patch';
+import type { LFOConfig } from '../types/circuits/modulation/lfo';
+import type { MotorFaderConfig } from '../types/circuits/io/motorfader';
+import type { EncoderConfig } from '../types/circuits/io/encoder';
 
 const MAX_ALLOWED_LFOS = 8;
 const LFO_SELECT = "_LFO_SELECT";

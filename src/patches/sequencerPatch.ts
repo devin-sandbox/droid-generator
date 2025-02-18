@@ -1,4 +1,4 @@
-import { Patch } from '../patch';
+import { Patch, type Circuit } from '../patch';
 import type { MotoquencerConfig } from '../types/circuits/sequencing/motoquencer';
 import { DeviceType } from '../types/devices';
 
@@ -14,7 +14,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   const patch = new Patch([DeviceType.P2B8, DeviceType.E4, DeviceType.M4]);
   
   // Configure LFO for clock generation
-  const lfo = {
+  const lfo: Circuit = {
     section: 'lfo',
     hz: '2',           // 2Hz = 120 BPM
     waveform: '0',     // Square wave
@@ -25,7 +25,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   patch.addCircuit(lfo);
   
   // Configure motoquencer for basic 4-step sequence
-  const motoquencer = {
+  const motoquencer: Circuit = {
     section: 'motoquencer',
     clock: '_INTERNAL_CLOCK',      // Use LFO square output as clock
     firstfader: '1',              // Use faders 1-4
@@ -41,15 +41,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     // CV and quantization
     cvbase: '0',                  // Base value for CV range
     cvrange: '1',                 // Full range (0 to 1)
-    quantize: '1',                // 1 = semitones
-    
-    // Pattern control
-    pattern: '0',                 // Default pattern
-    form: '0',                    // Default form
-    
-    // Randomization
-    luckychance: '0',             // No random probability
-    luckyamount: '0'              // No random amount
+    quantize: '1'                 // 1 = semitones
   };
   patch.addCircuit(motoquencer);
   
