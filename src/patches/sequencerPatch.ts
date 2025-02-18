@@ -29,7 +29,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   const button = {
     section: 'button' as const,
     button: 'E2.1',  // Use encoder's button
-    l: '1',          // LED output at full brightness (0-1 float)
+    led: '1',        // LED output at full brightness (0-1 float)
     states: '2'      // Two states for future layer switching
   };
   patch.addCircuit(button);
