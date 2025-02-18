@@ -31,7 +31,8 @@ export class Patch {
       pretty: true,
       assignment: " = ",
       lineBreak: "\n",
-      commentChar: "#"
+      commentChar: "#",
+      deduplicate: false
     });
     this.ini.comments.setAtLine(1, "# LABELS: master=18");
     
@@ -67,10 +68,14 @@ export class Patch {
     this.ini.setSection('m4');
     this.ini.comments.setAtLine(this.ini.size + 1, "");
     
-    // Serialize all circuits
+    // Serialize all circuits with proper spacing
+    let lastSection = '';
     for (const circuit of this.circuits) {
+      if (lastSection !== circuit.section) {
+        this.ini.comments.setAtLine(this.ini.size + 1, "");
+      }
       this.serializeCircuit(circuit);
-      this.ini.comments.setAtLine(this.ini.size + 1, "");
+      lastSection = circuit.section;
     }
     
     return this.ini.toString();
