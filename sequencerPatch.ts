@@ -1,6 +1,12 @@
 import { IniMap } from "./ini";
 import type { MotoquencerConfig } from './types/circuits/sequencing/motoquencer';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
+import type { LFOConfig } from './types/circuits/modulation/lfo';
+
+// Constants for clock configuration
+const CLOCK_OUTPUT = "O1";
+const CLOCK_HZ = "_CLOCK_HZ";
+const CLOCK_LEVEL = "_CLOCK_LEVEL";
 
 interface SequencerState extends Partial<MotoquencerConfig> {
   index: number;
@@ -31,11 +37,24 @@ function validateConfig(config: SequencerConfig): void {
   }
 }
 
+function configureClockLFO(ini: IniMap): void {
+  const lfo = ini.setSection("lfo");
+  ini.set(lfo.id ?? lfo.sec, "output", CLOCK_OUTPUT);
+  ini.set(lfo.id ?? lfo.sec, "waveform", "0");  // Square wave for clock
+  ini.set(lfo.id ?? lfo.sec, "level", CLOCK_LEVEL);
+  ini.set(lfo.id ?? lfo.sec, "hz", `${CLOCK_HZ} * 100`);
+
+  // Configure clock speed fader
+  const speedFader = ini.setSection("motorfader");
+  ini.set(speedFader.id ?? speedFader.sec, "fader", "1");
+  ini.set(speedFader.id ?? speedFader.sec, "output", CLOCK_HZ);
+}
+
 function createTrackConfig(index: number, isLinked: boolean): SequencerState {
   return {
     index,
-    output: `O${index * 2 + 1}`,
-    gate: `O${index * 2 + 2}`,
+    output: `O${index * 2 + 2}`,  // Start from O2 to leave O1 for clock
+    gate: `O${index * 2 + 3}`,    // Adjust gate outputs accordingly
     isLinked
   };
 }
@@ -49,6 +68,9 @@ function generatePatch(config: SequencerConfig): string {
   ini.setSection("e4");
   ini.setSection("m4");
 
+  // Configure clock LFO first
+  configureClockLFO(ini);
+
   // Configure tracks
   Array.from({ length: config.numTracks }, (_, i) => {
     const track = createTrackConfig(i, i > 0);
@@ -56,7 +78,7 @@ function generatePatch(config: SequencerConfig): string {
     
     if (i === 0) {
       // Main sequencer
-      ini.set(section.id ?? section.sec, 'clock', config.clock);
+      ini.set(section.id ?? section.sec, 'clock', CLOCK_OUTPUT);  // Use LFO output as clock
       ini.set(section.id ?? section.sec, 'fadermode', config.faderMode);
       ini.set(section.id ?? section.sec, 'numsteps', config.numSteps.toString());
       ini.set(section.id ?? section.sec, 'linktonext', '1');
