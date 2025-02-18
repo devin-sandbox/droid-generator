@@ -39,13 +39,13 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   // Configure motoquencer for basic 4-step sequence
   const motoquencer = {
     section: 'motoquencer' as const,
-    clock: 'I1',      // Clock input on I1
+    clock: 'I1',      // Use internal clock from clocktool
     firstfader: '1',  // Use faders 1-4
     numfaders: '4',   // All 4 faders on M4
     numsteps: '4',    // 4-step sequence
     cv: 'O1',        // CV output on O1
     gate: 'G1',      // Gate output on G1
-    button: 'E2.1',  // Connect to encoder button
+    button: 'E2.1'   // Connect to encoder button
     
     // Basic parameter control
     fadermode: '0',  // 0 = pitch/CV mode
