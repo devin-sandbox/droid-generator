@@ -1,15 +1,29 @@
 import { expect, test, describe } from "bun:test";
 import { generatePatch } from "../patches/globalStateE4";
 import { CircuitValidator } from "../validator";
+import { type Circuit } from "../patch";
 
 describe("GlobalStateE4", () => {
   test("generatePatch uses only allowed circuit keys", () => {
-    const patch = generatePatch(8);
-    const circuits = (patch as any)._circuits;
+    const ini = generatePatch(8);
+    const lines = ini.split('\n');
+    let currentCircuit: Record<string, string> = {};
     
-    // Verify each circuit has valid keys
-    for (const circuit of circuits) {
-      expect(() => CircuitValidator.validate(circuit)).not.toThrow();
+    // Parse INI and validate each circuit
+    for (const line of lines) {
+      if (line.startsWith('[')) {
+        const section = line.slice(1, -1);
+        if (section !== 'p2b8' && section !== 'e4' && section !== 'm4') {
+          currentCircuit = { section };
+        }
+      } else if (line.includes('=')) {
+        const [key, value] = line.split('=');
+        currentCircuit[key.trim()] = value.trim();
+      } else if (line === '' && Object.keys(currentCircuit).length > 1) {
+        // Validate circuit
+        expect(() => CircuitValidator.validate(currentCircuit as Circuit)).not.toThrow();
+        currentCircuit = {};
+      }
     }
   });
 
