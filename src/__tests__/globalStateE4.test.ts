@@ -1,6 +1,6 @@
 import { expect, test, describe } from "bun:test";
 import { generatePatch } from "../patches/globalStateE4";
-import { Patch } from "../patch";
+import { Patch, type Circuit } from "../patch";
 
 describe("GlobalStateE4", () => {
   test("generates patch with valid circuit keys", () => {
@@ -13,26 +13,26 @@ describe("GlobalStateE4", () => {
         sawtooth: 'O1',
         level: 'P3.2',
         hz: 'P3.1 * 100'
-      });
+      } as Circuit);
       
       patch.addCircuit({
         section: 'button',
         button: 'B1.2',
         shortpress: '_SAVE'
-      });
+      } as Circuit);
       
       patch.addCircuit({
         section: 'button',
         button: 'B1.1',
         shortpress: '_LOAD'
-      });
+      } as Circuit);
       
       patch.addCircuit({
         section: 'motorfader',
         fader: '1',
         savepreset: '_SAVE',
         loadpreset: '_LOAD'
-      });
+      } as Circuit);
     }).not.toThrow();
   });
 
