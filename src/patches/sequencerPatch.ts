@@ -1,7 +1,6 @@
 import { Patch } from '../patch';
 import type { MotoquencerConfig } from '../types/circuits/sequencing/motoquencer';
 import type { EncoderConfig } from '../types/circuits/io/encoder';
-import type { ClockToolConfig } from '../types/circuits/timing/clocktool';
 import { DeviceType } from '../types/devices';
 
 interface SequencerOptions {
@@ -15,16 +14,16 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
 
   const patch = new Patch([DeviceType.P2B8, DeviceType.E4, DeviceType.M4]);
   
-  // Configure clock generator with fixed timing
-  const clock = {
-    section: 'clocktool' as const,
-    clock: 'I1',       // Clock input
-    multiply: '1',     // No multiplication
-    divide: '1',       // No division
-    dutycycle: '0.5',  // 50% duty cycle
-    gatelength: '0.01' // 10ms gate length
+  // Configure LFO for clock generation
+  const lfo = {
+    section: 'lfo' as const,
+    hz: '2',           // 2Hz = 120 BPM
+    waveform: '0',     // Square wave
+    level: '1',        // Full level
+    bipolar: '0',      // Unipolar output
+    square: 'I1'       // Direct output to motoquencer
   };
-  patch.addCircuit(clock);
+  patch.addCircuit(lfo);
   
   // Configure button for future layer switching
   const button = {
