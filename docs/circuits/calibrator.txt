@@ -1,0 +1,103 @@
+# DROID Circuit Input/Output Keys
+
+## calibrator - VCO Calibrator
+
+### Inputs
+- input (i) - Pitch input
+  - Type: V/Oct
+  - Default: 0V
+  - Description: Patch your V/Oct pitch input here
+
+- nudgeup (nu) - Upward tuning trigger
+  - Type: trigger
+  - Default: none
+  - Description: Trigger to modify tuning upwards by one cent (or nudgeamount)
+
+- nudgedown (nd) - Downward tuning trigger
+  - Type: trigger
+  - Default: none
+  - Description: Trigger to modify tuning downwards
+
+- clearhere (ch) - Reset current note
+  - Type: trigger
+  - Default: none
+  - Description: Sets correction of currently played note to zero
+
+- nudgeamount (na) - Tuning step size
+  - Type: float
+  - Default: 0.01
+  - Description: Amount of detuning per button press (1.0 = one semitone)
+
+- tune0...tune8 (t) - Octave tuning
+  - Type: float
+  - Default: 0.0
+  - Description: Explicit tuning for octaves 0-8 (1.0 = one semitone, max ±12)
+
+- tunelowtail (tl) - Negative range tuning
+  - Type: float
+  - Default: 0.0
+  - Description: Tuning for negative voltage range (1.0 = up one semitone per octave)
+
+- tunehightail (th) - High range tuning
+  - Type: float
+  - Default: 0.0
+  - Description: Tuning for voltages > 8V (1.0 = up one semitone per octave)
+
+- select (s) - Layer selection
+  - Type: trigger
+  - Default: none
+  - Description: When active, enables button/LED interaction
+
+- selectat (sa) - Selection value
+  - Type: float
+  - Default: none
+  - Description: Value at which select input activates the circuit
+
+- preset (pr) - Preset number
+  - Type: integer
+  - Default: none
+  - Description: Preset number to save/load (0-3)
+
+- loadpreset (lp) - Load preset
+  - Type: trigger
+  - Default: none
+  - Description: Trigger to load preset
+
+- savepreset (sp) - Save preset
+  - Type: trigger
+  - Default: none
+  - Description: Trigger to save preset
+
+- clear (cl) - Reset state
+  - Type: trigger
+  - Default: none
+  - Description: Load default start state
+
+- clearall (ca) - Reset all
+  - Type: trigger
+  - Default: none
+  - Description: Reset state and all presets
+
+- dontsave (dos) - Disable saving
+  - Type: trigger
+  - Default: 0
+  - Description: When 1, state is not saved to SD card
+
+### Outputs
+- output (o) - Calibrated pitch
+  - Type: V/Oct
+  - Description: The calibrated pitch output
+
+- ledup (lu) - Up LED
+  - Type: trigger
+  - Description: LED indicator for upward adjustment
+
+- leddown (ld) - Down LED
+  - Type: trigger
+  - Description: LED indicator for downward adjustment
+
+- correction (c) - Correction amount
+  - Type: float
+  - Description: Current pitch correction in semitones (0.2 = 20 cents)
+
+Note: This circuit provides manual VCO calibration with per-octave compensation. Calibration state is saved per instance number (1-8).

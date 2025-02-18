@@ -1,0 +1,379 @@
+16.27
+
+fadermatrix – Matrix of up to 4x4 virtual motor faders
+
+This circuit is a clever way of controlling a
+four by four matrix of parameters, which
+allows you to select either a row or a column.
+
+output11
+
+output12
+
+output13
+
+output14
+
+output21
+
+output22
+
+output23
+
+output24
+
+output31
+
+output32
+
+output33
+
+output34
+
+parameters of the four envelopes – in order to shape for
+synth voices at the same time without switching between
+those:
+Select
+
+As an example let’s think of a bank of four
+envelope generators. Each of them has the settings
+attack, decay, sustain and release (ADSR). That nicely
+forms a 4×4 matrix:
+Att 1
+
+Dec 1
+
+Sus 1
+
+Rel 1
+output41
+
+Att 2
+
+Dec 2
+
+Sus 2
+
+output42
+
+output43
+
+Dec 3
+
+Sus 3
+
+Rel 3
+
+Att 4
+
+Dec 4
+
+Sus 4
+
+Rel 4
+
+Now when you design a patch for controlling these 16
+parameters with 4 motor faders you basically have the
+choice of selecting rows or columns! One way would be
+to always select one of the envelopes to be diplayed and
+edited on your faders, for example the second one:
+Att 1
+
+Dec 1
+
+Sus 1
+
+Rel 1
+
+Att 2
+
+Dec 2
+
+Sus 2
+
+Rel 2
+
+Att 3
+
+Dec 3
+
+Sus 3
+
+Rel 3
+
+Att 4
+
+Dec 4
+
+Sus 4
+
+Rel 4
+
+The fadermatrix has 16 outputs that map to these matrix positions:
+Select
+
+Dec 1
+
+Sus 1
+
+Rel 1
+
+Att 2
+
+Dec 2
+
+Sus 2
+
+Rel 2
+
+Att 3
+
+Dec 3
+
+Sus 3
+
+Rel 3
+
+Att 4
+
+Dec 4
+
+Sus 4
+
+Rel 4
+
+output44
+
+Rel 2
+
+Att 3
+
+Att 1
+
+With faderbank you would have to decide for one of the
+two options. But with fadermatrix you can have both at
+the same time.
+With the rowcolumn input you can select each column
+and each row as follows:
+
+An alternative would be to have control over all decay
+DROID manual for blue-6
+
+222
+
+Table of contents at page 2
+
+0
+
+4
+
+5
+
+6
+
+7
+
+Att 1
+
+Dec 1
+
+Sus 1
+
+Rel 1
+
+1
+
+Att 2
+
+Dec 2
+
+Sus 2
+
+Rel 2
+
+2
+
+Att 3
+
+Dec 3
+
+Sus 3
+
+Rel 3
+
+3
+
+Att 4
+
+Dec 4
+
+Sus 4
+
+Rel 4
+
+If you create a buttongroup with eight buttons and patch
+the output to the rowcolumn input, you have access to
+all four rows and columns. The nice thing about the
+buttongroup is that it automatically outputs the values
+from 0 to 7. Here is an example:
+[p2b8]
+[m4]
+[buttongroup]
+button1 = B1.1
+button2 = B1.3
+button3 = B1.5
+button4 = B1.7
+button5 = B1.2
+button6 = B1.4
+button7 = B1.6
+button8 = B1.8
+led1 = L1.1
+led2 = L1.3
+led3 = L1.5
+led4 = L1.7
+led5 = L1.2
+
+DROID manual for blue-6
+
+led6 = L1.4
+led7 = L1.6
+led8 = L1.8
+output = _ROWCOLUMN
+
+If you don’t want to waste 8 buttons for just switching,
+you can also use a pot and scale it to the range of 0 ... 7:
+rowcolumn = P1.1 * 7
+
+Now we add a fadermatrix. We send all 16 outputs to interncal patch cables to be picked up later by four contour
+circuits:
+[fadermatrix]
+rowcolumn = _ROWCOLUMN
+output11 = _ATTACK_1
+output12 = _DECAY_1
+output13 = _SUSTAIN_1
+output14 = _RELEASE_1
+output21 = _ATTACK_2
+output22 = _DECAY_2
+output23 = _SUSTAIN_2
+output24 = _RELEASE_2
+output31 = _ATTACK_3
+output32 = _DECAY_3
+output33 = _SUSTAIN_3
+output34 = _RELEASE_3
+output41 = _ATTACK_4
+output42 = _DECAY_4
+output43 = _SUSTAIN_4
+output44 = _RELEASE_4
+
+And here is the example for the ﬁrst contour (the other
+three are similar):
+[contour]
+gate = I1
+attack = _ATTACK_1
+decay = _DECAY_1
+sustain = _SUSTAIN_1
+release = _RELEASE_1
+output = O1
+
+223
+
+And of course the rotary switch of an S10 would also be a
+perfect match, since it outputs exactly the number from
+0 to 7.
+
+Notches
+As discussed in motorfader (see page 311), faders can
+set to have artiﬁcal notches. Also in the fader matrix you
+can set notches. Here the idea is that every parameter in
+the same column of the matrix has the same number of
+notches. Example:
+notches3 = 8
+
+This sets all four parameters in column 3 to have
+eight notches. This affects the four outputs output13,
+output23, output33 and output43 so that they get
+notches when selected and also change their output behaviour to outputting one of the values 0, 1, 2 ... 7.
+As you can see the matrix always assumes that you edit
+four similar things with four parameters each. Every row
+of the matrix is one such thing. Every column is one parameter.
+
+Smaller matrices
+You also can create smaller matrices, for example 3×.
+Simply omit the outputs output14, 24, 34, 44, 41, 42 and
+43 in that case. Also 2×2 is possible.
+Table of contents at page 2
+
+Because we always need to be able to swap rows and
+columns, those number always have to be identical. So
+you cannot create a 3×4 matrix, for example.
+
+Larger matrices
+If you have eight faders, you can create even larger matrices. A 8×8 matrix can be created by four fadermatrix
+
+Input
+
+Type
+
+Default
+
+Description
+
+firstfader (f)
+
+1 2 3
+
+1
+
+First M4 fader of the virtual fader matrix (starting with 1).
+
+rowcolumn (rc)
+
+1 2 3
+
+0
+
+Currently selected row or column as follows:
+
+DROID manual for blue-6
+
+0
+
+Control output11, output12, output13 and output14
+
+1
+
+Control output21, output22, output23 and output24
+
+2
+
+Control output31, output32, output33 and output34
+
+3
+
+Control output41, output42, output43 and output44
+
+4
+
+Control output11, output21, output31 and output41
+
+5
+
+Control output12, output22, output32 and output42
+
+6
+
+Control output13, output23, output33 and output43
+
+7
+
+Control output14, output24, output34 and output44
+
+224
+
+circuits. Here you need some extra logic. At any time exactly two of the circuits must be selected. Use the select
+inputs in combination with rowcolumn in order to set this
+up (left as an excercise) ;-)
+
+Table of contents at page 2
+
+

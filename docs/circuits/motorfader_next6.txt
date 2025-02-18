@@ -1,0 +1,285 @@
+Input
+
+Type
+
+defaultgate (dfg)
+
+Default
+
+Description
+
+1
+
+Here you set to which state (on / off) the gates should be set on a trigger to clear.
+
+clearskips (cs)
+
+A trigger here removes the “skip” setting from all steps.
+
+clearrepeats (crp)
+
+A trigger here resets the number of repeats to 1 for each step.
+
+clearstartend (cse)
+
+A trigger here clears the manual settings of the start and end step. So the sequence will be played in its full length
+(again) .
+
+gatelength (gl)
+
+0.5
+
+The gate length in input clock cycles. A value of 0.5 thus means half a clock cycle. A steady input clock is needed
+for this to work. Please note that if the gate length is >= 1.0, two succeeding notes will get a steady gate, which
+essentially means legato.
+If you don’t use a steady clock, set this parameter to 0. This will output a minimal gate length of about 10 ms (basically
+just a trigger).
+
+keyboardmode (km)
+
+keyboardcv (kc)
+
+1 2 3
+
+1
+
+1V
+Oct
+
+recordsilence (rsi)
+
+DROID manual for blue-6
+
+0
+
+ignore the keyboard inputs
+
+1
+
+keyboard and sequencer play together, keyboard has precedence
+
+2
+
+mute sequencer, just play keyboard
+
+The pitch input of a keyboard. This is used for playing along with the keyboardmode or recording with recordmode.
+The gate input of a keyboard. A positive gate enabled play along (see keyboardmode) and also recording, if recordmode
+is set accordingly.
+
+keyboardgate (kg)
+
+recordmode (rm)
+
+This input sets how a keyboard, that is hooked to keyboardcv, and keyboardgate should be used for directly playing
+notes. You can set it to 0, 1 or 2.
+
+1 2 3
+
+0
+
+0
+
+Use this input to record melodies played with a keyboard (namely keyboardcv and keyboardgate) into the sequencer.
+There are three possible settings:
+0
+
+don’t record
+
+1
+
+record, notes longer than one step will automatically tie steps via the gate pattern
+
+2
+
+record, don’t tie notes. Ignore the length of the input note
+
+When this input is set to 1 while recording, silence will be recorded while keyboardgate is off. Otherwise you can just
+add notes to the sequence.
+
+302
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+copy (cy)
+
+A trigger here copies the current page of the sequence to an internal clipboard. The clipboard is not part of any preset
+and is also not saved to the SD card. It can be used later for pasting it’s data to another preset or another page of a
+sequence.
+
+paste (pa)
+
+A trigger here copies the steps from the clipboard to the current page.
+
+pastefaders (pf)
+
+This is like paste, but just the values of the faders of the current fadermode are copied.
+
+pastebuttons (pb)
+
+This is like paste, but just the values of the faders of the current buttonmode are copied. Note: the button mode “start
+/ end” is not supported by copy and paste.
+
+linktonext (ln)
+
+0
+
+This settings allows you to create motoquencer tracks that have more than one CV or gate output for each step. If you
+set this to 1, the next motoquencer circuit in your patch will by synchronized to this one. This means that it always
+plays the same step number – including all fancy operating like shiftsteps, startstep, endstep, form, pattern and
+autoreset. All those inputs and also clock and reset are ignored by the next motoquencer.
+The same holds for the “repeats” and “skip” setting of the steps.
+fadermode and buttonmode are extended to the next motoquencers by adding 10 for each motoquencer to follow. So
+fadermode = 10 will show the CV of next motoquencer in the faders. fadermode = 11 the CV randomization of the
+next motoquencer. fadermode = 20 show the CV of the third linked motoquencer and so on.
+
+Don’t set fadermode or buttonmode on the linked motoquencers. They will be ignored there.
+Note: The linktonext setting cannot by dynamically changed. It needs to be ﬁxed 0 or 1. You cannot use any button
+or internal cable or other methods to change it while the patch is running.
+luckychance (lc)
+
+0
+
+luckyscope (ls)
+
+1 2 3
+
+luckyamount (la)
+
+DROID manual for blue-6
+
+0
+
+1
+
+1
+
+1.0
+
+Sets tha chance for a step to be affected by the next “lucky” operation (see triggers below).
+
+0
+
+Determines which part of the sequence is affected by the “lucky” operations. Depending on this setting the following
+steps are affected:
+
+1.0
+
+0
+
+All steps between the current start and end step
+
+1
+
+All steps
+
+2
+
+All steps between start and end on the current page
+
+3
+
+All steps on the current page
+
+Sets the amount of change that a “lucky” operation does to a step. The meaning depends on the operation. See the
+parameters below.
+
+303
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+luckycvbase (lv)
+
+0
+
+0.0
+
+This parameter affects only the operation luckycvs and luckyfaders when the fader mode is set to 0. It adds a ﬁxed
+amount of CV to the random result, so that lies in the range luckycvbase … (luckycvbase + luckyamount).
+
+1
+
+luckyfaders (lf)
+
+Moves the currently selected faders (according to fadermode) to new random positions. luckyamount sets the maximum value of the fader, where 1 allows the maximum.
+
+luckybuttons (lb)
+
+Randomly toggles the currently selected buttons (according to buttonmode). luckyamount only has an effect when
+the gate patterns are selected, since here, four different values are possible. luckamount restricts them if it is lower
+than 1.
+
+luckycvs (lcv)
+
+Replaces the affected steps’ CVs with a new random CVs. The lowest possible CV is cvbase. If luckyamount is 1, the
+highest possible CV is cvbase + cvrange, otherwise it is cvbase + luckyamount × cvrange.
+
+luckycvdrift (ld)
+
+Modiﬁes the affected steps’ CV randomly up or down. They will stay in the CV range set by cvbase and cvrange.
+luckyamount controls the amount of change.
+
+luckyspread (lr)
+
+First computes the average CV of all steps. Then changes the CV values of the affected steps such that their distance
+to the average increases or decreases. If luckyamount is greater than 0.5, the distance is increased. Otherwise it is
+decreased.
+
+luckyinvert (li)
+
+Inverts the CVs of the affected steps within the allowed CV range. luckyamount has no inﬂuence.
+
+luckyrandomizecv (lrc)
+
+Sets the “randomize CV” values of the affected steps to random values (yes, this is double randomization). The
+luckyamount sets the maximum randomization value that will be set.
+
+luckygates (lg)
+
+Sets the gates of the affected steps randomly to on or off. The chance for on is determined by luckyamount. So with
+luckyamount = 0 you clear all gates and with luckyamount = 1 you set all gates.
+
+luckyskips (lk)
+
+Sets the “skip this step” setting of the affected steps randomly to skip or normal. The chance for skip is determined by
+luckyamount.
+
+luckyties (lt)
+
+Sets the “tie this step to the next” setting of the affected steps randomly to tie or normal. This is the same as setting
+the gate pattern to the upper most position. The chance for tie is determined by luckyamount.
+
+luckygatepattern (lgp)
+
+Randomizes the gate pattern of the selected steps (there are four different values: once, all, hold and tie). Use
+luckyamount to reduce that set.
+
+luckygateprob (lga)
+
+Sets the “randomize gate” values of the affected steps to random values (yes, this is double randomization). The
+luckyamount sets the minimum randomization value that will be set (yes, this is inverted). So with luckyamount = 1
+you disable randomization and make the gates play always. With luckymount = 0 you set the gate propability to the
+lowest possible value (still not 0).
+
+DROID manual for blue-6
+
+304
+
+Table of contents at page 2
+
+

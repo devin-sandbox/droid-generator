@@ -1,0 +1,237 @@
+Input
+input (i)
+
+Type
+1V
+Oct
+
+Default
+
+Description
+
+0V
+
+Patch the unquantized input voltage here
+This jack is optional. If you patch it, the Minifonion will work in triggered mode. Here the output pitch is always frozen
+until the next trigger happens.
+
+trigger (t)
+
+bypass (b)
+root (ro)
+
+DROID manual for blue-6
+
+1 2 3
+
+off
+
+If you set this gate input to 1 then quantization is bypassed and the input voltage is directly copied to the output.
+
+0
+
+Set the root note here. 0 means C, 1 means C♯, 2 means D and so on. If you multiply the value of an input like I1 with
+120, then you can use a 1V/Oct input for selecting the root note via a sequencer, MIDI keyboard or the like. Also then
+you are compatible with the ROOT CV input of the Sinfonion.
+0
+
+C
+
+1
+
+C♯
+
+2
+
+D
+
+3
+
+D♯
+
+4
+
+E
+
+5
+
+F
+
+6
+
+F♯
+
+7
+
+G
+
+8
+
+G♯
+
+9
+
+A
+
+10
+
+A♯
+
+11
+
+B
+
+12
+
+C
+
+280
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+degree (dg)
+
+1 2 3
+
+0
+
+Set the musical scale. This is a number from 0 to 107. Below are the ﬁrst 12 and most important scales. You ﬁnd a list
+of all 108 scales on page 107.
+0
+
+lyd – Lydian major scale (it has a ♯4)
+
+1
+
+maj – Normal major scale (ionian)
+
+2
+
+X7 – Mixolydian (dominant seven chords)
+
+3
+
+sus – mixolydian with 3rd /4th swapped
+
+4
+
+alt – Altered scale
+
+5
+
+hm5 – Harmonic minor scale from the 5th
+
+6
+
+dor – Dorian minor (minor with ♯13)
+
+7
+
+min – Natural minor (aeolian)
+
+8
+
+hm – Harmonic minor (♭6 but ♯7)
+
+9
+
+phr – Phrygian minor scale (with ♭9)
+
+10
+
+dim – Diminished scale (whole/half tone)
+
+11
+
+aug – Augmented scale (just whole tones)
+
+Note: Alltogether there are 108 scales. Please see page 107 for a complete list
+select1 (s1)
+
++
+
+Gate input for selecting the root note as being an allowed interval. When you want to create a playing interface for live
+operation you can patch the output of a toggle button (made with the circuit [button]) here.
+Note: When all select and selectfill inputs are 0, automatically all seven scale notes are selected, i.e. select1 ...
+select13 will be set to one.
+
+select3 (s3)
+select5 (s5)
+select7 (s7)
+select9 (s9)
+select11 (s11)
+select13 (s13)
+
+DROID manual for blue-6
+
++
++
++
++
++
++
+
+Gate input for selecting the 3rd .
+Gate input for selecting the 5th .
+Gate input for selecting the 7th .
+Gate input for selecting the 9th (which is the same as the 2nd ).
+Gate input for selecting the 11th (which is the same as the 4th ).
+Gate input for selecting the 13th (which is the same as the 6th ).
+
+281
+
+Table of contents at page 2
+
+Input
+
+Default
+
+Description
+
+selectfill1 (sf1)
+
+off
+
+Selects the alternative 9th (i.e. the 9th that is not in the scale.
+
+selectfill2 (sf2)
+
+off
+
+Selects the alternative 3rd (i.e. the 3rd that is not in the scale).
+
+selectfill3 (sf3)
+
+off
+
+Selects the alternative 4th or 5th . In most cases this is the diminished 5th .
+
+selectfill4 (sf4)
+
+off
+
+Selects the alternative 13th (i.e. the 13th that is not in the scale).
+
+selectfill5 (sf5)
+
+off
+
+Selects the alternative 7th (i.e. the 7th that is not in the scale).
+
+DROID manual for blue-6
+
+Type
+
+282
+
+Table of contents at page 2
+
+

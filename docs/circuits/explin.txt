@@ -1,0 +1,39 @@
+# DROID Circuit Input/Output Keys
+
+## explin - Exponential to linear converter
+
+### Inputs
+- input (i) - Input signal
+  - Type: float
+  - Default: 0.0
+  - Description: Exponential envelope output or similar signal. Must be positive, otherwise set to 0.0.
+
+- startvalue (sv) - Start value
+  - Type: float
+  - Default: 1.0
+  - Description: Maximum value of the input signal (start voltage from where it decays exponentially)
+
+- endvalue (ev) - End value
+  - Type: float
+  - Default: 0.01
+  - Description: Value at which signal is considered zero (where linear output will be zero). Must be positive, forced to >= 0.001.
+
+- mix (m) - Dry/Wet mix
+  - Type: float
+  - Default: 1.0
+  - Description: Mix between input and processed signal. 0.0=dry input, 1.0=linear curve, >1.0 overcompensates beyond linearity.
+
+### Outputs
+- output (o) - Converted signal
+  - Type: float
+  - Description: Linear output curve based on exponential input and parameter settings.
+
+Note: Circuit converts exponential curves (like analog envelopes) into linear ones. The conversion is configured by:
+- startvalue: Point where input and output curves match
+- endvalue: Point considered "zero", affects output curve slope
+- mix: Allows blending between original and converted signals
+
+Example applications:
+- Converting exponential envelopes to linear
+- Linearizing control voltage curves
+- Creating custom envelope shapes through mixing

@@ -1,0 +1,58 @@
+# DROID Circuit Input/Output Keys
+
+## switch - Addressable/Clockable Switch
+
+### Inputs
+- input1...input16 - Signal inputs
+  - Type: float
+  - Default: 0.0
+  - Description: 1st through 16th inputs, must be used in order without gaps
+
+- forward - Forward trigger
+  - Type: trigger
+  - Description: Advances switch position by one step forward
+
+- backward - Backward trigger
+  - Type: trigger
+  - Description: Advances switch position by one step backward
+
+- reset - Position reset
+  - Type: trigger
+  - Description: Returns switch to initial position (offset 0)
+  - Note: Takes precedence over forward/backward within 5ms
+
+- offset - Position control
+  - Type: integer
+  - Default: 0
+  - Description: CV addressable switching offset
+  - Note: Value is added to internal offset (multiply external CV)
+
+### Outputs
+- output1...output16 - Signal outputs
+  - Type: float
+  - Description: 1st through 16th outputs, must be used in order without gaps
+  - Note: Unconnected outputs send to void, unconnected inputs treated as 0V
+
+Note: Versatile switching circuit with features:
+- Up to 16x16 matrix switching
+- CV addressable routing
+- Trigger-based stepping
+- Bidirectional control
+- Position reset
+- Multiple routing modes
+
+Example applications:
+- Signal distribution
+- Sequential switching
+- Matrix routing
+- CV addressing
+- Signal selection
+- Multi-channel control
+
+Limitations:
+- Must use inputs/outputs in order
+- No individual muting
+- No crossfading
+- No mixing capability
+- No state memory
+- Fixed matrix size

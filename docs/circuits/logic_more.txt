@@ -1,0 +1,238 @@
+Another nice solution is to make use of offvalue and
+onvalue of the button circuit. offvalue is 0 per default,
+so we just need to deﬁne onvalue:
+[lfo]
+hz
+square
+
+= 2
+= _LFO
+
+[button]
+button
+led
+onvalue
+
+= B1.1
+= L1.1
+= _LFO
+
+If you need to combine two gates in order to create a common gate pattern, you can use addition – which is very
+similar to a logic OR combination. The following example creates two overlayed euclidean rhythms:
+[euklid]
+length = 16
+beats = 3
+output = _E1
+[euklid]
+length = 13
+beats = 2
+output = _E2
+[copy]
+input = _E1 + _E2
+output = O1
+
+Note: When both _E1 and _E2 are 1 at the same time, the
+sum is 2, of course. This does not matter, since the output voltage is capped at 10 V (1.0) anyway.
+
+DROID manual for blue-6
+
+246
+
+Table of contents at page 2
+
+Input
+
+Default
+
+Description
+
+input1 ... input8 (i)
+
++
+
+1st ... 8th input. Note: this input is declared as a
+gate input, but in fact you can use it as a CV input in combination with various or random values set for the threshold.
+
+threshold (t)
+
+0.1
+
+Input values at, or above this threshold value, are considered high or on. The default is 0.1 which corresponds to an
+input voltage of 1 V. You can get interesting results when both the inputs are variable CVs (like from LFOs) and this
+threshold is being modulated as well.
+
+lowvalue (l)
+
+0.0
+
+Output value that is output for logic low, false or off.
+
+highvalue (h)
+
+1.0
+
+Output value that is output for a logic high, true or on.
+
+countvalue (cv)
+
+0.1
+
+Value added to the count output for each input with a high level
+
+Output
+
+Type
+
+Type
+
+Description
+
+and (a)
+
+A logic AND operation on all patched inputs: This output is set to highvalue if all inputs are high (i.e. at least
+threshold), else lowvalue
+
+or (o)
+
+A logic OR operation on all patched inputs: This output is set to highvalue if at least one of the inputs is high
+
+xor (x)
+
+Exclusive OR: This is high, if the number of high inputs is odd! This means that any change in one of the inputs will also
+change the output.
+
+nand (na)
+
+Like AND but the outcome is negated.
+
+nor (no)
+
+Like OR but the outcome is negated.
+
+negated (n)
+
+Logical negate of input1 (which can abbreviated as input). Note: The inputs input2 ... input7 are ignored here.
+Another note: If you use input1 anyway, negated always outputs exactly the same as nand and nor. It’s just more
+convenient to write and easier to understand. Hence a dedicated output for a logic negate.
+
+count (c)
+countlow (cl)
+
+DROID manual for blue-6
+
+1 2 3
+
+Adds countvalue to this output for each input that is high.
+Adds countvalue to this output for each input that is low.
+
+247
+
+Table of contents at page 2
+
+16.36
+
+math – Math utility circuit
+
+This circuit provides mathematic operations. Some of these use input1 and
+input2 – such as sum or product. Other
+ones just use input1 (which can be abbreviated as input) – such as negation or
+reciprocal.
+
+root
+
+Note: As long as you do not send a value directly to an
+output like O1, the range of the value is not limited by this
+circuit. You can generate almost arbitrary small or large
+positive and negative numbers. When you send a value
+to an output, it will be truncated into the range -1 ... +1
+(which corresonds to -10 V ... +10 V).
+
+Example for computing the quotient I1
+:
+I2
+[math]
+input1
+= I1
+input2
+= I2
+quotient = O1
+
+When you don’t use both inputs for an operation that
+usually needs to values, the omitted input will make the
+operation “neutral”. For example in the multiplication an
+omitted input will be treated as 1.0 where as in the sum
+it defaults to 0.0. This is useful when you want to temporarily disable a line in your patch. Consider the follow-
+
+= I1
+
+Input
+
+Type
+
+[math]
+input1 = I1
+# input2 = P1.2
+product = O1 # will be set to I1, not 0
+
+Description
+The two inputs
+
+input1, input2 (i)
+
+Output
+
+Default
+
+[math]
+input1 = I1
+input2 = P1.2
+product = O1
+
+If you now remove the line with input2, the output will
+simply copy the input, not set it to 0:
+
+Unused inputs
+
+Example for computing the square root of I1:
+[math]
+input
+
+ing patch, which multiplies the incoming CV from I1 with
+the pot value of P1.2 and outputs it to O1.
+
+= O1
+
+Type
+
+Description
+
+sum (s)
+
+input1 + input2
+
+difference (d)
+
+input1 − input2
+
+product (p)
+
+input1 × input2
+
+quotient (qu)
+
+input1 / input2. If input2 is zero, a very large number will be returned, while the correct sign is being kept. This is
+
+mathematically not correct but more useful than any other possible result.
+modulo (md)
+
+DROID manual for blue-6
+
+input1 modulo input2. This needs some explanation: With this operation you can “fold” the value from input1 into
+the range 0 ... input2. For example if input2 is 1 V, the output will convert 1.234 V to 0.234 V, -2.1 V to 0.9 V and
+0.5 V to 0.5 V. If input2 is zero or negative, the output will be zero.
+
+248
+
+Table of contents at page 2
+
+

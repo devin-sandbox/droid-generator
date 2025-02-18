@@ -1,0 +1,76 @@
+# DROID Circuit Input/Output Keys
+
+## firefacecontrol - Control a RME Fireface interface (experimental)
+
+### Inputs
+- trs (t) - TRS setting
+  - Type: int
+  - Default: 1
+  - Description: TRS configuration parameter
+
+- mainoutput (mo) - Main output level
+  - Type: float
+  - Default: 1
+  - Description: Controls main output level
+
+- outputlevel1...outputlevel16 (ol) - Channel output levels
+  - Type: float
+  - Default: 0
+  - Description: Individual output channel levels (1-16)
+
+- phonesoutput1, phonesoutput2 (po) - Phones outputs
+  - Type: float
+  - Default: 1
+  - Description: Headphone output level controls
+
+- outputmix1in1...outputmix16in16 (o1i-o16i) - Mix routing
+  - Type: float
+  - Default: 0
+  - Description: Mix routing for all 16 output mixes (1-16 inputs each)
+
+- pan1...pan16 (p) - Channel panning
+  - Type: float
+  - Default: 0
+  - Description: Panning control for each channel
+
+- unmute1...unmute16 (u) - Channel mute
+  - Type: float
+  - Default: 0
+  - Description: Unmute control for each channel
+
+- postfader1...postfader16 (pf) - Post-fader routing
+  - Type: float
+  - Default: 0
+  - Description: Post-fader routing control for each channel
+
+- update (ud) - Update trigger
+  - Type: trigger
+  - Description: Triggers update of interface settings
+
+- select (s) - Selection control
+  - Type: int
+  - Description: Enables/disables button and LED processing for overlay functionality
+
+- selectat (sa) - Selection value
+  - Type: int
+  - Description: Value at which select input activates circuit
+
+Note: Experimental circuit for controlling RME Fireface audio interfaces. Key features:
+- Requires X7 module
+- Controls output levels, mix routing, panning, and muting
+- Limited by Fireface MIDI implementation (designed for Mackie Control)
+- Suitable for use with M4 motor fader units
+
+Limitations:
+- Experimental status
+- MIDI implementation constraints from RME Fireface
+- One-way communication (no feedback from interface)
+- Limited parameter control due to MIDI implementation
+- Panning control limitations due to MIDI CC implementation
+
+Example applications:
+- Audio interface level control
+- Mix routing control
+- Headphone output management
+- Multi-channel mixing
+- Channel panning and muting control

@@ -1,0 +1,271 @@
+Input
+
+Type
+
+Default
+
+fromtrs (ft)
+
+1 2 3
+
++
+
+fromusb (fu)
+
+1 2 3
+
++
+
+totrs (tt)
+
+1 2 3
+
+tousb (tu)
+
+1 2 3
+
+DROID manual for blue-6
+
++
++
+
+Description
+Selects a TRS port to use as input (3.5 mm jack). fromtrs = 0 disables TRS, fromtrs = 10 enables auto detection.
+See the manual of midiin for details on port selection.
+Selects a USB port to use as input. fromusb = 0 disables USB, fromusb = 10 enables auto detection. See the manual
+of midiin for details on port selection.
+Selects which TRS MIDI port to output to. See the manual of midiout for details on port selection.
+Selects which USB MIDI port to output to. See the manual of midiout for details on port selection.
+
+278
+
+Table of contents at page 2
+
+16.42
+
+minifonion – Musical quantizer
+
+This circuit is a very musical quantizer that
+gently moves any input CV (pitch information on a 1V/oct base) into selected notes
+of a musical scale. Typically the input
+CV is coming from a random source, LFO,
+melody generator or sequencer.
+In fact the Minifonion is very similar to each of the the
+three quantizer channels in the Audiophile Circuit League
+Sinfonion – just without the user interface and more ﬂexible. It has Sinfonion compatible CVs for the root note and
+the scale selection so it can easily be combined with it as
+long as you control the Sinfonion via CV and stick to the
+ﬁrst mode. But of course you do not need a Sinfonion in
+order to use this circuit!
+If you want to mimick a Sinfonion with the
+you
+might also be interested in the circuits arpeggio (see
+page 127) and chord (see page 154).
+Here is the simplest possible application – a quantization
+of some (random) input pitch at I1 to the seven notes of
+a C lydian major scale.
+[minifonion]
+input = I1
+output = O2
+
+Now let’s change the root note to D (2 semitones above
+C) and the scale to natural minor, so that we now quantize to a D minor scale:
+[minifonion]
+input = I1
+output = O2
+root
+= 2
+degree = 7
+
+DROID manual for blue-6
+
+And here is the table of the ﬁrst 12 scales of the Minifonion. These are exactly the same scales as those in the
+ﬁrst mode (called Chords) of the Sinfonion:
+
+degree
+
+Abbr.
+
+Scale
+
+0
+
+lyd
+
+Lydian major scale (it has a ♯4)
+
+1
+
+maj
+
+Normal major scale (ionian)
+
+2
+
+X7
+
+Mixolydian (dominant seven chords)
+
+3
+
+sus
+
+mixolydian with 3rd /4th swapped
+
+4
+
+alt
+
+Altered scale
+
+5
+
+hm5
+
+Harmonic minor scale from the 5th
+
+6
+
+dor
+
+Dorian minor (minor with ♯13)
+
+7
+
+min
+
+Natural minor (aeolian)
+
+8
+
+hm
+
+Harmonic minor (♭6 but ♯7)
+
+9
+
+phr
+
+Phrygian minor scale (with ♭9)
+
+10
+
+dim
+
+Diminished scale (whole/half tone)
+
+11
+
+aug
+
+Augmented scale (just whole tones)
+
+input = I1
+output = O2
+root
+= I2 * 120 # base on semitones
+degree = I3 * 120 # base on semitones
+
+You ﬁnd the complete table of all 108 scales on page 107.
+If you are a Sinfonion user, please note that the inputs
+root and degree of the Minifonion are not based on semitones like the Sinfonion, but simply expect whole numbers like 0, 1, 2 and so on (which corresponds to the CVs
+0V, 10V, 20V, etc.). So if you want those CV inputs to be
+compatible, you have to multiply the values with the factor of 120 before sending them to the Minifonion:
+[minifonion]
+
+279
+
+Table of contents at page 2
+
+Input
+input (i)
+
+Type
+1V
+Oct
+
+Default
+
+Description
+
+0V
+
+Patch the unquantized input voltage here
+This jack is optional. If you patch it, the Minifonion will work in triggered mode. Here the output pitch is always frozen
+until the next trigger happens.
+
+trigger (t)
+
+bypass (b)
+root (ro)
+
+DROID manual for blue-6
+
+1 2 3
+
+off
+
+If you set this gate input to 1 then quantization is bypassed and the input voltage is directly copied to the output.
+
+0
+
+Set the root note here. 0 means C, 1 means C♯, 2 means D and so on. If you multiply the value of an input like I1 with
+120, then you can use a 1V/Oct input for selecting the root note via a sequencer, MIDI keyboard or the like. Also then
+you are compatible with the ROOT CV input of the Sinfonion.
+0
+
+C
+
+1
+
+C♯
+
+2
+
+D
+
+3
+
+D♯
+
+4
+
+E
+
+5
+
+F
+
+6
+
+F♯
+
+7
+
+G
+
+8
+
+G♯
+
+9
+
+A
+
+10
+
+A♯
+
+11
+
+B
+
+12
+
+C
+
+280
+
+Table of contents at page 2
+
+

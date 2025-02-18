@@ -1,0 +1,224 @@
+Input
+
+Type
+
+Default
+
+Description
+
+form (fo)
+
+1 2 3
+
+0
+
+This is an advanced feature that allows you to slice your steps into two or three parts and create musical song forms
+like AAAB or ABAC. Each of the parts A, B or C are then played according to the playmode.
+The form AAAB, for example, creates a 32 step form from just 16 steps, by playing the ﬁrst 8 steps three times and
+then the second 8 steps once.
+The following forms are available:
+0
+
+A (forms are basically deactivated)
+
+1
+
+AAAB
+
+2
+
+AABB
+
+3
+
+ABAC
+
+4
+
+AAABAAAC
+
+5
+
+AB
+
+6
+
+AAB
+
+Notes:
+• The splitting of the steps into parts takes place after accounting for startstep and endstep.
+• Forms with A, B and C split the pattern into three parts. These parts can only be of equal size if the number of
+steps is dividable by 3, of course.
+• The pattern AB is really not the same as A, e.g when direction is set 1 (reverse). In that case each of the parts
+is played backwards, but the parts themselves move forwards on your steps.
+direction (d)
+
+0
+
+Sets the general direction in which the sequencer moves through the steps. 0 means forwards and 1 means backwards.
+
+pingpong (pp)
+
+0
+
+If set to 1, the sequencer will change the direction every time it reaches the start or end of the sequence.
+
+DROID manual for blue-6
+
+298
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+pattern (pt)
+
+1 2 3
+
+0
+
+Selects one of a list of movement patterns. That way, the sequence steps are not played in linear order but in a more
+sophisticated movement. Available pattern are:
+0
+
+go step by step to the sequence (normal)
+
+→
+
+1
+
+two steps forward, one step backward
+
+→→←
+
+2
+
+double step forward, one step backward
+
+⇒←
+
+3
+
+double step forward, double step backward, single step forward
+
+⇒⇐→
+
+4
+
+double step forward, single step forward, double step backward, single step forward
+
+⇒→⇐→
+
+5
+
+random single step forward or backward
+
+↔
+
+6
+
+go forward by a small random number of steps
+
+→×?
+
+7
+
+random jump to any allowed (other) note
+
+⇕
+
+repeatshift (rs)
+
+1 2 3
+
+0
+
+This is a number in the range -24 … +24. If you set this to non-zero, each repetition of a step shifts the played note by
+that many notes within the selected scale notes. This only has effect on steps where the number of repeats is greater
+than 1. Also it is only is applied when the quantize = 2.
+
+ratchetshift (ras)
+
+1 2 3
+
+0
+
+This is a number in the range -24 … +24. If you set this to non-zero, each ratchet of a step shifts the played note by
+that many notes within the selected scale notes. This only has effect on steps where the number of ratchets is greater
+than 1. Also it is only is applied when the quantize = 2.
+If you combine ratchetshift with repeatshift, both shifts are added together. And the ratchet shifting is reset for
+each repetition of the step.
+
+accumulatorrange (ac)
+
+1 2 3
+
++
+
+Using this parameter enables the pitch accumulator. The value sets the maximum value the accumulator can get. The
+maximum is 16. If you set this to 0, the fader mode for pitch randomization still is in the special mode where the upper
+four positions control the impact of the accumulator.
+Please consult the manual of motoquencer (see page 286) for details on the pitch accumulator.
+
+DROID manual for blue-6
+
+299
+
+Table of contents at page 2
+
+Input
+
+Type
+
+constantlength (co)
+
+Default
+
+Description
+
+0
+
+This input enables a feature that (tries to) keep the actual length of the sequence constant. There are two levels. If
+constantlength = 1, every change in the repeats of a step is compensated by changing the repeats in the following
+steps. E.g. if you increase the number of repeats from 4 to 5 in step 3 (by moving the fader in the appropriate fader
+mode), the repeats in step 4 are reduced by 1. If they are already 1, step 5 is tried an so on, until it wrap around to step
+1.
+The second level is constantlength = 2. Here also the skip setting of steps is honored and modiﬁed in order to keep
+the length constant. A skipped step essentially has the length 0 (or 0 repeats). The componsation is now done not
+only when the repeats are changed but also when skip is switched on or off on a step.
+All the compensation is only active with the range that is set with the start and end step.
+
+autoreset (ar)
+metricsaver (ms)
+
+1 2 3
+
+0
+
+If set to non-zero, automatically issues a reset (just like a trigger to reset) every N clock ticks.
+
+1
+
+The Metric Saver ™ helps you to reliably come back to your original metric and time after playing around with all sorts
+of parameters that change the played number of steps in the sequence. These are: startstep, endstep (also when
+changed interactively), form, direction, pingpong, pattern, autoreset and repeats and skips of individual steps.
+Therefore it counts the actual number of clock cycles since the last external reset (or system start). And when all of
+these features are deactivated, it snaps back the clock to the position it would have been by now if you never had
+played around with all the funny stuff.
+That way, during a live performance, you can safely play around with all this polymetric and otherwise time disrupting
+stuff and as soon as you clean up your mess – voila: you are back on track and in sync with the rest of the “band”.
+The metric saver is turned on by default. But you can disable it by setting the parameter to 0.
+
+DROID manual for blue-6
+
+300
+
+Table of contents at page 2
+
+

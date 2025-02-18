@@ -3,7 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "globalStateE4.ts": "bun globalStateE4.ts",
+    "globalStateE4": "bun globalStateE4.ts",
     "sequencer": "bun sequencerPatch.ts"
   },
   "devDependencies": {

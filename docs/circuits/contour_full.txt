@@ -1,0 +1,929 @@
+contour – Contour generator
+
+An enhanced version of the classic ADSRenvelope generator with the six phases
+predelay, attack, hold, decay, sustain and
+release.
+For triggering there are two alternative inputs: gate and trigger. Use trigger if you are not interested in the length of the gate signal. There will be no
+decay / sustain phase in that case.
+The minimal patch just connects gate or trigger and
+the output. It creates an envelope with standard timings,
+triggered at I1 and output to O1:
+[contour]
+gate
+= I1
+output = O1
+
+Assigning pots to the classic four inputs lets you use the
+just as a normal ADSR envelope:
+[p2b8]
+[p2b8]
+[contour]
+gate
+= I1
+attack = P1.1
+decay
+= P1.2
+sustain = P2.1
+release = P2.2
+output = O1
+
+When you try this out, you will notice that the time range
+of the attack parameter is much shorter than that of
+1
+decay and release. If fact it is just 20
+of these. This
+has been chosen in this way because I believe that this
+
+DROID manual for blue-6
+
+makes sense from a musical point of view. Very long attack times are quite unusual and I wanted to be able to
+directly map the four values to pots. But if you don’t like
+that you can – of course – make all three timing parameters have the same range simply by multiplying attack by
+20:
+
+P
+A
+H
+D
+S
+R
+
+10
+V olts
+
+16.13
+
+5
+
+0
+[p2b8]
+[p2b8]
+
+0
+
+[contour]
+gate
+= I1
+attack = P1.1 * 20
+decay
+= P1.2
+sustain = P2.1
+release = P2.2
+output = O1
+
+If you do not change the shape parameter, the duration
+of the attack phase is 0.1 sec at a value of 1. The phases
+decay and release have a duration of 2.0 sec at a value of
+1.
+
+The Phases
+In addition to the traditional ADSR phases this circuit also
+has a an optional predelay (P) phase – which acts like a delay before the envelope starts – and an optional hold (H)
+phase which keeps the envelope at maximum level for a
+short time right after attack and before decay.
+The following diagram shows an example envelope with
+all six phases. The gate starts at 0 ms and ends at 200 ms.
+
+50
+
+100
+
+150
+200
+time(ms)
+
+250
+
+300
+
+Attack, Decay and Release
+The phases attack, decay, release are phases where the
+level of the envelope starts at one level and then approaches another level within a certain time. In the upper example all these phases had a linear characteristic.
+That means that the output voltage changes by a constant amount per time.
+’s contour allows you to control the shape of
+these phases in order to get them bent in either direction. For that purpose there are the inputs attackshape,
+decayshape and releaseshape.
+Let’s take decay as an example. During the decay phase
+the envelopes voltage falls from the maximum level of
+10 V (you can change this with the input level) to the
+sustain level deﬁned by the input sustain. For simplicity let’s assume that you have not used these inputs, so
+the maximum level is 10 V (1.0) and the sustain level is
+5 V (0.5). Also we assume attack, predelay and hold to
+be 0.0.
+When decayshape is not patched or otherwise set to its
+
+167
+
+Table of contents at page 2
+
+default of 0.5, the shape of the decay curve is linear. This
+means that it goes down by the same voltage each second
+until it reaches 0.5.
+
+= I1
+= P1.1
+= O1
+
+5
+
+0
+
+5
+0
+0
+
+50
+
+100
+
+150
+200
+time(ms)
+
+250
+
+300
+
+If the shape gets a value less than 0.5, the curve is bent
+into the opposite direction (some call this logarithmic
+but mathematically this is not true). Here is an example
+where decayshape is set to 0.0:
+D
+S
+R
+
+10
+0
+
+50
+
+100
+
+150
+200
+time(ms)
+
+250
+
+300
+
+Now, if you set decayshape to 1.0, the curve is completely exponential:
+
+Such an envelope sounds completely different – of course
+also depending on whether you feed this into a linear
+VCA, exponential VCA or a VCF. For ﬁne control you can
+use any number between 1.0 and 0.5 of course. In that
+case you will get a curve that is bent to a certain degree.
+Assigning decayshape to a pot helps you listening to the
+different sounds:
+
+V olts
+
+V olts
+
+V olts
+
+D
+S
+R
+
+10
+
+[contour]
+gate
+decayshape
+output
+
+D
+S
+R
+
+10
+
+5
+
+0
+0
+
+Input
+gate (g)
+
+trigger (t)
+
+Type
+
+Default
+
++
+
+50
+
+100
+
+150
+200
+time(ms)
+
+250
+
+300
+
+Description
+Patch a gate signal here that triggers the envelope. Gate means that the length of the signal is relevant. While the gate
+is high the sustain phase holds on. As soon as gate is going low the release phase is being entered.
+This is an alternative method of starting the envelope. If you use trigger instead of gate, there are the following
+differences:
+• The duration of the trigger signal is being ignored.
+• There is no decay / sustain phase. Attack and hold are immediately followed by release. The inputs sustain and
+decay have no impact anymore.
+• The predelay and attack phases are continued until their end even when the trigger signal ends (When using
+gate and the gate signal ends during predelay, the envelope does not start. When it ends during attack, decay /
+sustain are being skipped and release starts at the current level of the envelope. That way short gates can result
+in “quieter” envelopes).
+
+DROID manual for blue-6
+
+168
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+retrigger (rt)
+
+1
+
+If you patch 0 or off here, a gate or trigger impulse will not immediately restart the envelope unless it already has
+reached its release phase. The default on, which means that a trigger will immediately restart the envelope in any
+case.
+
+startfromzero (sz)
+
+0
+
+If you set this to 1 or on, a trigger or gate will reset the envelope’s current level immediately to zero. This is sometimes
+called “digital mode”. In the normal analog mode the envelope resumes from where it is. This means that when a
+trigger occurs right in the release phase where the level is still high, will start it’s attack not from zero but from this
+hight value.
+
+abortattack (aa)
+
+0
+
+This is an on / off setting that decides what happens if the input gate goes off while the predelay or attack phase is
+still not ﬁnished. Per default that phase will be ﬁnalized regardless of the gate state. If abortattack is on, the end of
+the gate will immediately stop the attack phase and move on to hold. Note: In this case the value of the envelope will
+not reach the maximum level. If the gate ends during the predelay phase, no envelope will be started at all.
+Note: This setting is only functional when the gate input is being used for triggering the envelope. If you use trigger,
+the attack phase is always completely executed and this setting has no inﬂuence.
+
+loop (lo)
+
+0
+
+This is an on / off input that switches loop on or off. When loop is on, the envelope will immediately start again once
+it has ﬁnished. It also starts without triggering. This converts contour into a kind of fancy LFO.
+gate / trigger and loop can be combined. Any gate or trigger will restart the envelope just as usual – even in loop
+
+mode.
+predelay (pd)
+
+0.0
+
+The predelay phase inserts a delay between the incoming gate and the begin of the envelope. The length of the predelay
+is 0.1 seconds per volt, so a value of 1.0 means 1 second
+
+attack (a)
+
+0.0
+
+Length of the attack phase, i.e. the time from the beginning of the gate until the maximum level is reached. See the
+general description for information about the scaling of this input.
+
+hold (h)
+
+0.0
+
+If this is none-zero, the envelopes lingers a certain amount of time at its maximum level after the attack and before
+the decay phase. The input value speciﬁes a number of seconds. A value of 0.5 (this is 5 V) will create a hold time of
+0.5 seconds.
+
+decay (d)
+
+0.2
+
+Time of the decay phase
+
+sustain (s)
+
+0
+
+1
+
+0.5
+
+Sustain level
+
+swell (sw)
+
+0
+
+1
+
+0.0
+
+If this jack is set to a value greater than 0.0, the level of the envelope will go up or down again during the sustain phase
+until it reaches swelllevel.
+
+swelltime (st)
+
+5.0
+
+Time of the swell phase
+
+swelllevel (sl)
+
+1.0
+
+Level the swell phase is approaching. Setting this to the same as sustain effectively disables swell.
+
+DROID manual for blue-6
+
+169
+
+Table of contents at page 2
+
+Input
+
+Default
+
+Description
+
+release (r)
+
+0.2
+
+Timing of the release phase
+
+level (l)
+
+1.0
+
+Maximum level and scaling of the envelope. It is basically an output attenuator of the envelope. Sudden changes in
+the level will immediately have an (audible) impact on the envelope.
+
+1.0
+
+energy of the attack: The velocity is similar to the level, but is effective just during the attack phase. During that
+phase that maximum voltage that is read from the velocity jack and will be used as the velocity of the envelope.
+Further changes during the other phases will be ignored. This makes it ideal of using with a sequencer. For example
+you can patch an accent output here and add some offset. Sudden changes in this input will not affect the shape of the
+envelope.
+
+0V
+
+This is a one volt per octave input affecting all timings of the envelope. When you set this to 0 (the default), it is neutral.
+A value of 0.1 (1 Volt) will exactly double the speed of all phases - just as one octave up doubles the frequency of an
+oscillator. This jack can be used to easily implement envelopes where the length very naturally follows this pitch - just
+like on a piano, glockenspiel or marimba lower notes last longer than higher ones.
+
+velocity (v)
+
+pitch (p)
+
+Type
+
+0
+
+1
+
+1V
+Oct
+
+Tap tempo is an alternative method of specifying a pitch information. When you patch a clock to tap tempo, all time
+parameters in the envelope are relative to that clock. If the clock speeds up, the envelope gets faster and vice versa.
+The reference speed is 120 BPM. This means that if you patch a 120 BPM clock here, nothing changes. Clocks faster
+than 120 BPM will speed up the envelope. Clocks slower than 120 BPM will slow it down.
+
+taptempo (tt)
+
+Please see page 23 for details on using taptempo inputs.
+shape (sh)
+
+0 0.5 1
+
+0.5
+
+attackshape (as)
+
+0 0.5 1
+
++
+
+decayshape (ds)
+
+0 0.5 1
+
+swellshape (ss)
+
+0 0.5 1
+
+releaseshape (rs)
+
+0 0.5 1
+
+zerocrossing (z)
+
+DROID manual for blue-6
+
++
++
++
++
+
+If you use this jack, it sets the shape for all of the relevant phases, which are attack, decay, swell and release. Note:
+this input is only effective for those phases where the dedicated input (like attackshape, etc.) is not being used.
+Shape of the attack curve. If nothing is patched here, the value of shape will be used. See the general description for
+how curve shapes work.
+Shape of the curve in the decay phase. If nothing is patched here, the value of shape will be used.
+Shape of curve during the swell phase. If nothing is patched here, the value of shape will be used.
+Shape of the curve in the release phase. If nothing is patched here, the value of shape will be used.
+This is an experimental feature: If you patch the output of an oscillator here, an incoming gate or trigger signal will be
+delayed until the next zero crossing of that signal. That allows you to start the envelope exactly when the audio signal
+is at 0 and avoid nasty klicks, even if the attack is set to 0. It comes at a price, however. The delay between the trigger
+and the ﬁrst zero crossing might vary a lot from note to note and that could make your rhythm untight, especially if
+the frequency of the oscillator is low.
+
+170
+
+Table of contents at page 2
+
+Output
+
+Type
+
+Description
+
+output (o)
+
+Main output of the envelope. Patch this to your ﬁlter, VCA or wherever you like.
+
+negated (n)
+
+The negated output is the same as the output but in negative voltage.
+
+inverted (iv)
+
+The inverted output always outputs positive voltages but is inverted relative to the level of the envelope. When the
+normal output outputs 0 V, the inverted output outputs level and vice versa
+
+endofpredelay (ep)
+
+This output will emit a trigger with a length of 10 ms when the predelay phase has ended.
+
+endofattack (ea)
+
+This output will emit a trigger with a length of 10 ms when the attack phase has ended.
+
+endofhold (eh)
+
+This output will emit a trigger with a length of 10 ms when the hold phase has ended.
+
+endofdecay (ed)
+
+This output will emit a trigger with a length of 10 ms when the decay phase has ended.
+
+endofrelease (er)
+
+This output will emit a trigger with a length of 10 ms when the release phase has ended.
+
+DROID manual for blue-6
+
+171
+
+Table of contents at page 2
+
+16.14
+
+copy – Copy a signal, while applying attenuation and offset
+
+This circuit is a simple utility that copies a
+signal from an input to an output. Since every input generally can be attenuated and
+offset this can be used for scaling and offsetting a signal on its path.
+
+input = I1 + I2
+output = O1
+
+Provide an attenuated signal from I1 into an internal
+patch cable:
+
+Build a simple precision adder (CV mixer), that adds the
+voltages of I1 and I2:
+[copy]
+
+Input
+
+Type
+
+input (i)
+
+Output
+output (o)
+
+DROID manual for blue-6
+
+Type
+
+[copy]
+input = I1 * 0.5
+output = _INPUT_CV
+
+Default
+
+Description
+
+0.0
+
+Connect the signal you want to copy here.
+
+Note: Previous versions of copy had an inverted output.
+This has been removed in blue-3. But the same effect can
+be achieved by substracting a signal from 1. This converts
+0 V into 10 V, 2 V into 8 V, 10 V into 0 V and so on:
+[copy]
+input = 10V - I1
+output = O1
+
+Description
+The resulting signal will be sent here.
+
+172
+
+Table of contents at page 2
+
+16.15
+
+crossfader – Morph between 8 inputs
+
+This utility circuit creates a CV controlled
+mix of two out of up to eight inputs.
+
+then maps the range 0.0 ... 1.0 to a journey from the ﬁrst
+to the last input. Let’s see the following example:
+
+With two inputs this acts like a classical
+cross fader. The following example lets
+you fade between the signals at I1 and I2
+by turning the pot P1.1:
+
+[lfo]
+hz
+sawtooth
+
+= 0.1
+= _FADE
+
+[crossfader]
+input1
+input2
+input3
+input4
+fade
+output
+
+= I1
+= I2
+= I3
+= I4
+= _FADE
+= O1
+
+[crossfader]
+input1 = I1
+input2 = I2
+fade
+= P1.1
+output = O1
+
+At fully CCW (0.0) only the signal of the ﬁrst input is being output, at fully CW (1.0) only that of the second one.
+In the center position (0.5) you get the average of both
+inputs, namely 0.5×I1 + 0.5×I2.
+Using more than two inputs is possible. The fade input
+
+Input
+
+Type
+
+input1 ... input8 (i)
+
+fade (f)
+
+0
+
+Output
+
+Type
+
+output (o)
+
+DROID manual for blue-6
+
+1
+
+Now during one LFO cycle of 10 seconds the output O1
+begins with the signal at I1 and then morphs to that of
+I2. It reaches 100% of I2 at a fade value of 31 . Then it
+continues to I3, which it reaches at 23 and ﬁnally – after 10
+seconds – it ends at I4. After that it immediately jumps
+back to I1, in order to begin the next cycle.
+
+Values beyond 1.0 for fade are allowed and allow you to
+morph from the last input to the ﬁrst one. In the previous example that would be the range from 1.0 to 1.3333.
+So if you scale up the sawtooth to a total range of 0.0 ...
+1.3333 you will get a smooth cyclic morph between all
+four inputs:
+[lfo]
+hz
+sawtooth
+
+= 0.1
+= _FADE
+
+[crossfader]
+input1
+input2
+input3
+input4
+fade
+output
+
+= I1
+= I2
+= I3
+= I4
+= _FADE * 1.3333
+= O1
+
+Default
+
+Description
+
+0.0
+
+The input signals that you want to crossfade between. At least input1 and input2 need to be patched. Otherwise
+they are treated like 0 V signals.
+
+0.5
+
+This value decides which of the two inputs should be mixed and to which degree each one should go into the mix. At
+0.0 the mix consists of 100% of the ﬁrst inputs, at 1.0 of 100% of the last patched input.
+
+Description
+Output of the mix
+
+173
+
+Table of contents at page 2
+
+16.16
+
+cvlooper – Clocked CV looper
+
+Easy to use clocked CV looper that also
+loops an additional gate and can do overlay and overdub.
+This circuit is a very easy to use CV looper.
+It records an incoming CV (and optionally
+a gate as well) on a virtual tape loop with a resolution of
+one sample per ms. The length of this tape is eight seconds. If you need a longer loop time, you can reduce the
+tape speed. At a speed of 0.5 you have a maximum loop
+time of 16 seconds and a resolution of one sample per
+2 ms (which is still pretty decent for most applications).
+This looper is meant to be playable in a live situation as
+easily as possible. For that purpose it does not implement the typical loop start → loop stop scheme – which
+requires the musician to know beforehand that she will
+start a loop. Instead the looper is always recording. The
+loop length is speciﬁed in clock ticks. And as soon as the
+looping is activated, the previous x clock ticks of CV information will be repeated over and over.
+Here is an example for a simple looper for one CV without
+a gate:
+[button]
+button
+led
+
+= B1.1
+= L1.1
+
+[cvlooper]
+cvin
+= I1
+clock
+= I8
+cvout
+= O1
+length
+= 16
+loopswitch = L1.1
+
+# steady clock
+# 16 clock ticks
+
+The button B1.1 is converted into a toggle button for activating the looping. The CV is read from I1 and is sent to
+DROID manual for blue-6
+
+O1. As long as the loop switch is off the looper is in bypass mode and simply copies I1 to O1. At the same time
+it is always recording to its internal endless tape. When
+the loop switch is switched on, the last 16 clock ticks of
+CV information is looped to O1 and I1 is ignored.
+
+Please note: for your convenience the exact time when
+the loop switch is switched on is quantized to the nearest
+clock tick – may it be in the future or past. This makes
+playing exactly in time much easier.
+The second example adds a gate signal – such as output by a ribbon controller. The gate is running through
+I2→O2.
+[button]
+button
+led
+
+Toggle buttons would ﬁt nicely for these two functions.
+Please note: you always need a clock! The CV looper is
+useless without one. If you do not want to use an external clock, you can make use of the LFO circuit for creating
+an internal clock.
+What if you want to loop more than one CV? Just create
+more cvlooper circuits – one for each CV. And control
+them from the same set of buttons.
+
+= B1.1
+= L1.1
+
+[cvlooper]
+cvin
+= I1
+gatein
+= I2
+clock
+= I8
+cvout
+= O1
+gateout
+= O2
+length
+= 16
+loopswitch = L1.1
+
+the output. The tape’s content stays untouched.
+This allows you to overlay the loop CV with your
+own from time to time.
+2. On the other hand, when overdub is on and the input gate is active, the input CV will be written to the
+tape and replaces the recorded CV at those places.
+And it also will be routed to the output at the same
+time.
+
+Changing the tape or clock speed
+# steady clock
+
+# 16 clock ticks
+
+Using a gate changes the behaviour of the CV looper. The
+state of gatein (not the exact voltage) is being looped as
+well. The CV is recorded to the tape only while the gate is
+high.
+Using a gate makes two additional features possible:
+1. When overlay is on and the input gate is active,
+the input CV will override that on the tape and instead the source signal from cvin is bypassed to
+174
+
+It is possible to change the tape speed on the ﬂy in order
+to slow down or speed up the recorded loop’s content. It
+is important – however – to always change the tape speed
+and clock speed at the same time and in the same manner.
+Otherwise you will get stuttering effects. So if you double the tapespeed you also need to double the frequency
+of the clock.
+
+Changing the length
+Changing length parameter on the ﬂy is supported and
+just works. Remember: it does not set the length of the
+tape loop but just the length of that part that is played
+Table of contents at page 2
+
+back. The recording is always done with the maximum
+length. So if you increase the length while playing back
+you will get access to the older parts of the CV history
+that way. Just don’t make the length longer than the actual tape (see below).
+
+Limitations
+1. The value range of cvin and cvout is -1 … +1 – or -10 V
+… +10 V. If that range is not sufﬁcient for you, you need to
+scale it yourself. For example you could divide the value
+by 10 before sending it to cvin and multiply it with 10 after it arrives at cvout:
+
+Input
+
+Type
+
+[cvlooper]
+cvin = _INPUT_CV / 10
+cvout = _OUT
+...
+
+3. The total loop length can be 128 clock ticks at most. If
+you need more ticks, you can divide the input clock down,
+using clocktool:
+
+[copy]
+input = _OUT * 10
+output = _OUTPUT_CV
+
+[clocktool]
+clock
+divide
+output
+
+= G1
+= 2
+= _LOOP_CLOCK
+
+2. Memory (RAM) is a valuable resource. The CV looper
+limits itself to 8000 samples in order not to waste too
+much memory and leave space for other circuits as well
+(the Droid master has about 100.000 bytes of memory
+and 8000 samples need 16.000 bytes). But if you want
+to make longer loops, you can reduce the tape speed and
+thus use less samples per second.
+
+[cvlooper]
+clock
+cvin
+tapespeed
+cvout
+length
+loopswitch
+
+= _LOOP_CLOCK
+= I5
+= 0.2 # max loop five x longer
+= O5
+= 128 # = 256 original ticks
+= _SOME_BUTTON
+
+Default
+
+Description
+
+cvin (ci)
+
+0.0
+
+Input CV that should be looped.
+
+gatein (gi)
+
+1
+
+Optional input gate. If you do not patch something here, the gate is assumed to be always high.
+
+clock (c)
+
+Input clock. The clock is mandatory and is the base for the deﬁnition of the loop length. Also the loop switch is quantized in time to the nearest clock.
+
+reset (r)
+
+A trigger here resets the playback head immediately to the start of the loop, if you are in playback mode.
+16
+
+Length of the loop in clock ticks. Example: You get a length of 16 ticks by patching the number 16 to length. If you
+want to set the length by means of an external CV that would require 160 Volts. So you need to multiply your input by
+some useful number in that case.
+
+tapespeed (s)
+
+1.0
+
+Relative tape speed, where 1.0 is the normal speed. So a value of 0.5 slows down the speed thus increasing the effective tape length from 8 to 16 seconds while reducing the sampling rate from 1 ms to 2 ms per sample. Changing the
+tape speed on the ﬂy probably leads to interesting results.
+
+loopswitch (ls)
+
++
+
+length (l)
+
+DROID manual for blue-6
+
+1 2 3
+
+Mandatory parameter: While the loop switch is off the CV looper simply sends all input CV and gate to their respective
+outputs. At the same time CV and gate are also recorded to the tape. When the loop switch is on, the CV and gate are
+being read from the tape, instead. The input CV and gate are now ignored.
+
+175
+
+Table of contents at page 2
+
+

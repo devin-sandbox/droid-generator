@@ -1,0 +1,379 @@
+16.40
+
+midiout – CV to MIDI converter
+
+This circuit allows you to “play” notes via
+MIDI on an external hardware or software
+synth. You also can send all sorts of other
+MIDI events. You need the X7 expander for
+that to work (see page 77).
+The MIDI implementation of midiout is very comprehensive. Please look at the table of input jacks for all features. Here I just want to show some basic examples to
+get you started quickly. Fun fact: This is the only circuit that does not have any outputs, because all output
+is done via MIDI!
+
+Basic operation
+Easy things should be easy and complex things should be
+possible. So we start with the easy things. Here is a patch
+that converts a CV / gate input from I1 / I2 into a stream
+of MIDI notes and sends them out via the 3.5 mm TRS jack
+on MIDI channel 1:
+[midiout]
+pitch = I1
+gate = I2
+
+Every time the gate input at I2 goes from off to on, the
+current pitch (1V/Oct) is read from I1. Then one MIDI
+“note on” event is being created. The “velocity” of that
+note is set to the default value of 1.0, which is the maximum (every MIDI note event has a velocity, which is
+meant to reﬂect the speed at which the key of the keyboard has been pressed).
+
+is just read just at the note starts, we don’t need a sample
+and hold here:
+usb = 1
+
+Uses USB only
+
+[random]
+minimum = 0.5 # minimum allowed velocity
+maximum = 1.0 # maximum allowed velocity
+output = _VELOCITY
+
+usb = 0
+
+Uses TRS only (default)
+
+[midiout]
+pitch = I1
+gate = I2
+velocity = _VELOCITY
+
+Note: the range of the velocity goes from 0.0 to 1.0 – just
+as all other parameters in midiout do. Internally MIDI
+uses the integer numbers 0 to 127.
+
+Output selection
+You can send your MIDI stream either via the 3.5 mm TRS
+jack of the X7 (TRS stands for “tip ring sleeve” – the structure of the stereo 3.5 mm plug) or via the USB-C port. This
+is controlled by the parameters usb and trs.
+Per default the stream is sent via TRS. As soon as you use
+either usb or trs you set this explicitely. Here is a complete table of all possible usages of these inputs (empty
+cells mean that the parameter is not used):
+
+trs = 1
+
+Uses TRS only (default)
+
+trs = 0
+
+Uses USB only
+
+usb = 0
+
+trs = 1
+
+Uses TRS only (default)
+
+usb = 1
+
+trs = 0
+
+Uses USB only
+
+usb = 1
+
+trs = 1
+
+Uses both TRS and USB
+
+usb = 0
+
+trs = 0
+
+Mute! does not send MIDI.
+
+Note: MIDI via USB has a much higher data rate then via
+TRS. If you use both USB and TRS at the same time, USB
+will run at the same (lower) data rate as TRS. This might
+lead to fewer updates for CCs and similar. The reason is
+that the midiout circuit does not make a separate book
+keeping for USB and TRS but creates just one common
+MIDI data stream. If that’s an issue for you, duplicate
+your midiout circuit and create one instance for TRS and
+one for USB. Then they create two separate MIDI streams
+that are optimized for the speciﬁc maximum data rates
+of their output ports.
+If you have a MASTER18 – especially if combined with the
+X7 – you can have more than one port of a type. When selecting the target ports you can use numbers greater than
+1 in this case.
+The upper table still applies in the following way: If you
+don’t specify the port explicitely, the ﬁrst port is used.
+For example if you specify usb = 0 and not trs, the port
+MIDI1 on the MASTER18 is used.
+
+You can specify any velocity you like with the jack
+velocity. Let’s randomize that. Since the velocity jack
+
+DROID manual for blue-6
+
+Uses TRS only (default)
+
+Here is how the MIDI ports are numbered in the various
+268
+
+Table of contents at page 2
+
+hardware conﬁgurations:
+
+Note gates
+
+usb = 1
+
+Send to the USB port on the X7
+
+trs = 1
+
+Send to the TRS port on the X7
+
+[midiout]
+pitch1 = I1
+pitch2 = I2
+pitch3 = I3
+gate1 = I5
+gate2 = I6
+gate3 = I7
+
+usb = 1
+
+Send to the USB port
+
+If you work with velocity, each voice has its own velocity
+input:
+
+trs = 1
+
+Send to the port MIDI1
+
+MASTER + X7:
+
+MASTER18:
+
+trs = 2
+
+Send to the port MIDI2
+
+trs = 10
+
+Send to both MIDI1 and MIDI2
+
+MASTER18 + X7:
+usb = 1
+
+Send to USB port on the MASTER18
+
+usb = 2
+
+Send to USB port on the X7
+
+usb = 10
+
+Send to both USB ports
+
+trs = 1
+
+Send to MIDI1 on the MASTER18
+
+trs = 2
+
+Send to MIDI2 on the MASTER18
+
+trs = 3
+
+Send to the TRS port on the X7
+
+trs = 10
+
+Send to all three TRS ports
+
+Polyphonic patches
+One great motivation for doing CV to MIDI at all is
+playing polyphonic music on hardware synths, because
+polyphony in Eurorack is quite costly and very time and
+space consuming. One midiout circuit can play up to
+eight notes at the same time and if that’s not enough, add
+a second midiout circuit. For each simultaneous note
+add one pair of pitch and gate jacks:
+
+DROID manual for blue-6
+
+Note gates are a convenient way to directly trigger certain notes. Here you select up to eight notes and get one
+dedicated trigger for each. You select the note number
+with note1, note2, etc. These are MIDI note numbers
+from 0 to 127, where 0 is usually a C-2 (and 24 a C0).
+When you send a trigger into the corresponding notegate
+input, that note will be played.
+[midiout]
+note1 = 24
+note2 = 25
+notegate1 = I1
+notegate2 = I2
+
+[midiout]
+pitch1 = I1
+pitch2 = I2
+pitch3 = I3
+gate1 = I5
+gate2 = I6
+gate3 = I7
+velocity1 = 0.6
+velocity2 = 0.8
+velocity3 = 1.0
+
+This is sometimes convenient when triggering drum
+voices.
+
+Creating a MIDI clock
+
+CC and other controllers
+There are several continuous values that you can change
+over time. The following example lets you control the
+MIDI CC number 17 via input I3 (at a range from 0 V to
+10 V) and the volume and modulation wheel with two
+pots:
+[midiout]
+pitch = I1
+gate = I2
+ccnumber1 = 17
+cc1 = I3
+volume = P1.1
+modwheel = P1.2
+
+If you want to simulate a MIDI sequencer, you need to
+provide a MIDI clock. This can be injected into the output
+either by sending a modular clock that is running on 16th
+notes into clock, or a raw MIDI clock into midiclock.
+Example: You want your clock to run at 120 BPM. BPM
+means beats per minute. And a beat is ment to be a quarter note. 120 quarter notes a minute means two quarter
+notes a second and that means eight 16th notes a second,
+hence our clock needs to run at 8 Hz.
+[lfo]
+hz = 8 # 120 BPM
+square = _CLOCK
+[midiout]
+clock = _CLOCK
+
+269
+
+Table of contents at page 2
+
+So if you work with a clock that can change the speed,
+better use the jack midiclock instead and directly supply
+the MIDI clock (at a six times higher speed). Here is the
+same example but now we directly create the MIDI clock:
+[lfo]
+hz = 48 # 120 BPM MIDI clock
+square = _MIDICLOCK
+[midiout]
+midiclock = _MIDICLOCK
+
+Pitch stabilization
+MIDI output appears simple to implement, but isn’t when
+you look at the details. One tricky problem is that many
+modules that output pitch information are not very precise in timing. Sequencers often need a couple of milliseconds for the pitch CV to reach its ﬁnal value and stabilize
+after the gate is being output.
+The following diagram shows a gate signal going high
+(blue) and a pitch signal with a small ramp reaching its
+ﬁnal destination shortly afterwards (red):
+
+MIDI sequencers also output “start” and “stop” messages.
+You can send them either via triggers into start and stop
+or use the input running for both. When running goes
+high, a “start” message is sent, when it goes low a “stop”
+message.
+
+Pitch tracking
+Pitch tracking is an advanced feature that works in monophonic setups. Here midiout watches the input pitch
+all the time and adapts the pitch of the currently played
+note via MID pitchbend events in order to reﬂect the pitch
+changes. See the documentation of the pitchtracking
+jack for details.
+
+DROID manual for blue-6
+
+If that does not work out well for you, you can deactivate
+this algorithm. One reason could be that your pitch never
+stabilizes, since it is some ever evolving random data:
+[midiout]
+pitch = I1
+gate = I2
+pitchstabilization = 0
+
+The second method is introducing a ﬁxed delay of the
+gate signal with the input triggerdelay. Using that parameter automatically disables pitch stabilization:
+
+5
+Pitch
+Gate
+
+0
+Start, Stop, Reset
+
+delays the “note on” as long as the pitch is still moving. When it has stabilized – i.e. on the same level for
+at least some very short time – the note event is issued
+immediately. This keeps the latency at a minimum.
+
+10
+V olts
+
+Note: The input jack clock receives 16th clocks. The actual MIDI clock is derived from that by multiplying it by 6.
+This means that the circuit interpolates the clock by measuring its speed and introducing ﬁve artiﬁcal clocks ticks
+inbetween the original ticks. While this works reasonably
+well for a steady clock, changes in clocks speed cannot be
+picked up very fast.
+
+0
+
+10
+
+20
+
+30
+40
+time(ms)
+
+50
+
+60
+
+I’ve seen a very similar situation indeed when I attached
+an oscilloscope to the output of a very famous Eurorack
+sequencer.
+Now when you would issue “note on” right at the beginning of the gate, you would obviously output the wrong
+pitch. What you need to do is to ﬁrst wait for some time.
+You need to delay the note event until the pitch is stable.
+Of course this introduces some undesirable latency, so it
+is crucial to keep that as short as possible.
+
+[midiout]
+pitch = I1
+gate = I2
+triggerdelay = 3.5 # delay gate by 3.5 ms
+
+Now the gate is delayed exactly 3.5 ms every time. You
+need to try out various useful values yourself. The best
+value depends on your sequencer (or whatever other
+source you are using).
+You can also activate both methods at once. This makes
+sense in situations, where the pitch is stable for a very
+short time after the gate but afterwards begins to move,
+like in the following diagram:
+
+The midiout circuit has two methods for doing
+this. The ﬁrst one is enabled per default and called
+pitchstabilization. Here, as soon as the gate goes
+high, it watches how pitch evolves over time. And it
+
+270
+
+Table of contents at page 2
+
+

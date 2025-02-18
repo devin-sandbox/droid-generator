@@ -1,0 +1,42 @@
+# DROID Circuit Input/Output Keys
+
+## fold - CV folder - keep (pitch) CV within certain bounds
+
+### Inputs
+- input (i) - Input signal
+  - Type: float
+  - Description: Input CV to be folded within bounds
+
+- foldby (fb) - Fold increment
+  - Type: float
+  - Description: Amount to add/subtract when folding (e.g., 1V for octave folding)
+
+- minimum (min) - Lower bound
+  - Type: float
+  - Description: Lower boundary for folding. Values below this will be folded up by foldby increments.
+
+- maximum (max) - Upper bound
+  - Type: float
+  - Description: Upper boundary for folding. Values above this will be folded down by foldby increments.
+
+### Outputs
+- output (o) - Folded signal
+  - Type: float
+  - Description: Input signal folded to stay within minimum and maximum bounds
+
+Note: Keeps CV signals within defined bounds by folding rather than limiting. Key features:
+- Configurable fold increment (e.g., 1V for octave folding)
+- Optional minimum/maximum bounds
+- Asymmetric folding behavior when min > max
+- Useful for pitch CV containment
+
+Special behaviors:
+- If minimum or maximum is omitted, no folding occurs at that boundary
+- If space between min/max is less than foldby, some values may remain outside bounds
+- When min > max, upward folding takes precedence
+
+Example applications:
+- Keeping pitch CV within specific octave range
+- Containing modulation signals within bounds
+- Creating repeating patterns from linear signals
+- Octave transposition of pitch CV

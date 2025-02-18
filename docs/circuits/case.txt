@@ -1,0 +1,26 @@
+# DROID Circuit Input/Output Keys
+
+## case - Switch choosing from inputs via conditions
+
+### Inputs
+- case1...case16 (c) - Case conditions
+  - Type: trigger
+  - Default: none
+  - Description: 1st through 16th case input, first non-zero case determines which value to use
+
+- value1...value16 (v) - Input values
+  - Type: float
+  - Default: none
+  - Description: 1st through 16th value input, copied to output based on case conditions
+
+- else (e) - Default value
+  - Type: float
+  - Default: 0
+  - Description: Value copied to output when no case inputs are non-zero
+
+### Outputs
+- output (o) - Selected value
+  - Type: float
+  - Description: Outputs the selected value input based on first true case condition
+
+Note: This circuit implements priority-based signal routing where the first true case condition determines which value is output. If no cases are true, the else value (default 0) is output.

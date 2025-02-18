@@ -1,0 +1,248 @@
+Input
+
+Type
+
+m4notchpower (m4n)
+
+0
+
+Default
+
+Description
+Set the force feedback power of the M4 motor fader units when they operate with virtual notches. The range is from
+0 (minimum notch power) to 1 (maximum notch power). Note: 0 does not turn the notches off, there is still some
+minimal feedback. If you don’t use this parameter, the notch force feedback operates at some default power, which is
+dependent on the M4 ﬁrmware version.
+
+1
+
+calibrate (c)
+
+Immediately enter the calibration procedure, that’s contained in the maintainance menu (only MASTER). Skips the
+menu. After calibration is done, resets.
+
+startcontrollerupgrade
+(u)
+
+Immediately starts the ﬁrmware upgrade procedure for controllers like M4 and E4. After one succesfull upgrade resets
+the master.
+
+startx7upgrade (x7)
+
+Immediately starts the X7 ﬁrmware upgrade procedure (which is located at position 8 of the maintainance menu).
+After the upgrade of the X7 resets the master.
+
+clear (cl)
+
+A trigger here sends a trigger to the clear input of all circuits that support this. That brings the state of those circuits
+to their start state. Circuits that have presets do keep those presets untouched. Just the current state is affected.
+That trigger is not sent to circuits whose clear input is patched.
+Note: Just that part of the state is affected that is saved to the SD card. For example the algoquencer (see page 115)
+does not reset to the ﬁrst step, it just clears it’s current pattern.
+A trigger here sends a trigger to the clearall input of all circuits that support this. That’s like a global factory reset
+for all of your circuits. Everything is set to its starting state, including all presets of those circuits.
+
+clearall (ca)
+
+That trigger is not sent to circuits whose clearall input is patched.
+Note: Just that part of the state is affected that is saved to the SD card. For example the algoquencer (see page 115)
+does not reset to the ﬁrst step, it just clears it’s current pattern.
+uislowdown (us)
+
+1
+
+Since blue-6 circuits that are ment to build a user interface are executed at just one eighth of the normal speed. They
+are just executed every eighth loop cycle. This saves considerable loop time and speeds up all the other more musical
+circuits.
+This breaks the rule that all circuits are executed in the order of their appearance in the patch, however. So if your
+patch really depends on that and your buttons, buttongroups and pots seem to behave weird, try switching off the UI
+optimization by setting this parameter to 0.
+
+DROID manual for blue-6
+
+184
+
+Table of contents at page 2
+
+16.21
+
+encoderbank – Create bank of up to 8 virtual input knobs from E4 encoders
+
+This circuit makes your life easier if you
+deal with lots of encoders in a larger setup.
+Instead of using a single encoder (see page
+189) circuit for every virtual knob, you can
+handle up to eight encoders with just one
+circuit.
+
+Please read the manual of the encoder (see page 189) circuit for all the details and examples of the features. We
+don’t repeat them here for sake of tersity.
+Example of a deﬁnition of 3 encoders:
+
+The encoderbank circuit shares almost all features with
+the single encoder circuit, except for:
+• movedup, moveddown and valuechanged triggers
+• The override input
+• The sharewithnext functionality
+
+[encoderbank]
+firstencoder = E2.1
+output1 = O1
+output2 = O2
+output3 = O3
+outputscale = 2V
+
+Deﬁning the number of encoders
+This circuit has no setting for the number of encoders
+it controls. This number is automaticall deﬁned by the
+number of outputs, leds or buttons you use. More precisely, it is the highest outputX or ledX or buttonX you
+use, whichever is higher. In the upper example, output3
+is the highest connected output number, so the circuit
+controls three encoders, starting from firstencoder.
+
+Input
+
+Type
+
+Default
+
+Description
+
+firstencoder (e)
+
+1 2 3
+
+1
+
+The ﬁrst encoder to use. You can either use it’s register name, like E8.2 for encoder 2 on controller 8. As an alternative
+you can use a number like 6. That would specify the 6th encoder of your setup: the encoder number 2 on your second
+E4.
+For each of the output jacks you use, one encoder is used, following the order of your controllers.
+This value is read just once when the
+
+led1 ... led8 (l)
+
+startvalue (sv)
+
+0
+
+starts. Making this parameter dynamic does not work.
+
+You can use the rings of LEDs around the encoders as virtual LEDs using this parameter. This is similar to using the
+according L registers of the E4, but honors the select input.
+
+1
+
+0.0
+
+This sets the value the encoder gets when you start this circuit for the ﬁrst time or when you send trigger to clear.
+Note: the range of this value refers to the situation before outputscale and outputoffset is applied. So if mode is
+unused or at 0, a startvalue of 0.5 sets the encoder’s virtual value exactly to the center – regardless of any scaling or
+offsetting that happens afterwards.
+
+notch (no)
+
+0.0
+
+This parameter helps you to dial in exactly the center of the selected range, which is 0.5 in normal mode and 0.0 in
+bipolar mode.
+The value of notch speciﬁes the portion of one complete 360 cycle of the pot during which the center position should
+be assumed. 0.1 is probably a good value.
+Notch does not work if mode selects positive or negative inﬁnity.
+
+DROID manual for blue-6
+
+185
+
+Table of contents at page 2
+
+Input
+
+Default
+
+Description
+
+outputscale (os)
+
+1.0
+
+The output is multiplied by this value. This is just for convenience and may save a copy (see page 172) circuit in some
+situations.
+
+outputoffset (oo)
+
+0.0
+
+After scaling the virtual value with outputscale, this value is being added before sending the result to the output.
+
+1
+
+Selects the possible range of the virtual value.
+
+mode (m)
+
+Type
+
+1 2 3
+
+0
+
+Off: the encoder is unsed, its LEDs are off
+
+1
+
+Normal mode: ﬁxed range between 0.0 and 1.0
+
+2
+
+Bipolar mode: ﬁxed range between -1.0 and 1.0
+
+3
+
+Positive inﬁnity: open range between 0.0 and ∞
+
+4
+
+Negative inﬁnity: open range between −∞ and 0.0
+
+5
+
+Bipolar inﬁnity: open range between −∞ and ∞
+
+6
+
+Circular inﬁnity: range is 0.0 … 1.0, but repeats over in both directions
+
+This setting is ignored if discrete is in use.
+Note: The mode 0 is for situations where encoders are overlayed with select and an encoder is unused. Setting mode
+= 0 can be used to disable this encoder and blank its LEDs.
+smooth (sm)
+
+0.5
+
+Unlike a potentiometer, an encoder does not output continous values but steps. If you directly wire the output of an
+encoder to a CV input of an audio module, the steps might become audible.
+Therefore the ﬁnal values of the encoder are smoothed out by a simulation of a low pass ﬁlter. That’s essentially the
+same as in the slew circuit. The smoothing is enabled per default but you can change it with this parameter.
+A value of 0.0 turns off smoothing and you get access to the tiny steps of the encoder. 1.0 selects a maximum smoothing, which has also the effect that fast turns of the encoder are slowed down a bit. The default value of 0.5 does just
+a mild slew limiting.
+If you use discrete, the smoothing is not applied.
+
+discrete (d)
+
+1 2 3
+
+0
+
+Set this to an integer number of 2 or higher to enable discrete mode. In this mode the encoder works like a rotary switch
+for selecting one of the numbers 0, 1, 2 and so on. The number you set for discrete selects the number of positions
+in this “switch”. For example discrete = 4 produces the values 0, 1, 2 or 3.
+In this mode the inputs notch, mode and smooth are ignored.
+
+DROID manual for blue-6
+
+186
+
+Table of contents at page 2
+
+

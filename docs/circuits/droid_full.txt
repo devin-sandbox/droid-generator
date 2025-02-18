@@ -1,0 +1,239 @@
+16.19
+
+detune – Detune multiple voices in a most disharmonic way
+
+Sometimes braking the harmony – at least
+for some period of time – can be a way to
+break through monotony. This circuit allows you to detune up to eight voices in a
+most disharmonic way.
+The application is simple. Before outputting your pitch
+information from your sequencers, quantizers, chord
+generators, arpeggiators and friends, feed them through
+this circuit. Then use the CV input detune to select the
+level of ugly detuning.
+
+[detune]
+detune = P1.1
+input1 = _PITCH1 # from somewhere
+input2 = _PITCH2 # from somewhere
+input3 = _PITCH3 # from somewhere
+input4 = _PITCH4 # from somewhere
+input5 = _PITCH5 # from somewhere
+output1 = O1
+output2 = O2
+output3 = O3
+output4 = O4
+output5 = O5
+
+For a ﬁrst test, start with using a pot for the detune value:
+The crux of the matter is that all of the voices are detuned
+in realation to each other. This circuit makes sure that
+
+Input
+
+Type
+
+Default
+
+each of the eight outputs is detuned in a different way,
+so if you input a chord, it won’t just simply move up and
+down in pitch but gets distorted and disharmonic.
+Hints:
+• Try using a slow and slight bipolar triangle LFO.
+• Try using an envelope with a short attack and a
+longer release to detune at the start of every bar
+and let the voices fade back into tune.
+This detune algorithm is identical with that of the Sinfonion. Therefore it is a good match for the chaoticdetune
+output of the circuit sinfonionlink (see page 353).
+
+Description
+
+input1 ... input8 (i)
+detune (d)
+
+0.0
+
+tuningmode (tm)
+
+0
+
+While this is 1, the circuit will output the value set by tuningpitch instead of the actual pitch. This is ment to be a
+help for tuning your VCOs.
+
+0V
+
+This pitch CV will be output while the tuning mode is active.
+
+tuningpitch (tp)
+
+Output
+
+1V
+Oct
+
+Type
+
+Description
+
+output1 ... output8 (o)
+
+DROID manual for blue-6
+
+182
+
+Table of contents at page 2
+
+16.20
+
+droid – General DROID controls
+
+This circuit gives access to some general
+conﬁguration settings. It does not
+make sense to create more than one instance of this.
+
+Input
+
+The droid circuit gives you access to miscellaneous functions that affect the system as a whole.
+The most commonly used functions are that for lowering
+the brightness of the LEDs on the master, G8 and X7 via
+
+Type
+
+ledbrightness and that of reducing the force feedback
+power of virtual notches of the motor faders of the M4.
+This is done with m4notchpower.
+
+Default
+
+Description
+
+ledbrightness (l)
+
+1.0
+
+Let’s you dim all of the 24 LEDs of the master and the G8. This is mainly for those who think they are too bright. But
+since this parameter can be CV-controlled, you could of course also do funny things with it. Beware: if you set this to
+zero, the LEDs will be completely dark. This also includes possible error messages.
+
+maxslope1 ... maxslope8
+(s)
+
+0.25
+
+Sets a threshold for a voltage change between two samples until the internal logic of the
+outputs assumes that
+this step is intentional and should not be smoothed out. A typical case where you do not want smoothing is the pitch
+output of a sequencer.
+The default value is 0.25. A value of 0.0 turns off smoothing altogether since the slightest voltage change is considered
+an intentional jump.
+
+lpfilter1 ... lpfilter8
+(lf)
+
+0
+
+1
+
+0.25
+
+Conﬁgures a digital low pass ﬁlter on the output in order to smooth out digital noise resulting from the
+loop. This loop is running somewhere between 3 and 6 kHz – depending on the number of circuits you use.
+
+’s main
+
+Per default this ﬁlter is set to 0.25 – which means a mild ﬁltering – thus still allowing fast and snappy envelopes and
+other rapidly changing signals while ﬁltering away most of the digital artefacts.
+If you use an output for a slow envelope that is combined with an audio path in a way that you hear digital artifacts
+then increase that value. This is e.g. the case if you modulate a VCA that in turn modulates a very low pitched audio
+wave with very few harmonics (such as a sine or triangle wave).
+The maximum value of 1.0 leads to a very strong ﬁltering – i.e. removing all fast transients. Snappy envelopes will be
+smoothed out heavily. Square wave LFOs will be converted into lower level almost sine waves.
+m4faderspeed (m4f)
+
+statusdump (sd)
+
+DROID manual for blue-6
+
+0
+
+1
+
+Set the force / speed of the motor faders. Faster speeds need more electrical power and might wear off the faders faster.
+Too slow speeds might lead to poor operation. This value goes from 0.0 (slowest possible speed) to 1.0 (maximum
+speed). If you don’t use this parameter, some reasonable default is used that depends on the ﬁrmware of the M4
+module.
+A trigger here does the same as a double “click” on the master’s button: it creates a status dump ﬁle on the SD card.
+This trigger allows you automated control with a precise timing. Each dump needs a couple of milli seconds to write to
+the SD card. So better do not spam this input with a high frequency of triggers.
+
+183
+
+Table of contents at page 2
+
+Input
+
+Type
+
+m4notchpower (m4n)
+
+0
+
+Default
+
+Description
+Set the force feedback power of the M4 motor fader units when they operate with virtual notches. The range is from
+0 (minimum notch power) to 1 (maximum notch power). Note: 0 does not turn the notches off, there is still some
+minimal feedback. If you don’t use this parameter, the notch force feedback operates at some default power, which is
+dependent on the M4 ﬁrmware version.
+
+1
+
+calibrate (c)
+
+Immediately enter the calibration procedure, that’s contained in the maintainance menu (only MASTER). Skips the
+menu. After calibration is done, resets.
+
+startcontrollerupgrade
+(u)
+
+Immediately starts the ﬁrmware upgrade procedure for controllers like M4 and E4. After one succesfull upgrade resets
+the master.
+
+startx7upgrade (x7)
+
+Immediately starts the X7 ﬁrmware upgrade procedure (which is located at position 8 of the maintainance menu).
+After the upgrade of the X7 resets the master.
+
+clear (cl)
+
+A trigger here sends a trigger to the clear input of all circuits that support this. That brings the state of those circuits
+to their start state. Circuits that have presets do keep those presets untouched. Just the current state is affected.
+That trigger is not sent to circuits whose clear input is patched.
+Note: Just that part of the state is affected that is saved to the SD card. For example the algoquencer (see page 115)
+does not reset to the ﬁrst step, it just clears it’s current pattern.
+A trigger here sends a trigger to the clearall input of all circuits that support this. That’s like a global factory reset
+for all of your circuits. Everything is set to its starting state, including all presets of those circuits.
+
+clearall (ca)
+
+That trigger is not sent to circuits whose clearall input is patched.
+Note: Just that part of the state is affected that is saved to the SD card. For example the algoquencer (see page 115)
+does not reset to the ﬁrst step, it just clears it’s current pattern.
+uislowdown (us)
+
+1
+
+Since blue-6 circuits that are ment to build a user interface are executed at just one eighth of the normal speed. They
+are just executed every eighth loop cycle. This saves considerable loop time and speeds up all the other more musical
+circuits.
+This breaks the rule that all circuits are executed in the order of their appearance in the patch, however. So if your
+patch really depends on that and your buttons, buttongroups and pots seem to behave weird, try switching off the UI
+optimization by setting this parameter to 0.
+
+DROID manual for blue-6
+
+184
+
+Table of contents at page 2
+
+

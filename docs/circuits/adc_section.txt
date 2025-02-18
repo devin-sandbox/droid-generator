@@ -1,0 +1,31 @@
+Input
+
+Default
+
+Description
+
+input (i)
+
+0.0
+
+Input signal to convert to binary representation.
+
+minimum (m)
+
+0.0
+
+The lowest assumed input value. This value and all lower values will be converted to the bit sequence 000000000000.
+
+maximum (x)
+
+1.0
+
+The highest assumed input value. This value and all higher values will be converted to the bit sequence 111111111111.
+
+Output
+bit1 ... bit12 (b)
+
+DROID manual for blue-6
+
+Type
+

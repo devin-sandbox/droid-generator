@@ -1,0 +1,289 @@
+Input
+
+Type
+
+Default
+
+Description
+
+luckycvbase (lv)
+
+0
+
+0.0
+
+This parameter affects only the operation luckycvs and luckyfaders when the fader mode is set to 0. It adds a ﬁxed
+amount of CV to the random result, so that lies in the range luckycvbase … (luckycvbase + luckyamount).
+
+1
+
+luckyfaders (lf)
+
+Moves the currently selected faders (according to fadermode) to new random positions. luckyamount sets the maximum value of the fader, where 1 allows the maximum.
+
+luckybuttons (lb)
+
+Randomly toggles the currently selected buttons (according to buttonmode). luckyamount only has an effect when
+the gate patterns are selected, since here, four different values are possible. luckamount restricts them if it is lower
+than 1.
+
+luckycvs (lcv)
+
+Replaces the affected steps’ CVs with a new random CVs. The lowest possible CV is cvbase. If luckyamount is 1, the
+highest possible CV is cvbase + cvrange, otherwise it is cvbase + luckyamount × cvrange.
+
+luckycvdrift (ld)
+
+Modiﬁes the affected steps’ CV randomly up or down. They will stay in the CV range set by cvbase and cvrange.
+luckyamount controls the amount of change.
+
+luckyspread (lr)
+
+First computes the average CV of all steps. Then changes the CV values of the affected steps such that their distance
+to the average increases or decreases. If luckyamount is greater than 0.5, the distance is increased. Otherwise it is
+decreased.
+
+luckyinvert (li)
+
+Inverts the CVs of the affected steps within the allowed CV range. luckyamount has no inﬂuence.
+
+luckyrandomizecv (lrc)
+
+Sets the “randomize CV” values of the affected steps to random values (yes, this is double randomization). The
+luckyamount sets the maximum randomization value that will be set.
+
+luckygates (lg)
+
+Sets the gates of the affected steps randomly to on or off. The chance for on is determined by luckyamount. So with
+luckyamount = 0 you clear all gates and with luckyamount = 1 you set all gates.
+
+luckyskips (lk)
+
+Sets the “skip this step” setting of the affected steps randomly to skip or normal. The chance for skip is determined by
+luckyamount.
+
+luckyties (lt)
+
+Sets the “tie this step to the next” setting of the affected steps randomly to tie or normal. This is the same as setting
+the gate pattern to the upper most position. The chance for tie is determined by luckyamount.
+
+luckygatepattern (lgp)
+
+Randomizes the gate pattern of the selected steps (there are four different values: once, all, hold and tie). Use
+luckyamount to reduce that set.
+
+luckygateprob (lga)
+
+Sets the “randomize gate” values of the affected steps to random values (yes, this is double randomization). The
+luckyamount sets the minimum randomization value that will be set (yes, this is inverted). So with luckyamount = 1
+you disable randomization and make the gates play always. With luckymount = 0 you set the gate propability to the
+lowest possible value (still not 0).
+
+DROID manual for blue-6
+
+304
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+luckyrepeats (lrp)
+
+Randomly sets the number of repeats of the affected steps to something between 1 and 16 (the maximum). The
+luckyamount determines the maximum repetition number, where 1 stands for a maximum of 16 repetitions.
+
+luckyratchets (lrt)
+
+Randomly sets the number of ratches of the affected steps to something between 1 and 8 (the maximum). The
+luckyamount determines the maximum ratchet number, where 1 stands for a maximum of 8 ratchets.
+
+luckyshuffle (lsh)
+
+Randomly swaps all affected affected steps (their playing order) together will all their attributes. luckyamount has no
+inﬂuence.
+
+buttoncolor (bc)
+
+0.1
+
+Reverses the playin gorder of the affected steps. luckyamount has not inﬂuence.
+
+luckyreverse (lrv)
+root (ro)
+
+DROID manual for blue-6
+
+Set a user deﬁned color for the gate buttons. This color is only used when buttonmode = 0. The main purpose of this
+option is to allow a separate color for the gate button in a linked sequencer, that does something else than gates.
+
+1 2 3
+
+0
+
+Set the root note here. 0 means C, 1 means C♯, 2 means D and so on. If you multiply the value of an input like I1 with
+120, then you can use a 1V/Oct input for selecting the root note via a sequencer, MIDI keyboard or the like. Also then
+you are compatible with the ROOT CV input of the Sinfonion.
+0
+
+C
+
+1
+
+C♯
+
+2
+
+D
+
+3
+
+D♯
+
+4
+
+E
+
+5
+
+F
+
+6
+
+F♯
+
+7
+
+G
+
+8
+
+G♯
+
+9
+
+A
+
+10
+
+A♯
+
+11
+
+B
+
+12
+
+C
+
+305
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+degree (dg)
+
+1 2 3
+
+0
+
+Set the musical scale. This is a number from 0 to 107. Below are the ﬁrst 12 and most important scales. You ﬁnd a list
+of all 108 scales on page 107.
+0
+
+lyd – Lydian major scale (it has a ♯4)
+
+1
+
+maj – Normal major scale (ionian)
+
+2
+
+X7 – Mixolydian (dominant seven chords)
+
+3
+
+sus – mixolydian with 3rd /4th swapped
+
+4
+
+alt – Altered scale
+
+5
+
+hm5 – Harmonic minor scale from the 5th
+
+6
+
+dor – Dorian minor (minor with ♯13)
+
+7
+
+min – Natural minor (aeolian)
+
+8
+
+hm – Harmonic minor (♭6 but ♯7)
+
+9
+
+phr – Phrygian minor scale (with ♭9)
+
+10
+
+dim – Diminished scale (whole/half tone)
+
+11
+
+aug – Augmented scale (just whole tones)
+
+Note: Alltogether there are 108 scales. Please see page 107 for a complete list
+select1 (s1)
+
++
+
+Gate input for selecting the root note as being an allowed interval. When you want to create a playing interface for live
+operation you can patch the output of a toggle button (made with the circuit [button]) here.
+Note: When all select and selectfill inputs are 0, automatically all seven scale notes are selected, i.e. select1 ...
+select13 will be set to one.
+
+select3 (s3)
+select5 (s5)
+select7 (s7)
+select9 (s9)
+select11 (s11)
+select13 (s13)
+
+DROID manual for blue-6
+
++
++
++
++
++
++
+
+Gate input for selecting the 3rd .
+Gate input for selecting the 5th .
+Gate input for selecting the 7th .
+Gate input for selecting the 9th (which is the same as the 2nd ).
+Gate input for selecting the 11th (which is the same as the 4th ).
+Gate input for selecting the 13th (which is the same as the 6th ).
+
+306
+
+Table of contents at page 2
+
+

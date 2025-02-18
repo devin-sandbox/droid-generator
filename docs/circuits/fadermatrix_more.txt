@@ -1,0 +1,260 @@
+Because we always need to be able to swap rows and
+columns, those number always have to be identical. So
+you cannot create a 3×4 matrix, for example.
+
+Larger matrices
+If you have eight faders, you can create even larger matrices. A 8×8 matrix can be created by four fadermatrix
+
+Input
+
+Type
+
+Default
+
+Description
+
+firstfader (f)
+
+1 2 3
+
+1
+
+First M4 fader of the virtual fader matrix (starting with 1).
+
+rowcolumn (rc)
+
+1 2 3
+
+0
+
+Currently selected row or column as follows:
+
+DROID manual for blue-6
+
+0
+
+Control output11, output12, output13 and output14
+
+1
+
+Control output21, output22, output23 and output24
+
+2
+
+Control output31, output32, output33 and output34
+
+3
+
+Control output41, output42, output43 and output44
+
+4
+
+Control output11, output21, output31 and output41
+
+5
+
+Control output12, output22, output32 and output42
+
+6
+
+Control output13, output23, output33 and output43
+
+7
+
+Control output14, output24, output34 and output44
+
+224
+
+circuits. Here you need some extra logic. At any time exactly two of the circuits must be selected. Use the select
+inputs in combination with rowcolumn in order to set this
+up (left as an excercise) ;-)
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+Description
+
+notches1 ... notches4 (n)
+
+1 2 3
+
+0
+
+Number of artiﬁcal notches in the respective column. For example notches2 controls the notches of output12,
+output22, output32 and output42.
+0
+
+disables the notches
+
+1
+
+creates a pitch bend wheel
+
+2
+
+creates a binary switch
+
+3
+
+creates a switch with four positions
+
+8
+
+creates eight notches
+
+25
+
+creates 25 notches
+
+Enabling notches also changes the output value. When you have two or more notches, the output values become
+discrete. For example with four notches the output will be 0, 1, 2 or 3.
+Note: The maximum number of notches is 201. But if you select more than 25 notches, the force feedback is turned
+off as the notches would get too small to work.
+startvalue1 ...
+startvalue4 (sv)
+
+These inputs allow to set a deﬁned start value for each column. When the
+starts ﬁrst and there is either no
+saved state or state saving is disabled via dontsave = 1, these start values are used. Also a trigger to clear loads the
+start avlues. There is one start value for each column. All rows share the same start value for a column.
+
+ledvalue11 ... ledvalue14
+(l1)
+
+With these inputs you can address the LEDs below the virtual faders of output11 ... output14. As opposed to using
+direction (e.g. L1.1), these inputs will only affect the LED if the according output is selected.
+
+ledvalue21 ... ledvalue24
+(l2)
+
+With these inputs you can address the LEDs below the virtual faders of output21 ... output24. As opposed to using
+direction (e.g. L1.2), these inputs will only affect the LED if the according output is selected.
+
+ledvalue31 ... ledvalue34
+(l3)
+
+With these inputs you can address the LEDs below the virtual faders of output31 ... output34. As opposed to using
+direction (e.g. L3.2), these inputs will only affect the LED if the according output is selected.
+
+ledvalue41 ... ledvalue44
+(l4)
+
+With these inputs you can address the LEDs below the virtual faders of output41 ... output44. As opposed to using
+direction (e.g. L4.2), these inputs will only affect the LED if the according output is selected.
+
+ledcolor1 ... ledcolor4
+(lc)
+
+Sets the color of the LEDs below the faders if ledvalueXY is used. There are just four inputs since every column of
+outputs has the same LED color (in order to identify them). The color works as with the R registers for the LEDs on the
+master module.
+
+DROID manual for blue-6
+
+225
+
+Table of contents at page 2
+
+Input
+
+Type
+
+Default
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+preset (pr)
+
+1 2 3
+
++
+
+Description
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+This is the preset number to save or to load. Note: the ﬁrst preset has the number 0, not 1! For the whole story on
+presets please refer to page 21. This circuit has 6 presets, so this number ranges from 0 to 5.
+
+loadpreset (lp)
+
+A trigger here loads a preset. As a speciality you can use the trigger for selecting a preset at the same time.
+
+savepreset (sp)
+
+A trigger here saves a preset.
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+Output
+
+0
+
+Type
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+Description
+
+output11 ... output14
+(o1)
+
+Outputs for the CV values of the ﬁrst row of parmeter.
+
+output21 ... output24
+(o2)
+
+Outputs for the CV values of the second row of parmeter.
+
+output31 ... output34
+(o3)
+
+Outputs for the CV values of the third row of parmeter.
+
+output41 ... output44
+(o4)
+
+Outputs for the CV values of the fourth row of parmeter.
+
+button11 ... button14
+(b1)
+
+Give access to the state of the touch button below the faders when the respective output in the ﬁrst row is selected.
+
+DROID manual for blue-6
+
+226
+
+Table of contents at page 2
+
+

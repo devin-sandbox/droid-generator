@@ -1,0 +1,148 @@
+# DROID Circuit Input/Output Keys
+
+## motoquencer - Motor Fader Sequencer
+
+### Inputs
+- clock - Clock input
+  - Type: trigger
+  - Description: Main sequencer clock input
+
+- page - Page selection
+  - Type: integer
+  - Default: 0
+  - Description: Select active page of faders (0-3 for 16 steps)
+
+- fadermode - Fader parameter mode
+  - Type: integer
+  - Range: 0-7
+  - Description: Select parameter controlled by faders:
+    0 = pitch/CV
+    1 = randomize CV
+    2 = gate probability
+    3 = repeats (1-16)
+    4 = gate pattern
+    5 = ratchets (1-8)
+    6 = gate
+    7 = skip
+
+- buttonmode - Button function mode
+  - Type: integer
+  - Range: 0-3
+  - Description: Select button function:
+    0 = gates
+    1 = start/end
+    2 = gate pattern
+    3 = skip
+
+- firstfader - First fader number
+  - Type: integer
+  - Description: First fader to use in sequence
+
+- numfaders - Number of faders
+  - Type: integer
+  - Description: Number of faders to use
+
+- direction - Playback direction
+  - Type: binary
+  - Default: 0
+  - Description: 0=forward, 1=backward
+
+- pingpong - Ping-pong mode
+  - Type: binary
+  - Default: 0
+  - Description: Enable bidirectional playback
+
+- pattern - Step pattern
+  - Type: integer
+  - Description: Modify step order pattern
+
+- form - Sequence form
+  - Type: integer
+  - Description: Create patterns like AAAB from sequence parts
+
+- autoreset - Auto reset count
+  - Type: integer
+  - Default: 0
+  - Description: Reset sequence after N clock ticks
+
+- startstep - Start step
+  - Type: integer
+  - Description: First step to play in sequence
+
+- endstep - End step
+  - Type: integer
+  - Description: Last step to play in sequence
+
+- root - Scale root note
+  - Type: integer
+  - Default: 0
+  - Description: Root note for scale quantization
+
+- degree - Scale selection
+  - Type: integer
+  - Default: 0
+  - Description: Musical scale for quantization
+
+- quantize - Quantization mode
+  - Type: integer
+  - Default: 2
+  - Description: 0=off, 1=semitones, 2=scale
+
+- cvbase - CV base value
+  - Type: float
+  - Description: Minimum CV value
+
+- cvrange - CV range
+  - Type: float
+  - Description: CV range above base value
+
+- accumulatorrange - Accumulator range
+  - Type: integer
+  - Default: 0
+  - Description: Number of sequence repeats before resetting accumulator
+
+- luckychance - Random chance
+  - Type: float
+  - Range: 0-1
+  - Description: Probability of steps affected by lucky operations
+
+- luckyamount - Random amount
+  - Type: float
+  - Description: Maximum random CV change
+
+- luckycvs - Randomize CVs
+  - Type: trigger
+  - Description: Trigger to randomize affected step CVs
+
+### Outputs
+- cv - CV output
+  - Type: float
+  - Description: Main CV/pitch output
+
+- gate - Gate output
+  - Type: gate
+  - Description: Main gate output
+
+Note: Motor fader sequencer with features:
+- Up to 32 steps with motor fader control
+- Multiple parameters per step
+- Page switching for long sequences
+- Various playback patterns and forms
+- Scale quantization
+- Randomization features
+- Pitch accumulation system
+
+Example applications:
+- Performance sequencing
+- Complex pattern generation
+- Live sequence modification
+- Probability-based sequencing
+- Musical scale sequencing
+- Polymetric pattern creation
+
+Limitations:
+- Requires M4 controller
+- Maximum 32 steps
+- Maximum 8 ratchets per step
+- Maximum 16 repeats per step
+- Maximum 201 fader notches

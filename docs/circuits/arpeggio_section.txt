@@ -1,0 +1,103 @@
+Input
+
+interval
+
+select1
+
+root
+3rd
+
+select3
+select5
+
+5th
+7th
+
+step
+
+Cmaj
+
+Cmin
+
+I
+
+C
+
+C
+
+III
+
+E
+
+E♭
+
+V
+
+G
+
+G
+
+VII
+
+B
+
+B♭
+
+II
+
+D
+
+D
+
+--
+Input
+
+Type
+
+input (i)
+distribution (di)
+
+0 0.5 1
+
+Output
+
+Type
+
+Example:
+[bernoulli]
+input
+= G1
+distribution = P1.1
+output1
+= G2
+output2
+= G4
+
+Note: each time a positive trigger edge is seen at input
+a new random decision is made for which output to use.
+From now on that chosen output gets an exact copy of
+the input signal – even if it is not a simple trigger signal
+but something more complex like an envelope. The other
+output will send 0 V.
+
+Default
+
+Description
+
+0
+
+Send gate or trigger signals here.
+
+0.5
+
+This controls the probability of a gate to be forwarded to output1. A value of 0.5 means 50%.
+
+Description
+
+output1 (o1)
+
+Gates from input are forwarded here if the random decision was in favour of output 1.
+
+output2 (o2)
+
+Gates from input are forwarded here if the random decision was in favour of output 2.

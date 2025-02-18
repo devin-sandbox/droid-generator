@@ -1,0 +1,90 @@
+# DROID Circuit Input/Output Keys
+
+## arpeggio - Arpeggiator - Pattern based melody generator
+
+### Inputs
+- clock - Clock input for arpeggiator timing
+  - Type: trigger
+  - Default: none
+  - Description: Advances the arpeggio pattern on each trigger
+
+- reset - Reset the pattern to start
+  - Type: trigger
+  - Default: none
+  - Description: Resets pattern position to beginning
+
+- pattern - Arpeggio pattern selection
+  - Type: integer
+  - Default: 0
+  - Description: Selects which arpeggio pattern to play
+
+- transpose - Transpose amount in semitones
+  - Type: float
+  - Default: 0.0
+  - Description: Transposes the entire pattern up/down
+
+- gate - Gate length control
+  - Type: float
+  - Default: 0.5
+  - Description: Controls the length of output gates (0.0-1.0)
+
+- hold - Hold current notes
+  - Type: trigger
+  - Default: 0
+  - Description: When active, holds current notes regardless of input changes
+
+- root - Root note selection
+  - Type: float
+  - Default: 0.0
+  - Description: Sets the root note of the arpeggio (C)
+
+- third - Third note selection
+  - Type: float
+  - Default: 0.0
+  - Description: Sets the third note of the arpeggio (E/Eb)
+
+- fifth - Fifth note selection
+  - Type: float
+  - Default: 0.0
+  - Description: Sets the fifth note of the arpeggio (G)
+
+- seventh - Seventh note selection
+  - Type: float
+  - Default: 0.0
+  - Description: Sets the seventh note of the arpeggio (B/Bb)
+
+- select1 - Note 1 enable
+  - Type: trigger
+  - Default: 1
+  - Description: Enable/disable root note in pattern
+
+- select3 - Note 3 enable
+  - Type: trigger
+  - Default: 1
+  - Description: Enable/disable third note in pattern
+
+- select5 - Note 5 enable
+  - Type: trigger
+  - Default: 1
+  - Description: Enable/disable fifth note in pattern
+
+### Outputs
+- cv - CV output for pitch
+  - Type: float
+  - Description: Pitch CV output following selected arpeggio pattern
+
+- gate - Gate output
+  - Type: trigger
+  - Description: Gate/trigger output for current note
+
+- position - Current step in pattern
+  - Type: integer
+  - Description: Outputs current position in arpeggio pattern (0-based)
+
+- changed - Pattern change indicator
+  - Type: trigger
+  - Description: Outputs trigger when pattern changes
+
+- step - Current step value
+  - Type: integer
+  - Description: Current step number in the pattern sequence

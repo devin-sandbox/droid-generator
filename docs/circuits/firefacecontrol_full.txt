@@ -1,0 +1,238 @@
+Input
+
+Type
+
+Default
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+preset (pr)
+
+1 2 3
+
++
+
+Description
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+This is the preset number to save or to load. Note: the ﬁrst preset has the number 0, not 1! For the whole story on
+presets please refer to page 21. This circuit has 6 presets, so this number ranges from 0 to 5.
+
+loadpreset (lp)
+
+A trigger here loads a preset. As a speciality you can use the trigger for selecting a preset at the same time.
+
+savepreset (sp)
+
+A trigger here saves a preset.
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+Output
+
+0
+
+Type
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+Description
+
+output11 ... output14
+(o1)
+
+Outputs for the CV values of the ﬁrst row of parmeter.
+
+output21 ... output24
+(o2)
+
+Outputs for the CV values of the second row of parmeter.
+
+output31 ... output34
+(o3)
+
+Outputs for the CV values of the third row of parmeter.
+
+output41 ... output44
+(o4)
+
+Outputs for the CV values of the fourth row of parmeter.
+
+button11 ... button14
+(b1)
+
+Give access to the state of the touch button below the faders when the respective output in the ﬁrst row is selected.
+
+DROID manual for blue-6
+
+226
+
+Table of contents at page 2
+
+Output
+
+Type
+
+Description
+
+button21 ... button24
+(b2)
+
+Give access to the state of the touch button below the faders when the respective output in the second row is selected.
+
+button31 ... button34
+(b3)
+
+Give access to the state of the touch button below the faders when the respective output in the third row is selected.
+
+button41 ... button44
+(b4)
+
+Give access to the state of the touch button below the faders when the respective output in the fourth row is selected.
+
+DROID manual for blue-6
+
+227
+
+Table of contents at page 2
+
+16.28
+
+firefacecontrol – Control a RME Fireface interface (experimental)
+
+This experimental circuit allows you to
+control the most import volumes and
+mixes of an RME Fireface audio interface.
+It’s also a perfect match for the M4 motor
+fader units. You need an X7 in order to use
+this circuit.
+
+problem is that the MIDI implementation of the Fireface
+is more designed for user interaction via a Mackie Control
+and not for general automation. This is very sad.
+
+Please note that this circuit is still experimental. Its main
+
+Input
+
+Type
+
+Default
+
+trs ()
+
+1 2 3
+
+1
+
+outputlevel1 ...
+outputlevel16 (ol)
+
+0
+
+1 2 3
+
+phonesoutput1,
+phonesoutput2 (po)
+
+1 2 3
+
+outputmix2in1 ...
+outputmix2in16 (o2i)
+outputmix3in1 ...
+outputmix3in16 (o3i)
+outputmix4in1 ...
+outputmix4in16 (o4i)
+outputmix5in1 ...
+outputmix5in16 (o5i)
+outputmix6in1 ...
+outputmix6in16 (o6i)
+outputmix7in1 ...
+outputmix7in16 (o7i)
+
+DROID manual for blue-6
+
+RME: if you are reading this: please contact me so that we
+can ﬁx this.
+
+Description
+
+1
+
+mainoutput (mo)
+
+outputmix1in1 ...
+outputmix1in16 (o1i)
+
+For example there is a MIDI CC for changing the panning
+of a channel. But instead of simply having the CC going
+from 0 (left) via 64 (mid) to 127 (right), it uses various CC
+values as commands for modiﬁying the existing panning
+
+by some ﬁxed value to the left or to the right. So without
+knowing the current setting, it’s not possible to send the
+correct CC commands. And for
+there is no way to
+know, since MIDI is a one way communication.
+
+0
+
+1
+
+0
+
+1
+
+0
+
+1
+
+0
+
+1
+
+0
+
+1
+
+0
+
+1
+
+0
+
+1
+
+1
+
+228
+
+Table of contents at page 2
+
+

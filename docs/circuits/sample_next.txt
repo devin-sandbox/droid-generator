@@ -1,0 +1,249 @@
+Input
+
+Type
+
+Default
+
+Description
+
+playbutton (pb)
+
+A trigger here starts or restarts the playback.
+
+recordbutton (rb)
+
+A trigger here starts or stops the recording.
+
+stopbutton (sb)
+
+A trigger here stops and ongoing playback or recording.
+
+loop (lo)
+
+off
+
+Set this to 1 to enable loop mode. In loop mode the playback is restarted immediately when it’s ﬁnished.
+
+pause (p)
+
+off
+
+While this is 1, playback or recording is halted (the tape stops moving for the while).
+
+mode (m)
+
+Using this input is an alternative to using the three button inputs. If you patch mode, the three buttons (and LED
+outputs) are ignored. Instead you set the mode with this input:
+
+1 2 3
+
+0
+
+Idle / stopped
+
+1
+
+Playback
+
+2
+
+Recording
+
+Since you set the mode from “outside”, the recorder cannot switch it by itself. So if the mode is set to 1 (playback) and
+the playback is ﬁnished, it stays in playback mode and continues outputting the last sample.
+playbackspeed (ps)
+
+1.0
+
+Sets the speed of the tape during playback. 1 is normal speed, 0.5 half speed, 2 double speed, and so on. Negative
+speeds are allowed an move the tape backwards. The speed 0 stops the tape.
+
+scrub (sc)
+
+off
+
+If 1 enables scrubbing. Now the outputs reﬂect the tape position that is set with scrubposition.
+
+scrubposition (sp)
+
+0
+
+1
+
+0.0
+
+Position of the tape to play when scrubbing is enabled.
+
+trimstart (ts)
+
+0
+
+1
+
+0.0
+
+Omits a fraction of the recording at the beginning during playback and scrubbing. 0.1 omits the ﬁrst 10%.
+
+trimend (te)
+
+0
+
+1
+
+1.0
+
+Omits a fraction of the recording at the end during playback and scrubbing. 0.8 omits the last 20% (not 80%!).
+
+0.0
+
+Continous input CV
+
+cvin (ci)
+numberin (ni)
+
+1 2 3
+
+Discrete input number in the range 0 ... 255
+
+gatein1 ... gatein8 (gi)
+
+Input gates
+
+clock (c)
+
+If you use this clock input, all time inputs are measured in clock ticks instead of seconds.
+
+sample (sm)
+
+If you patch this input, “triggered” mode is enabled. In this mode, the virtual tape just records a new CV on each trigger
+at sample. So it just records stepped CVs, no slopes and no CV changes between the triggers.
+
+DROID manual for blue-6
+
+344
+
+Table of contents at page 2
+
+Input
+
+Type
+
+timewindow (tw)
+
+Default
+
+Description
+
+0.0
+
+When in triggered mode, this optional parameter helps tackling a problem that many hardware sequencers show: often
+their pitch CV is not at its ﬁnal destination value at the time their gate is being output. Often you see a very short “slew”
+ramp of say 5 ms after the gate. During that time the pitch CV moves from its former to the new value.
+Now if you trigger the cvtape circuit with the sequencer’s gate you will essentially sample the previous pitch CV instead
+of the new one. Or maybe something in between.
+The timewindow parameter conﬁgures a short time window after the trigger to trigger. During that time period the
+tape will constantly adapt the last sample to a changed input CV. When that time is over, the input is ﬁnally frozen on
+the tape.
+The timewindow parameter is in seconds. So when you set timewindow to say 0.005 (which means 5 ms), you give the
+input CV 5 ms time for settling to its ﬁnal value after a trigger to sample before freezing it.
+
+bypass (b)
+
+off
+
+Setting bypass to on copies the input signals directly to the outputs, regardless of any other stuff going on.
+
+save (sv)
+
+Send a trigger here to save the current contents of the tape to a ﬁle on the SD card. The ﬁlename is tapeXXXX.bin,
+where XXXX is replaced by the number set by filenumber.
+
+load (ld)
+
+Send a trigger here to load a previously saved ﬁle into the tape. Use filenumber so specify which ﬁle to load.
+
+filenumber (f)
+
+1 2 3
+
+1
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+Output
+
+Type
+
+Number of the ﬁle to load or save. The range is 0 - 9999. If filenumber is 123, the name on the SD card is
+tape0123.bin. These ﬁles are shared between all recorder and delay circuits.
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+
+Description
+
+recordled (rl)
+
+Is 1 during recordings.
+
+playled (pl)
+
+Is 1 during playback or scrubbing.
+
+stopled (sl)
+
+Is 1 when no playback, recording or scrubbing is going on.
+
+DROID manual for blue-6
+
+345
+
+Table of contents at page 2
+
+Output
+
+Type
+
+Output of the continous input CV
+
+cvout (co)
+numberout (no)
+
+Description
+
+1 2 3
+
+Output of the discrete number
+
+gateout1 ... gateout8
+(go)
+
+Output of the gates
+
+overflow (ov)
+
+When the internal memory of the tape is exceeded and data got lost, this gate goes to 1 for 0.5 seconds. If you are
+suspecting this situation, you can wire this output to an LED and observe the memory status that way.
+
+DROID manual for blue-6
+
+346
+
+Table of contents at page 2
+
+

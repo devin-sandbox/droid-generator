@@ -1,0 +1,270 @@
+Input
+
+Type
+
+Default
+
+Description
+
+noteshift (nos)
+
+1 2 3
+
+0
+
+Shifts the resulting output note(s) by this number of scale notes up or down (if negative). So the output note still is
+part of the scale but may be a note that is none of the selected ones. The maximum shift range is limited to -24 … +24.
+
+selectnoteshift (sns)
+
+1 2 3
+
+0
+
+Shifts the output note by this number of selected scale notes up or down (if negative). If you use noteshift at the
+same time, first selectnoteshift is applied, then noteshift. The maximum shift range is limited to -24 … +24.
+
+off
+
+While this is 1, the circuit will output the value set by tuningpitch instead of the actual pitch. This is ment to be a
+help for tuning your VCOs.
+
+tuningmode (tm)
+
+tuningpitch (tp)
+
+1V
+Oct
+
+0V
+
+This pitch CV will be output while the tuning mode is active.
+
+transpose (tr)
+
+1V
+Oct
+
+0V
+
+This value is being added to the output pitch when not in tuning mode. It can be used for musical transposition or
+adding a vibrato.
+
+select (s)
+
+1 2 3
+
++
+
+selectat (sa)
+
+1 2 3
+
++
+
+preset (pr)
+
+1 2 3
+
++
+
+The select input allows you to overlay buttons and LEDs with multiple functions. If you use this input, the circuit will
+process the buttons and LEDs just as if select has a positive gate signal (usually you will select this to 1). Otherwise
+it won’t touch them so they can be used by another circuit. Note: even if the circuit is currently not selected, it will
+nevertheless work and process all its other inputs and its outputs (those that do not deal with buttons or LEDs) in a
+normal way.
+This input makes the select input more ﬂexible. Here you specify at which value select should select this circuit.
+E.g. if selectat is 0, the circuit will be active if select is exactly 0 instead of a positive gate signal. In some cases this
+is more conventient.
+This is the preset number to save or to load. Note: the ﬁrst preset has the number 0, not 1! For the whole story on
+presets please refer to page 21. This circuit has 4 presets, so this number ranges from 0 to 3.
+
+loadpreset (lp)
+
+A trigger here loads a preset. As a speciality you can use the trigger for selecting a preset at the same time.
+
+savepreset (sp)
+
+A trigger here saves a preset.
+
+clear (cl)
+
+A trigger here loads the default start state into the circuit. The presets are not affected, unless you use direct preset
+switching with the preset input and without triggers. And that case the current preset is also cleared.
+
+clearall (ca)
+
+A trigger here loads the default start state into the circuit and into all of its presets.
+
+dontsave (dos)
+
+Output
+cv ()
+
+DROID manual for blue-6
+
+0
+
+Type
+
+If you set this to 1, the state of the circuit will not saved to the SD card and not loaded from the SD card when the Droid
+starts.
+
+Description
+The CV output (or pitch output, if you use quantize).
+
+214
+
+Table of contents at page 2
+
+Output
+
+Type
+
+Description
+
+gate (g)
+
+The gate output.
+
+startofsequence (ssq)
+
+Outputs a trigger whenever the sequencer starts playing from the beginning. This can be used for synchronizing with
+other sequencers. An external reset will also cause this output to trigger.
+
+startofpart (spa)
+
+Outputs a trigger whenever a form part starts again. This is only interesting when you use form.
+
+startstepout (sso)
+
+1 2 3
+
+Outputs the current start step. This is useful in case it has been interactively set with the buttons and you need that
+information for another circuit.
+
+endstepout (eso)
+
+1 2 3
+
+Outputs the current end step. This is useful in case it has been interactively set with the buttons and you need that
+information for another circuit.
+
+currentstep (cst)
+
+1 2 3
+
+Outputs the number of the step that is currently being played (starting from 0).
+
+currentpage (cpg)
+
+1 2 3
+
+Outputs the number of the fader page that is currently played, i.e. the value you would have to feed into page in order
+to see the currently being played step.
+
+accumulator (acc)
+
+1 2 3
+
+The current value of the pitch accumulator (an integer number in the range 0 … 16.
+
+DROID manual for blue-6
+
+215
+
+Table of contents at page 2
+
+16.24
+
+euklid – Euclidean rhythm generator
+
+This circuit creates trigger patterns according to the well-known Euclidean rhythms
+and is of course CV controllable. The pattern is described by three numbers:
+• The number of steps in the pattern
+• The number of beats in the pattern
+• An offset for shifting the beats forward
+The number of beats are distributed as evenly as possible
+in the pattern – but of course are all placed precisely on
+clock beats. Here are a few examples of various patterns:
+length: 16, beats: 4, offset: 0
+
+Offbeats
+Here is an example without CV control:
+[euklid]
+clock
+reset
+length
+beats
+offset
+output
+
+= G1
+= G2
+= 16
+= 5
+= 0
+= G3
+
+The output offbeats does the exact opposite of
+outputs: it triggers at those clock beats where output
+does not. So at any given clock tick exactly either output
+or offbeats triggers.
+
+Gate length
+
+Now let’s change that in order to make the beats controllable by the pot P1.1. Please note how the pot range is
+being changed from the default 0 … 1 to the necessary
+1 … 16 by using a factor of 15 and an offset of 1:
+
+The length of the output gate is the same as that of the input gate. Also the exact voltage from the input is copied
+to the output while the current step is active.
+
+length: 16, beats: 5, offset: 0
+
+length: 16, beats: 11, offset: 0
+
+[euklid]
+clock
+reset
+length
+beats
+offset
+output
+
+length: 13, beats: 5, offset: 0
+
+By the way: Since the default for length is 16 and for
+offset 0 you can drop those two lines if you like:
+
+length: 16, beats: 5, offset: 1
+
+length: 13, beats: 5, offset: 1
+
+[euklid]
+clock
+reset
+beats
+output
+
+= G1
+= G2
+= 16
+= P1.1 * 15 + 1
+= 0
+= G3
+
+= G1
+= G2
+= P1.1 * 15 + 1
+= G3
+
+length: 4, beats: 2, offset: 1
+
+DROID manual for blue-6
+
+216
+
+Table of contents at page 2
+
+

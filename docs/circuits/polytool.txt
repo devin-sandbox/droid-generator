@@ -1,0 +1,60 @@
+# DROID Circuit Input/Output Keys
+
+## polytool - Polyphonic Voice Control
+
+### Inputs
+- pitchinput1...pitchinput16 - Voice pitches
+  - Type: 1V/Oct
+  - Description: Pitch CV inputs for up to 16 input voices
+
+- gateinput1...gateinput16 - Voice gates
+  - Type: gate
+  - Description: Gate inputs for up to 16 input voices
+
+- roundrobin - Voice distribution
+  - Type: binary
+  - Default: 0
+  - Description: Enable round-robin voice allocation instead of sequential
+
+- voiceallocation - Voice stealing
+  - Type: integer
+  - Range: 0-3
+  - Default: 0
+  - Description: Voice allocation strategy when all outputs are in use
+  - Values:
+    0: Cancel oldest note
+    1: Omit new note
+    2: Cancel lowest note
+    3: Cancel highest note
+
+### Outputs
+- pitchoutput1...pitchoutput16 - Voice pitches
+  - Type: 1V/Oct
+  - Description: Pitch CV outputs for up to 16 output voices
+
+- gateoutput1...gateoutput16 - Voice gates
+  - Type: gate
+  - Description: Gate outputs for up to 16 output voices
+
+Note: Polyphonic voice management with features:
+- Up to 16 input/output voices
+- Flexible voice allocation
+- Round-robin distribution
+- Multiple stealing strategies
+- Dynamic voice mapping
+- Automatic voice reduction
+
+Example applications:
+- MIDI-style voice allocation
+- Polyphony reduction
+- Voice distribution
+- Arpeggio to chord conversion
+- Note priority management
+- Voice stealing control
+
+Limitations:
+- Maximum 16 voices
+- Fixed allocation strategies
+- No voice priority weighting
+- No voice reassignment
+- No release time consideration
