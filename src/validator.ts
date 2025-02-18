@@ -7,7 +7,7 @@ type CircuitSection = Circuit['section'];
 type AllowedKeys = Record<CircuitSection, readonly string[]>;
 
 const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
-  motorfader: [
+  motoquencer: [
     'section',
     'clock',
     'firstfader',
