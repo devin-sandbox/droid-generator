@@ -15,15 +15,14 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
 
   const patch = new Patch([DeviceType.P2B8, DeviceType.E4, DeviceType.M4]);
   
-  // Configure clock generator with fixed frequency
+  // Configure clock generator with fixed timing
   const clock = {
     section: 'clocktool' as const,
-    multiply: '1',
-    divide: '1',
-    dutycycle: '0.5',
-    gatelength: '0.01',  // 10ms gate length
-    hz: '2',             // 2Hz = 120 BPM
-    output: 'I1'         // Connect to motoquencer clock input
+    clock: 'I1',       // Clock input
+    multiply: '1',     // No multiplication
+    divide: '1',       // No division
+    dutycycle: '0.5',  // 50% duty cycle
+    gatelength: '0.01' // 10ms gate length
   };
   patch.addCircuit(clock);
   
@@ -39,7 +38,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   // Configure motoquencer for basic 4-step sequence
   const motoquencer = {
     section: 'motoquencer' as const,
-    clock: 'I1',      // Use internal clock from clocktool
+    clock: 'I2',      // Use external clock input
     firstfader: '1',  // Use faders 1-4
     numfaders: '4',   // All 4 faders on M4
     numsteps: '4',    // 4-step sequence
