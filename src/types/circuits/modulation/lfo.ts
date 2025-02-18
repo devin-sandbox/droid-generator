@@ -13,7 +13,7 @@ export interface LFOConfig extends BaseCircuitConfig {
   taptempo?: GateInput;
   
   /** Frequency in Hz */
-  hz?: CVInput;
+  hz: CVInput;
   
   /** Output level */
   level?: CVInput;
@@ -43,13 +43,13 @@ export interface LFOConfig extends BaseCircuitConfig {
   syncphase?: CVInput;
   
   /** Waveform selection (0-6) */
-  waveform?: CVInput;
+  waveform: CVInput;
   
   /** Main output */
   output?: CVInput;
   
   /** Square wave output */
-  square?: CVInput;
+  square: CVInput;
   
   /** Sawtooth wave output */
   sawtooth?: CVInput;
