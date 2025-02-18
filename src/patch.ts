@@ -5,6 +5,7 @@ import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { EncoderConfig } from './types/circuits/io/encoder';
 import type { ButtonConfig } from './types/circuits/io/button';
 import type { MotoquencerConfig } from './types/circuits/sequencing/motoquencer';
+import type { ClockToolConfig } from './types/circuits/timing/clocktool';
 import { DeviceType } from './types/devices';
 
 type Circuit = 
@@ -12,7 +13,8 @@ type Circuit =
   | (MotorFaderConfig & { section: 'motorfader' })
   | (EncoderConfig & { section: 'encoder' })
   | (ButtonConfig & { section: 'button' })
-  | (MotoquencerConfig & { section: 'motoquencer' });
+  | (MotoquencerConfig & { section: 'motoquencer' })
+  | (ClockToolConfig & { section: 'clocktool' });
 
 export class Patch {
   private circuits: Circuit[] = [];
