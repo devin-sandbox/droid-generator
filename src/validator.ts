@@ -7,52 +7,6 @@ type CircuitSection = Circuit['section'];
 type AllowedKeys = Record<CircuitSection, readonly string[]>;
 
 const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
-  lfo: [
-    'section',
-    'rate',
-    'taptempo',
-    'hz',
-    'level',
-    'offset',
-    'bipolar',
-    'randomize',
-    'phase',
-    'pulsewidth',
-    'skew',
-    'sync',
-    'syncphase',
-    'waveform',
-    'output',
-    'square',
-    'sawtooth',
-    'triangle',
-    'ramp',
-    'paraboloid',
-    'sine',
-    'cosine'
-  ],
-  motorfader: [
-    'section',
-    'fader',
-    'position',
-    'speed',
-    'notches',
-    'touch'
-  ],
-  encoder: [
-    'section',
-    'encoder',
-    'button',
-    'led',
-    'increment',
-    'decrement'
-  ],
-  button: [
-    'section',
-    'button',
-    'led',
-    'states'
-  ],
   motoquencer: [
     'section',
     'clock',
@@ -95,7 +49,20 @@ const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
     'endstep',
     'direction',
     'pingpong',
-    'autoreset'
+    'autoreset',
+    'gatestretch',
+    'gatelength',
+    'harmonicshift',
+    'noteshift',
+    'selectnoteshift',
+    'buttoncolor',
+    'startofsequence',
+    'startofpart',
+    'startstepout',
+    'endstepout',
+    'currentstep',
+    'currentpage',
+    'accumulator'
   ],
   lfo: [
     'section',
