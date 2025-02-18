@@ -12,7 +12,6 @@ describe("GlobalStateE4", () => {
       expect(() => CircuitValidator.validate(circuit)).not.toThrow();
     }
   });
-  });
 
   test("validates number of LFOs", () => {
     expect(() => generatePatch(0)).toThrow(/Number of LFOs must be between 1 and 8/);
