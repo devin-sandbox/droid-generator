@@ -46,7 +46,7 @@ export class Patch {
     
     for (const [key, value] of entries) {
       if (value !== undefined) {
-        this.ini.set(section.id ?? section.sec, `    ${key} = `, value);
+        this.ini.set(section.id ?? section.sec, `    ${key}`, ` = ${value}`);
       }
     }
   }
@@ -60,7 +60,7 @@ export class Patch {
     this.ini.setSection('p2b8');
     this.ini.setSection('e4');
     this.ini.setSection('m4');
-    this.ini.comments.setAtLine(4, "");
+    this.ini.comments.setAtLine(this.ini.size + 1, "");
     
     // Add section headers
     this.addComment("# -------------------------------------------------");
