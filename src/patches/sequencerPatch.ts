@@ -48,7 +48,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   // Configure encoder for layer switching
   const layerEncoder: Circuit & EncoderConfig = {
     section: 'encoder',
-    encoder: 'E1.1',
+    encoder: 'E2.1',
     button: '_LAYER_SWITCH',
     led: '_LAYER_LED',
     color: '0.5',  // Green for step layer
