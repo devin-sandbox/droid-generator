@@ -3,7 +3,7 @@ import type { LFOConfig } from '../types/circuits/modulation/lfo';
 import type { MotorFaderConfig } from '../types/circuits/io/motorfader';
 import type { EncoderConfig } from '../types/circuits/io/encoder';
 
-const MAX_ALLOWED_LFOS = 8;
+const MAX_ALLOWED_LFOS = 7; // Limited by available outputs O1-O7
 const LFO_SELECT = "_LFO_SELECT";
 
 function validateNumLfos(num: number): number {
