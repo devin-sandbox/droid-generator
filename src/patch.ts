@@ -21,7 +21,7 @@ export class Patch {
   private devices: DeviceType[];
 
   getCircuits(): readonly Circuit[] {
-    return this.circuits;
+    return [...this.circuits];
   }
 
   addComment(text: string): void {
