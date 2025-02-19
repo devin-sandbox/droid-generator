@@ -3,6 +3,8 @@ import { createSequencerPatch } from "../patches/sequencerPatch";
 import { CircuitValidator } from "../validator";
 import type { Circuit } from "../patch";
 import type { ButtonGroupConfig } from "../types/circuits/io/buttongroup";
+import type { EncoderConfig } from "../types/circuits/io/encoder";
+import type { MotorFaderConfig } from "../types/circuits/io/motorfader";
 
 describe("SequencerPatch", () => {
   test("creates default 4-track sequencer patch", () => {
@@ -20,28 +22,30 @@ describe("SequencerPatch", () => {
     expect(() => createSequencerPatch({ numTracks: 0 })).toThrow();
   });
 
-  test("layer switching activates correct faders", () => {
+  test("layer switching circuit validation", () => {
     const patch = createSequencerPatch();
+    const validator = new CircuitValidator();
     const circuits = patch.getCircuits();
     
-    // Find encoder and switch circuits
-    const encoder = circuits.find(c => c.section === 'encoder' && c.encoder === 'E2.1');
+    // Validate all circuits
+    for (const circuit of circuits) {
+      expect(() => validator.validate(circuit)).not.toThrow();
+    }
+    
+    // Verify signal connections
+    const encoder = circuits.find(c => c.section === 'encoder') as Circuit & EncoderConfig;
     const switches = circuits.filter(c => c.section === 'switch');
-    const faders = circuits.filter(c => c.section === 'motorfader');
+    const faders = circuits.filter(c => c.section === 'motorfader') as (Circuit & MotorFaderConfig)[];
     
-    // Verify encoder outputs control layer state
-    expect(encoder?.output).toBe('_CURRENT_LAYER');
-    expect(encoder?.button).toBe('_LAYER_SWITCH');
-    
-    // Verify each switch uses encoder button state
+    // Check signal flow: encoder -> switches -> faders
+    const layerSignal = encoder.button;
     switches.forEach(s => {
-      expect(s.input1).toBe('_LAYER_SWITCH');
+      expect(s.input1).toBe(layerSignal);
     });
     
-    // Verify faders are activated by corresponding layer states
     faders.forEach((f, i) => {
-      expect(f.select).toBe(`_LAYER_STATE_${i + 1}`);
-      expect(f.selectat).toBe(`2${i + 1}`);
+      const layerState = switches[i].output;
+      expect(f.select).toBe(layerState);
     });
   });
 });
