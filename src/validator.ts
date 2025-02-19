@@ -6,7 +6,18 @@ import type { ButtonGroupConfig } from './types/circuits/io/buttongroup';
 import type { MathConfig } from './types/circuits/control/math';
 import type { SwitchConfig } from './types/circuits/control/switch';
 
-type CircuitSection = 'lfo' | 'motorfader' | 'encoder' | 'button' | 'buttongroup' | 'motoquencer' | 'math' | 'switch';
+const ALLOWED_CIRCUITS = [
+  'lfo',
+  'motorfader',
+  'encoder',
+  'button',
+  'buttongroup',
+  'motoquencer',
+  'math',
+  'switch'
+] as const;
+
+type CircuitSection = typeof ALLOWED_CIRCUITS[number];
 type AllowedKeys = Record<CircuitSection, readonly string[]>;
 
 const ALLOWED_KEYS: Record<CircuitSection, readonly string[]> = {
@@ -169,13 +180,27 @@ const ALLOWED_KEYS: Record<CircuitSection, readonly string[]> = {
 
 export class CircuitValidator {
   static validate(circuit: Circuit): void {
+    if (!circuit || typeof circuit !== 'object') {
+      throw new Error('Invalid circuit: must be an object');
+    }
+
     const circuitType = circuit.section;
+    if (!circuitType) {
+      throw new Error('Invalid circuit: missing section');
+    }
+
     const allowedKeys = ALLOWED_KEYS[circuitType];
+    
+    if (!ALLOWED_CIRCUITS.includes(circuitType as CircuitSection)) {
+      throw new Error(
+        `Unknown circuit type: ${circuitType}\n` +
+        `Valid types are: ${ALLOWED_CIRCUITS.join(', ')}`
+      );
+    }
     
     if (!allowedKeys) {
       throw new Error(
-        `Unknown circuit type: ${circuitType}\n` +
-        `Valid types are: ${Object.keys(ALLOWED_KEYS).join(', ')}`
+        `Circuit type ${circuitType} is allowed but not configured in ALLOWED_KEYS`
       );
     }
     
