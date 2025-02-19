@@ -8,7 +8,7 @@ if (isNaN(numTracks) || numTracks < 1 || numTracks > 4) {
   Bun.exit(1);
 }
 
-const defaultLayer = Bun.argv[3] ?? 'step';
+const defaultLayer = Bun.argv[3] ?? 'tempo';
 if (!['step', 'tempo'].includes(defaultLayer)) {
   console.error('Layer must be either "step" or "tempo"');
   Bun.exit(1);
