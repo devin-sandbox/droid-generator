@@ -5,6 +5,7 @@ import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { EncoderConfig } from './types/circuits/io/encoder';
 import type { ButtonConfig } from './types/circuits/io/button';
 import type { ButtonGroupConfig } from './types/circuits/io/buttongroup';
+import type { SwitchConfig } from './types/circuits/control/switch';
 import type { MathConfig } from './types/circuits/control/math';
 import type { MotoquencerConfig } from './types/circuits/sequencing/motoquencer';
 import { DeviceType } from './types/devices';
@@ -18,7 +19,7 @@ export type Circuit =
   | (ButtonGroupConfig & { section: 'buttongroup' })
   | (MotoquencerConfig & { section: 'motoquencer' })
   | (MathConfig & { section: 'math' })
-  | ({ section: 'switch', position: string, value0: string, value1: string, output: string });
+  | (SwitchConfig & { section: 'switch' });
 
 export class Patch {
   private circuits: Circuit[] = [];
