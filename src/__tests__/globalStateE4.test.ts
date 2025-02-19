@@ -21,7 +21,7 @@ describe("GlobalStateE4", () => {
         currentCircuit[key.trim()] = value.trim();
       } else if (line === '' && Object.keys(currentCircuit).length > 1) {
         // Validate circuit
-        expect(() => CircuitValidator.validate(currentCircuit as Circuit)).not.toThrow();
+        expect(() => CircuitValidator.validate(currentCircuit as unknown as Circuit)).not.toThrow();
         currentCircuit = {};
       }
     }
