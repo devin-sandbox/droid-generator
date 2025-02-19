@@ -1,11 +1,15 @@
 import { Patch, type Circuit } from '../patch';
 import type { MotoquencerConfig } from '../types/circuits/sequencing/motoquencer';
 import type { ButtonGroupConfig } from '../types/circuits/io/buttongroup';
+import type { EncoderConfig } from '../types/circuits/io/encoder';
+import type { MotorFaderConfig } from '../types/circuits/io/motorfader';
 import { DeviceType } from '../types/devices';
+import type { LayerMode } from '../types/common';
 
 interface SequencerOptions {
   numSteps?: number;
   numTracks?: number;
+  defaultLayer?: LayerMode;
 }
 
 function createTrackConfig(trackIndex: number): Circuit {
@@ -16,7 +20,7 @@ function createTrackConfig(trackIndex: number): Circuit {
     numfaders: '4',
     numsteps: '4',
     select: '_SELECTED_TRACK',  // Track selection input
-    selectat: `${trackIndex}`,  // Activate when _SELECTED_TRACK matches index
+    selectat: `1${trackIndex + 1}`,  // Activate when _SELECTED_TRACK matches index (11-14)
     cv: `O${trackIndex + 1}`,  // O1-O4
     gate: `G${trackIndex + 1}`, // G1-G4
     fadermode: '0',
@@ -41,13 +45,106 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   // Add label comment
   patch.addComment('LABELS: master=18');
   
+  // Configure encoder for layer switching
+  const layerEncoder: Circuit & EncoderConfig = {
+    section: 'encoder',
+    encoder: 'E2.1',
+    button: '_LAYER_SWITCH',
+    color: '_LAYER_STATE_1 * 0.6',  // Blue (0.6) for tempo, Red (0) for step
+    mode: '6',     // Circular mode for layer switching
+    discrete: '2', // Two positions for step/tempo layers
+    snapforce: '1', // Strong snap between positions
+    output: '_CURRENT_LAYER'
+  };
+  patch.addCircuit(layerEncoder);
+
+  // Configure BPM control faders
+  const bpmFaders: (Circuit & MotorFaderConfig)[] = [
+    {
+      section: 'motorfader',
+      fader: '1',
+      notches: '10',
+      outputscale: '9',
+      snapforce: '0.8',
+      output: '_BPM_HUNDREDS',
+      select: '_LAYER_STATE_1',
+      selectat: '21'  // Active in tempo layer, first fader
+    },
+    {
+      section: 'motorfader',
+      fader: '2',
+      notches: '10',
+      outputscale: '9',
+      snapforce: '0.8',
+      output: '_BPM_TENS',
+      select: '_LAYER_STATE_2',
+      selectat: '22'  // Active in tempo layer, second fader
+    },
+    {
+      section: 'motorfader',
+      fader: '3',
+      notches: '10',
+      outputscale: '9',
+      snapforce: '0.8',
+      output: '_BPM_ONES',
+      select: '_LAYER_STATE_3',
+      selectat: '23'  // Active in tempo layer, third fader
+    }
+  ];
+  
+  for (const fader of bpmFaders) {
+    patch.addCircuit(fader);
+  }
+  
+  // Configure math circuits for BPM calculation
+  const bpmCalculator1: Circuit = {
+    section: 'math',
+    input1: '_BPM_HUNDREDS * 100',
+    input2: '_BPM_TENS * 10',
+    sum: '_BPM_PARTIAL'
+  };
+  patch.addCircuit(bpmCalculator1);
+
+  const bpmCalculator2: Circuit = {
+    section: 'math',
+    input1: '_BPM_PARTIAL',
+    input2: '_BPM_ONES',
+    sum: '_TOTAL_BPM'
+  };
+  patch.addCircuit(bpmCalculator2);
+  
+  // Configure layer switching for each fader
+  const layerSwitch1: Circuit = {
+    section: 'switch',
+    input1: '_LAYER_SWITCH',  // Step layer
+    input2: '21',  // Tempo layer (first fader)
+    output: '_LAYER_STATE_1'
+  };
+  patch.addCircuit(layerSwitch1);
+
+  const layerSwitch2: Circuit = {
+    section: 'switch',
+    input1: '_LAYER_SWITCH',  // Step layer
+    input2: '22',  // Tempo layer (second fader)
+    output: '_LAYER_STATE_2'
+  };
+  patch.addCircuit(layerSwitch2);
+
+  const layerSwitch3: Circuit = {
+    section: 'switch',
+    input1: '_LAYER_SWITCH',  // Step layer
+    input2: '23',  // Tempo layer (third fader)
+    output: '_LAYER_STATE_3'
+  };
+  patch.addCircuit(layerSwitch3);
+
   // Configure LFO for clock generation
   const lfo: Circuit = {
     section: 'lfo',
-    hz: '2',           // 2Hz = 120 BPM
-    waveform: '0',     // Square wave
-    level: '1',        // Full level
-    bipolar: '0',      // Unipolar output
+    hz: '_TOTAL_BPM / 60',  // Convert BPM to Hz
+    waveform: '0',          // Square wave
+    level: '1',             // Full level
+    bipolar: '0',           // Unipolar output
     square: '_INTERNAL_CLOCK'
   };
   patch.addCircuit(lfo);

@@ -11,6 +11,9 @@ export type CVInput = string;
 /** Enumerated value parameter (mode selections) */
 export type EnumInput = string;
 
+/** Layer mode for sequencer UI */
+export type LayerMode = 'step' | 'tempo';
+
 /** Boolean flag parameter (enable/disable features) */
 export type BooleanInput = string;
 
