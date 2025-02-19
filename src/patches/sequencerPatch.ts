@@ -101,8 +101,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     section: 'math',
     input1: '_BPM_HUNDREDS * 100',
     input2: '_BPM_TENS * 10',
-    operation: '0',  // Addition
-    output: '_BPM_PARTIAL'
+    sum: '_BPM_PARTIAL'
   };
   patch.addCircuit(bpmCalculator1);
 
@@ -110,8 +109,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     section: 'math',
     input1: '_BPM_PARTIAL',
     input2: '_BPM_ONES',
-    operation: '0',  // Addition
-    output: '_TOTAL_BPM'
+    sum: '_TOTAL_BPM'
   };
   patch.addCircuit(bpmCalculator2);
   
