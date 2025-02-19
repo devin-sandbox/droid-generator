@@ -40,6 +40,10 @@ describe("SequencerPatch", () => {
     expect(buttonGroup.led2).toBe('L1.2');
     expect(buttonGroup.led3).toBe('L1.3');
     expect(buttonGroup.led4).toBe('L1.4');
+    expect(buttonGroup.value1).toBe('0');  // Track 1 selection value
+    expect(buttonGroup.value2).toBe('1');  // Track 2 selection value
+    expect(buttonGroup.value3).toBe('2');  // Track 3 selection value
+    expect(buttonGroup.value4).toBe('3');  // Track 4 selection value
     expect(buttonGroup.output).toBe('_SELECTED_TRACK');
   });
 

@@ -60,6 +60,10 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     led2: 'L1.2',
     led3: 'L1.3',
     led4: 'L1.4',
+    value1: '0',  // Track 1 selection value
+    value2: '1',  // Track 2 selection value
+    value3: '2',  // Track 3 selection value
+    value4: '3',  // Track 4 selection value
     output: '_SELECTED_TRACK'  // Output value used for track selection
   };
   patch.addCircuit(buttonGroup);
