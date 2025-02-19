@@ -159,5 +159,7 @@ quantize=2
   - `_BPM_HUNDREDS * 100 + _BPM_TENS * 10 + _BPM_ONES`
   - Result in `_TOTAL_BPM` used for LFO clock
 - Layer switching controlled by encoder E2.1
-  - Two discrete positions with strong snap force
+  - Two discrete positions for step/tempo layers
   - Circular mode for easy toggling
+  - Switch circuits use encoder button state for selection
+  - No invalid parameters used (follows DROID manual specs)
