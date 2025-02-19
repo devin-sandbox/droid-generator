@@ -10,7 +10,7 @@ This document shows the standard output of the sequencer with tempo control impl
 [encoder]
 encoder=E2.1
 button=_LAYER_SWITCH
-color=_LAYER_STATE * 0.6
+color=_LAYER_STATE_1 * 0.6
 mode=6
 discrete=2
 snapforce=1
@@ -21,7 +21,7 @@ notches=10
 outputscale=9
 snapforce=0.8
 output=_BPM_HUNDREDS
-select=_LAYER_STATE
+select=_LAYER_STATE_1
 selectat=21
 [motorfader]
 fader=2
@@ -29,7 +29,7 @@ notches=10
 outputscale=9
 snapforce=0.8
 output=_BPM_TENS
-select=_LAYER_STATE
+select=_LAYER_STATE_2
 selectat=22
 [motorfader]
 fader=3
@@ -37,7 +37,7 @@ notches=10
 outputscale=9
 snapforce=0.8
 output=_BPM_ONES
-select=_LAYER_STATE
+select=_LAYER_STATE_3
 selectat=23
 [math]
 input1=_BPM_HUNDREDS * 100
@@ -49,9 +49,19 @@ input2=_BPM_ONES
 sum=_TOTAL_BPM
 [switch]
 position=_CURRENT_LAYER
-input1=0
+input1=11
 input2=21
-output=_LAYER_STATE
+output=_LAYER_STATE_1
+[switch]
+position=_CURRENT_LAYER
+input1=11
+input2=22
+output=_LAYER_STATE_2
+[switch]
+position=_CURRENT_LAYER
+input1=11
+input2=23
+output=_LAYER_STATE_3
 [lfo]
 hz=_TOTAL_BPM / 60
 waveform=0

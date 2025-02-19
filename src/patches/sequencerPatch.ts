@@ -50,7 +50,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     section: 'encoder',
     encoder: 'E2.1',
     button: '_LAYER_SWITCH',
-    color: '_LAYER_STATE * 0.6',  // Blue (0.6) for tempo, Red (0) for step
+    color: '_LAYER_STATE_1 * 0.6',  // Blue (0.6) for tempo, Red (0) for step
     mode: '6',     // Circular mode for layer switching
     discrete: '2', // Two positions for step/tempo layers
     snapforce: '1', // Strong snap between positions
@@ -67,7 +67,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
       outputscale: '9',
       snapforce: '0.8',
       output: '_BPM_HUNDREDS',
-      select: '_LAYER_STATE',
+      select: '_LAYER_STATE_1',
       selectat: '21'  // Active in tempo layer, first fader
     },
     {
@@ -77,7 +77,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
       outputscale: '9',
       snapforce: '0.8',
       output: '_BPM_TENS',
-      select: '_LAYER_STATE',
+      select: '_LAYER_STATE_2',
       selectat: '22'  // Active in tempo layer, second fader
     },
     {
@@ -87,7 +87,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
       outputscale: '9',
       snapforce: '0.8',
       output: '_BPM_ONES',
-      select: '_LAYER_STATE',
+      select: '_LAYER_STATE_3',
       selectat: '23'  // Active in tempo layer, third fader
     }
   ];
@@ -113,15 +113,33 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   };
   patch.addCircuit(bpmCalculator2);
   
-  // Configure layer switching
-  const layerSwitch: Circuit = {
+  // Configure layer switching for each fader
+  const layerSwitch1: Circuit = {
     section: 'switch',
     position: '_CURRENT_LAYER',
     input1: '11',  // Step layer (11-14)
-    input2: '21',  // Tempo layer (21-23)
-    output: '_LAYER_STATE'
+    input2: '21',  // Tempo layer (first fader)
+    output: '_LAYER_STATE_1'
   };
-  patch.addCircuit(layerSwitch);
+  patch.addCircuit(layerSwitch1);
+
+  const layerSwitch2: Circuit = {
+    section: 'switch',
+    position: '_CURRENT_LAYER',
+    input1: '11',  // Step layer (11-14)
+    input2: '22',  // Tempo layer (second fader)
+    output: '_LAYER_STATE_2'
+  };
+  patch.addCircuit(layerSwitch2);
+
+  const layerSwitch3: Circuit = {
+    section: 'switch',
+    position: '_CURRENT_LAYER',
+    input1: '11',  // Step layer (11-14)
+    input2: '23',  // Tempo layer (third fader)
+    output: '_LAYER_STATE_3'
+  };
+  patch.addCircuit(layerSwitch3);
 
   // Configure LFO for clock generation
   const lfo: Circuit = {
