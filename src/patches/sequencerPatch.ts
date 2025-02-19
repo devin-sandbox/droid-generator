@@ -1,5 +1,6 @@
 import { Patch, type Circuit } from '../patch';
 import type { MotoquencerConfig } from '../types/circuits/sequencing/motoquencer';
+import type { ButtonGroupConfig } from '../types/circuits/io/buttongroup';
 import { DeviceType } from '../types/devices';
 
 interface SequencerOptions {
@@ -14,7 +15,8 @@ function createTrackConfig(trackIndex: number): Circuit {
     firstfader: '1',  // All tracks share faders 1-4
     numfaders: '4',
     numsteps: '4',
-    page: `TRACK_${trackIndex}`,  // Connect to button output for page selection
+    select: '_SELECTED_TRACK',  // Track selection input
+    selectat: `${trackIndex}`,  // Activate when _SELECTED_TRACK matches index
     cv: `O${trackIndex + 1}`,  // O1-O4
     gate: `G${trackIndex + 1}`, // G1-G4
     fadermode: '0',
@@ -47,18 +49,20 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   };
   patch.addCircuit(lfo);
   
-  // Configure track selection buttons with page connections
-  const buttons = Array.from({ length: numTracks }, (_, i) => {
-    const button: Circuit = {
-      section: 'button',
-      button: `B1.${i + 1}`,  // B1.1 through B1.4 on P2B8
-      states: '2',        // Simple on/off state
-      led: `L1.${i + 1}`,     // LED feedback
-      output: `TRACK_${i}`  // Output value used for page selection
-    };
-    return button;
-  });
-  buttons.forEach(button => patch.addCircuit(button));
+  // Configure button group for track selection
+  const buttonGroup: Circuit & ButtonGroupConfig = {
+    section: 'buttongroup',
+    button1: 'B1.1',
+    button2: 'B1.2',
+    button3: 'B1.3',
+    button4: 'B1.4',
+    led1: 'L1.1',
+    led2: 'L1.2',
+    led3: 'L1.3',
+    led4: 'L1.4',
+    output: '_SELECTED_TRACK'  // Output value used for track selection
+  };
+  patch.addCircuit(buttonGroup);
   
   // Add tracks
   for (let i = 0; i < numTracks; i++) {
