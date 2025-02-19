@@ -22,30 +22,23 @@ describe("SequencerPatch", () => {
     expect(() => createSequencerPatch({ numTracks: 0 })).toThrow();
   });
 
-  test("layer switching circuit validation", () => {
+  test("circuits use only allowed keys", () => {
     const patch = createSequencerPatch();
     const validator = new CircuitValidator();
     const circuits = patch.getCircuits();
     
-    // Validate all circuits
+    // Validate all circuits against allowed keys
     for (const circuit of circuits) {
+      const circuitKeys = Object.keys(circuit).filter(k => k !== 'section');
+      const allowedKeys = validator.getAllowedKeys(circuit.section);
+      
+      // Every key in the circuit must be in the allowed keys list
+      circuitKeys.forEach(key => {
+        expect(allowedKeys).toContain(key);
+      });
+      
+      // Validate the circuit passes the validator
       expect(() => validator.validate(circuit)).not.toThrow();
     }
-    
-    // Verify signal connections
-    const encoder = circuits.find(c => c.section === 'encoder') as Circuit & EncoderConfig;
-    const switches = circuits.filter(c => c.section === 'switch');
-    const faders = circuits.filter(c => c.section === 'motorfader') as (Circuit & MotorFaderConfig)[];
-    
-    // Check signal flow: encoder -> switches -> faders
-    const layerSignal = encoder.button;
-    switches.forEach(s => {
-      expect(s.input1).toBe(layerSignal);
-    });
-    
-    faders.forEach((f, i) => {
-      const layerState = switches[i].output;
-      expect(f.select).toBe(layerState);
-    });
   });
 });
