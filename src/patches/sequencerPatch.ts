@@ -96,19 +96,27 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     patch.addCircuit(fader);
   }
   
-  // Configure math circuit for BPM calculation
-  const bpmCalculator: Circuit = {
+  // Configure math circuits for BPM calculation
+  const bpmCalculator1: Circuit = {
     section: 'math',
     input1: '_BPM_HUNDREDS',
     input2: '_BPM_TENS',
-    input3: '_BPM_ONES',
     operation: '0',  // Addition
     scale1: '100',
     scale2: '10',
-    scale3: '1',
+    output: '_BPM_PARTIAL'
+  };
+  patch.addCircuit(bpmCalculator1);
+
+  const bpmCalculator2: Circuit = {
+    section: 'math',
+    input1: '_BPM_PARTIAL',
+    input2: '_BPM_ONES',
+    operation: '0',  // Addition
+    scale2: '1',
     output: '_TOTAL_BPM'
   };
-  patch.addCircuit(bpmCalculator);
+  patch.addCircuit(bpmCalculator2);
   
   // Configure layer switching
   const layerSwitch: Circuit = {
