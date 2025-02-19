@@ -99,11 +99,9 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   // Configure math circuits for BPM calculation
   const bpmCalculator1: Circuit = {
     section: 'math',
-    input1: '_BPM_HUNDREDS',
-    input2: '_BPM_TENS',
+    input1: '_BPM_HUNDREDS * 100',
+    input2: '_BPM_TENS * 10',
     operation: '0',  // Addition
-    scale1: '100',
-    scale2: '10',
     output: '_BPM_PARTIAL'
   };
   patch.addCircuit(bpmCalculator1);
@@ -113,7 +111,6 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     input1: '_BPM_PARTIAL',
     input2: '_BPM_ONES',
     operation: '0',  // Addition
-    scale2: '1',
     output: '_TOTAL_BPM'
   };
   patch.addCircuit(bpmCalculator2);
