@@ -116,8 +116,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   // Configure layer switching for each fader
   const layerSwitch1: Circuit = {
     section: 'switch',
-    position: '_CURRENT_LAYER',
-    input1: '11',  // Step layer (11-14)
+    input1: '_LAYER_SWITCH',  // Step layer
     input2: '21',  // Tempo layer (first fader)
     output: '_LAYER_STATE_1'
   };
@@ -125,8 +124,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
 
   const layerSwitch2: Circuit = {
     section: 'switch',
-    position: '_CURRENT_LAYER',
-    input1: '11',  // Step layer (11-14)
+    input1: '_LAYER_SWITCH',  // Step layer
     input2: '22',  // Tempo layer (second fader)
     output: '_LAYER_STATE_2'
   };
@@ -134,8 +132,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
 
   const layerSwitch3: Circuit = {
     section: 'switch',
-    position: '_CURRENT_LAYER',
-    input1: '11',  // Step layer (11-14)
+    input1: '_LAYER_SWITCH',  // Step layer
     input2: '23',  // Tempo layer (third fader)
     output: '_LAYER_STATE_3'
   };
