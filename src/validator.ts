@@ -2,15 +2,20 @@ import type { Circuit } from './patch';
 import type { MotorFaderConfig } from './types/circuits/io/motorfader';
 import type { EncoderConfig } from './types/circuits/io/encoder';
 import type { ButtonConfig } from './types/circuits/io/button';
+import type { ButtonGroupConfig } from './types/circuits/io/buttongroup';
+import type { MathConfig } from './types/circuits/control/math';
+import type { SwitchConfig } from './types/circuits/control/switch';
 
-type CircuitSection = Circuit['section'];
+type CircuitSection = 'lfo' | 'motorfader' | 'encoder' | 'button' | 'buttongroup' | 'motoquencer' | 'math' | 'switch';
 type AllowedKeys = Record<CircuitSection, readonly string[]>;
 
-const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
+const ALLOWED_KEYS: Record<CircuitSection, readonly string[]> = {
   motoquencer: [
     'section',
     'clock',
     'firstfader',
+    'select',
+    'selectat',
     'numfaders',
     'numsteps',
     'page',
@@ -133,6 +138,32 @@ const ALLOWED_KEYS: Record<Circuit['section'], readonly string[]> = {
     'clear',
     'clearall',
     'dontsave'
+  ],
+  buttongroup: [
+    'section',
+    'button1', 'button2', 'button3', 'button4', 'button5', 'button6', 'button7', 'button8',
+    'led1', 'led2', 'led3', 'led4', 'led5', 'led6', 'led7', 'led8',
+    'value1', 'value2', 'value3', 'value4', 'value5', 'value6', 'value7', 'value8',
+    'minactive', 'maxactive', 'longpresstime', 'startbutton', 'output',
+    'buttonoutput1', 'buttonoutput2', 'buttonoutput3', 'buttonoutput4',
+    'buttonoutput5', 'buttonoutput6', 'buttonoutput7', 'buttonoutput8',
+    'buttonpress', 'longpress', 'selectionchanged', 'extrapress'
+  ],
+  math: [
+    'section',
+    'input1', 'input2',
+    'sum', 'difference', 'product', 'quotient', 'modulo', 'power',
+    'average', 'maximum', 'minimum', 'negation', 'reciprocal', 'amount',
+    'sine', 'cosine', 'square', 'root', 'logarithm',
+    'round', 'floor', 'ceil'
+  ],
+  switch: [
+    'section',
+    'input1', 'input2', 'input3', 'input4', 'input5', 'input6', 'input7', 'input8',
+    'input9', 'input10', 'input11', 'input12', 'input13', 'input14', 'input15', 'input16',
+    'output1', 'output2', 'output3', 'output4', 'output5', 'output6', 'output7', 'output8',
+    'output9', 'output10', 'output11', 'output12', 'output13', 'output14', 'output15', 'output16',
+    'forward', 'backward', 'reset', 'offset'
   ]
 } as const;
 

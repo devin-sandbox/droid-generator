@@ -6,9 +6,6 @@ import type { CVInput } from '../../common';
  * @see DROID manual page 361
  */
 export interface SwitchConfig extends BaseCircuitConfig {
-  /** Switch position (0-15) */
-  position?: CVInput;
-  
   /** Input values (1-16) */
   input1?: CVInput;
   input2?: CVInput;
@@ -27,6 +24,27 @@ export interface SwitchConfig extends BaseCircuitConfig {
   input15?: CVInput;
   input16?: CVInput;
   
-  /** Selected value output */
-  output?: CVInput;
+  /** Output values (1-16) */
+  output1?: CVInput;
+  output2?: CVInput;
+  output3?: CVInput;
+  output4?: CVInput;
+  output5?: CVInput;
+  output6?: CVInput;
+  output7?: CVInput;
+  output8?: CVInput;
+  output9?: CVInput;
+  output10?: CVInput;
+  output11?: CVInput;
+  output12?: CVInput;
+  output13?: CVInput;
+  output14?: CVInput;
+  output15?: CVInput;
+  output16?: CVInput;
+
+  /** Control inputs */
+  forward?: CVInput;
+  backward?: CVInput;
+  reset?: CVInput;
+  offset?: CVInput;
 }
