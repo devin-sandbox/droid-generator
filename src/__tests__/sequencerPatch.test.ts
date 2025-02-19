@@ -5,7 +5,7 @@ import { CircuitValidator } from "../validator";
 describe("SequencerPatch", () => {
   test("creates patch with valid circuit keys", () => {
     const patch = createSequencerPatch();
-    const circuits = (patch as any)._circuits;
+    const circuits = patch.getCircuits();
     
     // Verify each circuit has valid keys
     for (const circuit of circuits) {
@@ -18,7 +18,7 @@ describe("SequencerPatch", () => {
       numSteps: 8,
       numTracks: 2
     });
-    const circuits = (patch as any)._circuits;
+    const circuits = patch.getCircuits();
     
     // Verify each circuit has valid keys
     for (const circuit of circuits) {

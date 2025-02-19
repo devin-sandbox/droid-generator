@@ -20,7 +20,7 @@ export class Patch {
   private ini: IniMap;
   private devices: DeviceType[];
 
-  protected get _circuits(): readonly Circuit[] {
+  getCircuits(): readonly Circuit[] {
     return this.circuits;
   }
 
