@@ -66,6 +66,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     value4: '3',  // Track 4 selection value
     maxactive: '1',  // Only one track can be active at a time
     minactive: '1',  // At least one track must be active
+    startbutton: '1',  // Track 1 selected by default
     output: '_SELECTED_TRACK'  // Output value used for track selection
   };
   patch.addCircuit(buttonGroup);

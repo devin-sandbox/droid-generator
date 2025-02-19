@@ -46,6 +46,7 @@ describe("SequencerPatch", () => {
     expect(buttonGroup.value4).toBe('3');  // Track 4 selection value
     expect(buttonGroup.maxactive).toBe('1');  // Only one track can be active at a time
     expect(buttonGroup.minactive).toBe('1');  // At least one track must be active
+    expect(buttonGroup.startbutton).toBe('1');  // Track 1 selected by default
     expect(buttonGroup.output).toBe('_SELECTED_TRACK');
   });
 
