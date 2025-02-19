@@ -63,32 +63,32 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   const bpmFaders: (Circuit & MotorFaderConfig)[] = [
     {
       section: 'motorfader',
-      fader: '1',
+      fader: '5',
       notches: '10',
       outputscale: '9',
       snapforce: '0.8',
       output: '_BPM_HUNDREDS',
-      select: '_CURRENT_LAYER',
+      select: '_LAYER_STATE',
       selectat: '1'  // Active in tempo layer
     },
     {
       section: 'motorfader',
-      fader: '2',
+      fader: '6',
       notches: '10',
       outputscale: '9',
       snapforce: '0.8',
       output: '_BPM_TENS',
-      select: '_CURRENT_LAYER',
+      select: '_LAYER_STATE',
       selectat: '1'  // Active in tempo layer
     },
     {
       section: 'motorfader',
-      fader: '3',
+      fader: '7',
       notches: '10',
       outputscale: '9',
       snapforce: '0.8',
       output: '_BPM_ONES',
-      select: '_CURRENT_LAYER',
+      select: '_LAYER_STATE',
       selectat: '1'  // Active in tempo layer
     }
   ];
