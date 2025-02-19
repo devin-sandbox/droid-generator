@@ -17,7 +17,7 @@ function createTrackConfig(trackIndex: number): Circuit {
     section: 'motoquencer',
     clock: '_INTERNAL_CLOCK',
     firstfader: '1',  // All tracks share faders 1-4
-    numfaders: '4'
+    numfaders: '4',
     numsteps: '4',
     select: '_SELECTED_TRACK',  // Track selection input
     selectat: `1${trackIndex + 1}`,  // Activate when _SELECTED_TRACK matches index (11-14)
