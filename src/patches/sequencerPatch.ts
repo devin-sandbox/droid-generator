@@ -1,11 +1,15 @@
 import { Patch, type Circuit } from '../patch';
 import type { MotoquencerConfig } from '../types/circuits/sequencing/motoquencer';
 import type { ButtonGroupConfig } from '../types/circuits/io/buttongroup';
+import type { EncoderConfig } from '../types/circuits/io/encoder';
+import type { MotorFaderConfig } from '../types/circuits/io/motorfader';
 import { DeviceType } from '../types/devices';
+import type { LayerMode } from '../types/common';
 
 interface SequencerOptions {
   numSteps?: number;
   numTracks?: number;
+  defaultLayer?: LayerMode;
 }
 
 function createTrackConfig(trackIndex: number): Circuit {
@@ -41,13 +45,89 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   // Add label comment
   patch.addComment('LABELS: master=18');
   
+  // Configure encoder for layer switching
+  const layerEncoder: Circuit & EncoderConfig = {
+    section: 'encoder',
+    encoder: 'E1.1',
+    button: '_LAYER_SWITCH',
+    led: '_LAYER_LED',
+    color: '0.5',  // Green for step layer
+    mode: '6',     // Circular mode for layer switching
+    discrete: '2', // Two positions for step/tempo layers
+    snapforce: '1', // Strong snap between positions
+    output: '_CURRENT_LAYER'
+  };
+  patch.addCircuit(layerEncoder);
+
+  // Configure BPM control faders
+  const bpmFaders: (Circuit & MotorFaderConfig)[] = [
+    {
+      section: 'motorfader',
+      fader: '1',
+      notches: '10',
+      outputscale: '9',
+      snapforce: '0.8',
+      output: '_BPM_HUNDREDS',
+      select: '_CURRENT_LAYER',
+      selectat: '1'  // Active in tempo layer
+    },
+    {
+      section: 'motorfader',
+      fader: '2',
+      notches: '10',
+      outputscale: '9',
+      snapforce: '0.8',
+      output: '_BPM_TENS',
+      select: '_CURRENT_LAYER',
+      selectat: '1'  // Active in tempo layer
+    },
+    {
+      section: 'motorfader',
+      fader: '3',
+      notches: '10',
+      outputscale: '9',
+      snapforce: '0.8',
+      output: '_BPM_ONES',
+      select: '_CURRENT_LAYER',
+      selectat: '1'  // Active in tempo layer
+    }
+  ];
+  
+  for (const fader of bpmFaders) {
+    patch.addCircuit(fader);
+  }
+  
+  // Configure math circuit for BPM calculation
+  const bpmCalculator: Circuit = {
+    section: 'math',
+    input1: '_BPM_HUNDREDS',
+    input2: '_BPM_TENS',
+    input3: '_BPM_ONES',
+    operation: '0',  // Addition
+    scale1: '100',
+    scale2: '10',
+    scale3: '1',
+    output: '_TOTAL_BPM'
+  };
+  patch.addCircuit(bpmCalculator);
+  
+  // Configure layer switching
+  const layerSwitch: Circuit = {
+    section: 'switch',
+    position: '_CURRENT_LAYER',
+    value0: '0',  // Step layer
+    value1: '1',  // Tempo layer
+    output: '_LAYER_STATE'
+  };
+  patch.addCircuit(layerSwitch);
+
   // Configure LFO for clock generation
   const lfo: Circuit = {
     section: 'lfo',
-    hz: '2',           // 2Hz = 120 BPM
-    waveform: '0',     // Square wave
-    level: '1',        // Full level
-    bipolar: '0',      // Unipolar output
+    hz: '_TOTAL_BPM / 60',  // Convert BPM to Hz
+    waveform: '0',          // Square wave
+    level: '1',             // Full level
+    bipolar: '0',           // Unipolar output
     square: '_INTERNAL_CLOCK'
   };
   patch.addCircuit(lfo);

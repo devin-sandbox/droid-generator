@@ -15,7 +15,9 @@ export type Circuit =
   | (EncoderConfig & { section: 'encoder' })
   | (ButtonConfig & { section: 'button' })
   | (ButtonGroupConfig & { section: 'buttongroup' })
-  | (MotoquencerConfig & { section: 'motoquencer' });
+  | (MotoquencerConfig & { section: 'motoquencer' })
+  | ({ section: 'math', input1?: string, input2?: string, input3?: string, operation: string, scale1?: string, scale2?: string, scale3?: string, output: string })
+  | ({ section: 'switch', position: string, value0: string, value1: string, output: string });
 
 export class Patch {
   private circuits: Circuit[] = [];
