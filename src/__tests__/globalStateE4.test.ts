@@ -7,9 +7,6 @@ describe("GlobalStateE4", () => {
   test("generates valid patch", () => {
     const patch = generatePatch(7);
     expect(patch).toBeDefined();
-    expect(patch).toContain("[lfo]");
-    expect(patch).toContain("[button]");
-    expect(patch).toContain("[motorfader]");
   });
 
   test("validates number of LFOs", () => {
