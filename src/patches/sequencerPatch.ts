@@ -51,7 +51,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     encoder: 'E2.1',
     button: '_LAYER_SWITCH',
     led: '_LAYER_LED',
-    color: '0.5',  // Green for step layer
+    color: '_LAYER_STATE * 0.6',  // Blue (0.6) for tempo, Red (0) for step
     mode: '6',     // Circular mode for layer switching
     discrete: '2', // Two positions for step/tempo layers
     snapforce: '1', // Strong snap between positions
