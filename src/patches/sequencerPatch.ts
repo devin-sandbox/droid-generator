@@ -38,6 +38,12 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   // Single M4 module - all tracks share the same 4 faders
   const patch = new Patch([DeviceType.P2B8, DeviceType.E4, DeviceType.M4]);
   
+  // Add labels section
+  patch.addCircuit({
+    section: 'labels',
+    master: '18'
+  });
+  
   // Configure LFO for clock generation
   const lfo: Circuit = {
     section: 'lfo',
