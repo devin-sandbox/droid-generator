@@ -144,5 +144,20 @@ quantize=2
 ```
 
 ## Layer Selection Values
-- Step layer: `_LAYER_STATE = 0` (activates faders 11-14)
-- Tempo layer: `_LAYER_STATE = 21` (activates faders 21-23)
+- Step layer: All `_LAYER_STATE_*` outputs = 11 (activates faders 11-14)
+- Tempo layer: 
+  - `_LAYER_STATE_1 = 21` (activates first fader for hundreds)
+  - `_LAYER_STATE_2 = 22` (activates second fader for tens)
+  - `_LAYER_STATE_3 = 23` (activates third fader for ones)
+
+## Implementation Details
+- Each fader has a dedicated switch circuit for selection
+- Encoder color uses first layer state (`_LAYER_STATE_1 * 0.6`)
+  - Blue (0.6) in tempo layer
+  - Red (0) in step layer
+- BPM calculation combines fader values:
+  - `_BPM_HUNDREDS * 100 + _BPM_TENS * 10 + _BPM_ONES`
+  - Result in `_TOTAL_BPM` used for LFO clock
+- Layer switching controlled by encoder E2.1
+  - Two discrete positions with strong snap force
+  - Circular mode for easy toggling
