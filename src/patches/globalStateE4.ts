@@ -1,9 +1,9 @@
-import { Patch } from './patch';
-import type { LFOConfig } from './types/circuits/modulation/lfo';
-import type { MotorFaderConfig } from './types/circuits/io/motorfader';
-import type { EncoderConfig } from './types/circuits/io/encoder';
+import { Patch, type Circuit } from '../patch';
+import type { LFOConfig } from '../types/circuits/modulation/lfo';
+import type { MotorFaderConfig } from '../types/circuits/io/motorfader';
+import type { EncoderConfig } from '../types/circuits/io/encoder';
 
-const MAX_ALLOWED_LFOS = 8;
+const MAX_ALLOWED_LFOS = 7; // Limited by available outputs O1-O7
 const LFO_SELECT = "_LFO_SELECT";
 
 function validateNumLfos(num: number): number {
@@ -13,38 +13,35 @@ function validateNumLfos(num: number): number {
   return num;
 }
 
-function generatePatch(numLfos: number): string {
-  const patch = new Patch();
+export function generatePatch(numLfos: number = MAX_ALLOWED_LFOS): string {
   numLfos = validateNumLfos(numLfos);
+  const patch = new Patch();
 
   patch.addCircuit({
     section: 'lfo',
     sawtooth: 'O1',
     level: 'P3.2',
     hz: 'P3.1 * 100'
-  });
+  } as Circuit);
 
   patch.addCircuit({
     section: 'button',
     shortpress: '_SAVE',
     button: 'B1.2'
-  });
+  } as Circuit);
 
   patch.addCircuit({
     section: 'button',
     shortpress: '_LOAD',
     button: 'B1.1'
-  });
+  } as Circuit);
 
   patch.addCircuit({
     section: 'motorfader',
     savepreset: '_SAVE',
     fader: '1',
     loadpreset: '_LOAD'
-  });
+  } as Circuit);
 
   return patch.toString();
 }
-
-const numLfos = Bun.argv[2] ? parseInt(Bun.argv[2], 10) : MAX_ALLOWED_LFOS;
-console.log(generatePatch(numLfos));

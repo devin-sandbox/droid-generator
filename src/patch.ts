@@ -6,6 +6,7 @@ import type { EncoderConfig } from './types/circuits/io/encoder';
 import type { ButtonConfig } from './types/circuits/io/button';
 import type { MotoquencerConfig } from './types/circuits/sequencing/motoquencer';
 import { DeviceType } from './types/devices';
+import { CircuitValidator } from './validator';
 
 export type Circuit = 
   | (LFOConfig & { section: 'lfo' })
@@ -18,6 +19,10 @@ export class Patch {
   private circuits: Circuit[] = [];
   private ini: IniMap;
   private devices: DeviceType[];
+
+  getCircuits(): readonly Circuit[] {
+    return [...this.circuits];
+  }
 
   addComment(text: string): void {
     this.ini.comments.setAtLine(this.ini.size + 1, text);
@@ -35,6 +40,7 @@ export class Patch {
   }
 
   addCircuit(circuit: Circuit): void {
+    CircuitValidator.validate(circuit);
     this.circuits.push(circuit);
   }
 

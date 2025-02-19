@@ -1,6 +1,5 @@
-import { Patch } from '../patch';
+import { Patch, type Circuit } from '../patch';
 import type { MotoquencerConfig } from '../types/circuits/sequencing/motoquencer';
-import type { EncoderConfig } from '../types/circuits/io/encoder';
 import { DeviceType } from '../types/devices';
 
 interface SequencerOptions {
@@ -15,8 +14,8 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   const patch = new Patch([DeviceType.P2B8, DeviceType.E4, DeviceType.M4]);
   
   // Configure LFO for clock generation
-  const lfo = {
-    section: 'lfo' as const,
+  const lfo: Circuit = {
+    section: 'lfo',
     hz: '2',           // 2Hz = 120 BPM
     waveform: '0',     // Square wave
     level: '1',        // Full level
@@ -25,18 +24,9 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   };
   patch.addCircuit(lfo);
   
-  // Configure button for future layer switching
-  const button = {
-    section: 'button' as const,
-    button: 'E2.1',  // Use encoder's button
-    led: '1',        // LED output at full brightness (0-1 float)
-    states: '2'      // Two states for future layer switching
-  };
-  patch.addCircuit(button);
-
   // Configure motoquencer for basic 4-step sequence
-  const motoquencer = {
-    section: 'motoquencer' as const,
+  const motoquencer: Circuit = {
+    section: 'motoquencer',
     clock: '_INTERNAL_CLOCK',      // Use LFO square output as clock
     firstfader: '1',              // Use faders 1-4
     numfaders: '4',               // All 4 faders on M4
@@ -49,17 +39,9 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     buttonmode: '0',              // 0 = gates mode
     
     // CV and quantization
-    cvbase: '-1',                 // Full negative range
+    cvbase: '0',                  // Base value for CV range
     cvrange: '1',                 // Full range (0 to 1)
-    quantize: '1',                // 1 = semitones
-    
-    // Pattern control
-    pattern: '0',                 // Default pattern
-    form: '0',                    // Default form
-    
-    // Randomization
-    luckychance: '0',             // No random probability
-    luckyamount: '0'              // No random amount
+    quantize: '2'                 // 2 = semitones
   };
   patch.addCircuit(motoquencer);
   
