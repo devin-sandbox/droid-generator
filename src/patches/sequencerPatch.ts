@@ -11,9 +11,10 @@ function createTrackConfig(trackIndex: number): Circuit {
   return {
     section: 'motoquencer',
     clock: '_INTERNAL_CLOCK',
-    firstfader: `${1 + (trackIndex * 4)}`,  // Track 1: 1-4, Track 2: 5-8, etc.
+    firstfader: '1',  // All tracks share faders 1-4
     numfaders: '4',
     numsteps: '4',
+    page: `TRACK_${trackIndex}`,  // Connect to button output for page selection
     cv: `O${trackIndex + 1}`,  // O1-O4
     gate: `G${trackIndex + 1}`, // G1-G4
     fadermode: '0',
@@ -25,11 +26,15 @@ function createTrackConfig(trackIndex: number): Circuit {
 }
 
 export function createSequencerPatch(options: SequencerOptions = {}) {
-  const numSteps = 4;
-  const numTracks = 4;  // Fixed 4 tracks
+  const numSteps = options.numSteps ?? 4;
+  const numTracks = options.numTracks ?? 4;  // Default to 4 tracks
+
+  if (numTracks < 1 || numTracks > 4) {
+    throw new Error('Track count must be between 1 and 4');
+  }
   
-  // Need multiple M4 modules for 16 faders
-  const patch = new Patch([DeviceType.P2B8, DeviceType.E4, DeviceType.M4, DeviceType.M4]);
+  // Single M4 module - all tracks share the same 4 faders
+  const patch = new Patch([DeviceType.P2B8, DeviceType.E4, DeviceType.M4]);
   
   // Configure LFO for clock generation
   const lfo: Circuit = {
@@ -42,13 +47,14 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   };
   patch.addCircuit(lfo);
   
-  // Configure track selection buttons
-  const buttons = [1, 2, 3, 4].map(i => {
+  // Configure track selection buttons with page connections
+  const buttons = Array.from({ length: numTracks }, (_, i) => {
     const button: Circuit = {
       section: 'button',
-      button: `B1.${i}`,  // B1.1 through B1.4 on P2B8
+      button: `B1.${i + 1}`,  // B1.1 through B1.4 on P2B8
       states: '2',        // Simple on/off state
-      led: `L1.${i}`     // LED feedback
+      led: `L1.${i + 1}`,     // LED feedback
+      output: `TRACK_${i}`  // Output value used for page selection
     };
     return button;
   });
