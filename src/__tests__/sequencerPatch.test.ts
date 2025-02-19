@@ -19,4 +19,12 @@ describe("SequencerPatch", () => {
     expect(() => createSequencerPatch({ numTracks: 5 })).toThrow();
     expect(() => createSequencerPatch({ numTracks: 0 })).toThrow();
   });
+
+  test("configures layer switching correctly", () => {
+    const patch = createSequencerPatch();
+    const ini = patch.toString();
+    expect(ini).toContain('button=_LAYER_SWITCH');
+    expect(ini).toContain('output=_CURRENT_LAYER');
+    expect(ini).toContain('input1=_LAYER_SWITCH');
+  });
 });
