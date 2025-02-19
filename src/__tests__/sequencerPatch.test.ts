@@ -26,5 +26,7 @@ describe("SequencerPatch", () => {
     expect(ini).toContain('button=_LAYER_SWITCH');
     expect(ini).toContain('output=_CURRENT_LAYER');
     expect(ini).toContain('input1=_LAYER_SWITCH');
+    expect(ini).not.toContain('position=');
+    expect(ini).not.toContain('snapforce=');
   });
 });
