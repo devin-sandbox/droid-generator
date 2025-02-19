@@ -111,6 +111,26 @@ describe("CircuitValidator", () => {
     });
   });
 
+  describe("Circuit Type Validation", () => {
+    test("throws on null circuit", () => {
+      expect(() => CircuitValidator.validate(null as any)).toThrow(/Invalid circuit/);
+    });
+
+    test("throws on non-object circuit", () => {
+      expect(() => CircuitValidator.validate("not an object" as any)).toThrow(/Invalid circuit/);
+    });
+
+    test("throws on missing section", () => {
+      expect(() => CircuitValidator.validate({} as any)).toThrow(/missing section/);
+    });
+
+    test("throws on unknown circuit type", () => {
+      expect(() => CircuitValidator.validate({
+        section: "unknown"
+      } as any)).toThrow(/Unknown circuit type/);
+    });
+  });
+
   describe("Error Cases", () => {
     test("throws on unknown circuit type", () => {
       const circuit: Circuit = {
