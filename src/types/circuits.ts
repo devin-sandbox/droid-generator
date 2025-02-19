@@ -1,5 +1,5 @@
 import type { BaseCircuitConfig } from './base';
-import type { LFOConfig } from './circuits/sequencing/lfo';
+import type { LFOConfig } from './circuits/modulation/lfo';
 import type { MotorFaderConfig } from './circuits/io/motorfader';
 import type { EncoderConfig } from './circuits/io/encoder';
 import type { ButtonConfig } from './circuits/io/button';
