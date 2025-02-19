@@ -40,3 +40,10 @@ bun run src/cli/sequencer.ts 4 tempo  # 4-track sequencer starting in tempo laye
 ## Development
 
 This project uses [Bun](https://bun.sh) as its JavaScript/TypeScript runtime. All circuit configurations strictly follow the DROID manual specifications.
+
+### Type Definitions
+Circuit type definitions are located in the `types` directory:
+- Base circuit interfaces in `types/base.ts`
+- Common types in `types/common.ts`
+- Circuit-specific types in `types/circuits/` (organized by category)
+- All types strictly follow DROID manual specifications
