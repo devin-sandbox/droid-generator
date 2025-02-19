@@ -24,14 +24,14 @@ describe("SequencerPatch", () => {
       expect(track.numsteps).toBe('4');
     });
     
-    // Verify UI controls
-    const encoder = circuits.find(c => c.section === 'encoder');
-    expect(encoder?.button).toBe('TRACK_SELECT');
-    expect(encoder?.led).toBe('TRACK_LED');
+    // Verify track selection buttons
+    const buttons = circuits.filter(c => c.section === 'button');
+    expect(buttons).toHaveLength(4);
     
-    const button = circuits.find(c => c.section === 'button');
-    expect(button?.button).toBe('TRACK_SELECT');
-    expect(button?.states).toBe('4');
-    expect(button?.startvalue).toBe('1');
+    buttons.forEach((button, i) => {
+      expect(button.button).toBe(`B1.${i + 1}`);
+      expect(button.states).toBe('2');
+      expect(button.led).toBe(`L1.${i + 1}`);
+    });
   });
 });

@@ -42,23 +42,17 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   };
   patch.addCircuit(lfo);
   
-  // Configure encoder for track selection
-  const encoder: Circuit = {
-    section: 'encoder',
-    encoder: '1',
-    button: 'TRACK_SELECT',
-    led: 'TRACK_LED'
-  };
-  patch.addCircuit(encoder);
-  
-  // Configure button for track selection
-  const button: Circuit = {
-    section: 'button',
-    button: 'TRACK_SELECT',
-    states: '4',  // One state per track
-    startvalue: '1'    // Initial state
-  };
-  patch.addCircuit(button);
+  // Configure track selection buttons
+  const buttons = [1, 2, 3, 4].map(i => {
+    const button: Circuit = {
+      section: 'button',
+      button: `B1.${i}`,  // B1.1 through B1.4 on P2B8
+      states: '2',        // Simple on/off state
+      led: `L1.${i}`     // LED feedback
+    };
+    return button;
+  });
+  buttons.forEach(button => patch.addCircuit(button));
   
   // Add tracks
   for (let i = 0; i < numTracks; i++) {
