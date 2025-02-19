@@ -1,20 +1,42 @@
 # droid-generator
 
-To install dependencies:
+A TypeScript-based generator for DROID patches, supporting various circuit configurations and modular synthesis features.
+
+## Features
+
+- **Circuit Generation**: Create complex DROID patches with type-safe circuit configurations
+- **Multi-Track Sequencing**: Support for up to 4 tracks with shared fader controls
+- **Layer Management**: Switch between different control layers (e.g., step sequencing and tempo control)
+- **Dynamic BPM Control**: Precise tempo control using digit-based fader input
+- **Type Safety**: TypeScript interfaces ensuring valid DROID configurations
+
+## Installation
 
 ```bash
 bun install
 ```
 
-To run:
+## Usage
 
+Generate a sequencer patch:
 ```bash
-bun run index.ts
+bun run src/cli/sequencer.ts [num_tracks] [initial_layer]
 ```
 
-This project was created using `bun init` in bun v1.1.18. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+Example:
+```bash
+bun run src/cli/sequencer.ts 4 tempo  # 4-track sequencer starting in tempo layer
+```
 
 ## Documentation
 
-### Sequencer
-The sequencer implementation supports multiple tracks and tempo control. See [example output](docs/example-output/sequencer.md) for configuration details and layer selection values.
+### Circuits
+- [Sequencer](docs/example-output/sequencer.md): Multi-track sequencer with tempo control
+  - Layer switching between step and tempo modes
+  - BPM control using digit-based faders
+  - Track selection with button group
+  - Shared fader controls across tracks
+
+## Development
+
+This project uses [Bun](https://bun.sh) as its JavaScript/TypeScript runtime. All circuit configurations strictly follow the DROID manual specifications.
