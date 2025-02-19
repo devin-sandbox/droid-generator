@@ -117,8 +117,8 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   const layerSwitch: Circuit = {
     section: 'switch',
     position: '_CURRENT_LAYER',
-    input1: '0',  // Step layer
-    input2: '1',  // Tempo layer
+    input1: '0',  // Step layer (11-14)
+    input2: '21',  // Tempo layer (21-23)
     output: '_LAYER_STATE'
   };
   patch.addCircuit(layerSwitch);
