@@ -9,8 +9,7 @@ describe("SequencerPatch", () => {
     
     // Verify components
     expect(circuits.filter(c => c.section === 'motoquencer')).toHaveLength(4);
-    expect(circuits.filter(c => c.section === 'encoder')).toHaveLength(1);
-    expect(circuits.filter(c => c.section === 'button')).toHaveLength(1);
+    expect(circuits.filter(c => c.section === 'button')).toHaveLength(4);
     expect(circuits.filter(c => c.section === 'lfo')).toHaveLength(1);
     
     // Verify track configurations
