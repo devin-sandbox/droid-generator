@@ -17,7 +17,7 @@ function createTrackConfig(trackIndex: number): Circuit {
     section: 'motoquencer',
     clock: '_INTERNAL_CLOCK',
     firstfader: '1',  // All tracks share faders 1-4
-    numfaders: '4',
+    numfaders: '3',  // Using faders 1-3 for both step and tempo modes
     numsteps: '4',
     select: '_SELECTED_TRACK',  // Track selection input
     selectat: `${trackIndex}`,  // Activate when _SELECTED_TRACK matches index
@@ -62,7 +62,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   const bpmFaders: (Circuit & MotorFaderConfig)[] = [
     {
       section: 'motorfader',
-      fader: '5',
+      fader: '1',
       notches: '10',
       outputscale: '9',
       snapforce: '0.8',
@@ -72,7 +72,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     },
     {
       section: 'motorfader',
-      fader: '6',
+      fader: '2',
       notches: '10',
       outputscale: '9',
       snapforce: '0.8',
@@ -82,7 +82,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     },
     {
       section: 'motorfader',
-      fader: '7',
+      fader: '3',
       notches: '10',
       outputscale: '9',
       snapforce: '0.8',
@@ -117,8 +117,8 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
   const layerSwitch: Circuit = {
     section: 'switch',
     position: '_CURRENT_LAYER',
-    value0: '0',  // Step layer
-    value1: '1',  // Tempo layer
+    input1: '0',  // Step layer
+    input2: '1',  // Tempo layer
     output: '_LAYER_STATE'
   };
   patch.addCircuit(layerSwitch);
