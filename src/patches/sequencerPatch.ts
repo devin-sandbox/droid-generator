@@ -41,7 +41,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
     // CV and quantization
     cvbase: '0',                  // Base value for CV range
     cvrange: '1',                 // Full range (0 to 1)
-    quantize: '1'                 // 1 = semitones
+    quantize: '2'                 // 2 = semitones
   };
   patch.addCircuit(motoquencer);
   
