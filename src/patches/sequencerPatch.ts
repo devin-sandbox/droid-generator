@@ -20,7 +20,7 @@ function createTrackConfig(trackIndex: number): Circuit {
     numfaders: '3',  // Using faders 1-3 for both step and tempo modes
     numsteps: '4',
     select: '_SELECTED_TRACK',  // Track selection input
-    selectat: `${trackIndex}`,  // Activate when _SELECTED_TRACK matches index
+    selectat: `1${trackIndex + 1}`,  // Activate when _SELECTED_TRACK matches index (11-14)
     cv: `O${trackIndex + 1}`,  // O1-O4
     gate: `G${trackIndex + 1}`, // G1-G4
     fadermode: '0',
@@ -68,7 +68,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
       snapforce: '0.8',
       output: '_BPM_HUNDREDS',
       select: '_LAYER_STATE',
-      selectat: '1'  // Active in tempo layer
+      selectat: '21'  // Active in tempo layer, first fader
     },
     {
       section: 'motorfader',
@@ -78,7 +78,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
       snapforce: '0.8',
       output: '_BPM_TENS',
       select: '_LAYER_STATE',
-      selectat: '1'  // Active in tempo layer
+      selectat: '22'  // Active in tempo layer, second fader
     },
     {
       section: 'motorfader',
@@ -88,7 +88,7 @@ export function createSequencerPatch(options: SequencerOptions = {}) {
       snapforce: '0.8',
       output: '_BPM_ONES',
       select: '_LAYER_STATE',
-      selectat: '1'  // Active in tempo layer
+      selectat: '23'  // Active in tempo layer, third fader
     }
   ];
   
